@@ -8,7 +8,7 @@
  * @author Jose Diaz-Gonzalez
  * @version $Id$
  **/
-App::import('Lib', 'AdminGenerator.cake_admin');
+App::import('Lib', 'CakeAdmin.cake_admin');
 class AdminShell extends Shell {
 
 /**
