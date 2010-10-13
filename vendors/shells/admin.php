@@ -246,7 +246,7 @@ class AdminShell extends Shell {
  * @author Jose Diaz-Gonzalez
  **/
     function generateAppController($admin) {
-        $path = APP . 'plugins' . DS . 'admin_generator' . DS . 'libs' . DS . 'templates' . DS . 'classes';
+        $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
 
         $this->AdminTemplate->set(compact('admin'));
         $contents = $this->AdminTemplate->generate($path, 'app_controller');
@@ -275,7 +275,7 @@ class AdminShell extends Shell {
  * @author Jose Diaz-Gonzalez
  **/
     function generateController($admin) {
-        $path = APP . 'plugins' . DS . 'admin_generator' . DS . 'libs' . DS . 'templates' . DS . 'classes';
+        $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
 
         $controllerName = $this->_controllerName($admin->modelName);
         $actions = $this->generateActions($admin);
@@ -335,7 +335,7 @@ class AdminShell extends Shell {
         if (!empty($options['plugin'])) {
             $intermediate = 'plugins' . DS . $options['plugin'] . DS;
         } else {
-            $intermediate = 'plugins' . DS . 'admin_generator' . DS;
+            $intermediate = 'plugins' . DS . 'cake_admin' . DS;
         }
         
         $path = APP . $intermediate . 'libs' . DS . 'templates' . DS . 'actions';
