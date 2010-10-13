@@ -232,10 +232,30 @@ class AdminShell extends Shell {
  * @todo test me
  **/
     function generate($admin) {
-        if (!$this->generateAppController($admin)) return false;
-        if (!$this->generateController($admin)) return false;
-        if (!$this->generateModel($admin)) return false;
-        if (!$this->generateViews($admin)) return false;
+        if (!$this->generateAppController($admin)) {
+            $this->out();
+            $this->out(sprintf('Failed to generate %s App Controller', Inflector::humanize($admin->plugin)));
+            $this->out();
+            return false;
+        }
+        if (!$this->generateController($admin)) {
+            $this->out();
+            $this->out(sprintf('Failed to generate %s Controller', $this->_controllerName($admin->modelName)));
+            $this->out();
+            return false;
+        }
+        if (!$this->generateModel($admin))  {
+            $this->out();
+            $this->out(sprintf('Failed to generate %s Model', $admin->modelName));
+            $this->out();
+            return false;
+        }
+        if (!$this->generateViews($admin)) {
+            $this->out();
+            $this->out(sprintf('Failed to generate %s Views', $this->_controllerName($admin->modelName)));
+            $this->out();
+            return false;
+        }
         return true;
     }
 
