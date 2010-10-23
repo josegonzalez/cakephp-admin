@@ -82,6 +82,42 @@ class AdminTemplateTask extends Shell {
 	}
 
 /**
+ * Parses frontmatter from given content and returns the split data
+ * as an array of [content, parsed frontmatter]
+ *
+ * Parsed frontmatter is always an array, whose contents are dependent
+ * upon the template in use
+ *
+ * If frontmatter exists more than once, then this method will return
+ * false. Frontmatter may only be specified once per template
+ *
+ * @param string $content
+ * @return void
+ */
+    function parseMetadata($contents) {
+        $results = preg_match('/^(?:---\s*[\n\r]*)(.*)[\n\r]*(?:---\s*[\n\r]*)/ms', $contents, $matches);
+        if ($results == 0) return array($contents, array());
+        if ($results > 1) return false;
+
+        return array(
+            str_replace($matches[0], '', $contents),
+            $this->json_decode_nice("{{$matches[1]}}")
+        );
+    }
+
+/**
+ * Allows the Json frontmatter to be a bit more lenient and YAML like if necessary
+ *
+ * @param string $json
+ * @param boolean $assoc
+ * @return void
+ */
+    function json_decode_nice($json, $assoc = false) {
+        $json = str_replace(array("\n","\r"),"", $json);
+        $json = preg_replace('/([{,])(\s*)([^"]+?)\s*:/','$1"$3":',$json);
+        return json_decode($json, $assoc);
+    }
+/**
  * Find a template inside a directory inside a path.
  *
  * @param string $directory Subdirectory to look for ie. 'views', 'objects'
