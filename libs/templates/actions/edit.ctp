@@ -22,7 +22,7 @@
             }
         }
         if (empty($this->data)) {
-            $this->data = $this-><?php echo $currentModelName; ?>->find('<?php echo $alias; ?>', $<?php echo $admin->primaryKey; ?>);
+            $this->data = $this-><?php echo $currentModelName; ?>->find('<?php echo $alias; ?>', array('<?php echo $admin->primaryKey; ?>' => $<?php echo $admin->primaryKey; ?>));
         }
         if (empty($this->data)) {
 <?php if ($admin->sessions): ?>
