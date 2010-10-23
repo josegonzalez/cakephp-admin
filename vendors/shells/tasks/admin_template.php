@@ -94,16 +94,16 @@ class AdminTemplateTask extends Shell {
  * @param string $content
  * @return void
  */
-    function parseMetadata($contents) {
-        $results = preg_match('/^(?:---\s*[\n\r]*)(.*)[\n\r]*(?:---\s*[\n\r]*)/ms', $contents, $matches);
-        if ($results == 0) return array($contents, array());
-        if ($results > 1) return false;
+	function parseMetadata($contents) {
+		$results = preg_match('/^(?:---\s*[\n\r]*)(.*)[\n\r]*(?:---\s*[\n\r]*)/ms', $contents, $matches);
+		if ($results == 0) return array($contents, array());
+		if ($results > 1) return false;
 
-        return array(
-            str_replace($matches[0], '', $contents),
-            $this->json_decode_nice("{{$matches[1]}}")
-        );
-    }
+		return array(
+			str_replace($matches[0], '', $contents),
+			$this->json_decode_nice("{{$matches[1]}}")
+		);
+	}
 
 /**
  * Allows the Json frontmatter to be a bit more lenient and YAML like if necessary
@@ -112,11 +112,11 @@ class AdminTemplateTask extends Shell {
  * @param boolean $assoc
  * @return void
  */
-    function json_decode_nice($json, $assoc = false) {
-        $json = str_replace(array("\n","\r"),"", $json);
-        $json = preg_replace('/([{,])(\s*)([^"]+?)\s*:/','$1"$3":',$json);
-        return json_decode($json, $assoc);
-    }
+	function json_decode_nice($json, $assoc = false) {
+		$json = str_replace(array("\n","\r"),"", $json);
+		$json = preg_replace('/([{,])(\s*)([^"]+?)\s*:/','$1"$3":',$json);
+		return json_decode($json, $assoc);
+	}
 /**
  * Find a template inside a directory inside a path.
  *
