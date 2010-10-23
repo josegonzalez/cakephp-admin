@@ -83,9 +83,7 @@ class AdminTemplateTask extends Shell {
 
 /**
  * Find a template inside a directory inside a path.
- * Will scan all other theme dirs if the template is not found in the first directory.
  *
- * @param string $path The initial path to look for the file on. If it is not found fallbacks will be used.
  * @param string $directory Subdirectory to look for ie. 'views', 'objects'
  * @param string $filename lower_case_underscored filename you want.
  * @access public
