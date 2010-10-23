@@ -1,7 +1,7 @@
 <?php
 /**
  * Admin Shell
- * 
+ *
  * [Short Description]
  *
  * @package default
@@ -167,10 +167,10 @@ class AdminShell extends Shell {
  * to ensure that the plugin path, and all
  * subpaths, are writeable by the system.
  *
- * Also ensures that templates are available for 
+ * Also ensures that templates are available for
  * all actions, plugins, etc
  *
- * @param CakeAdmin $admin 
+ * @param CakeAdmin $admin
  * @return mixed boolean true if successful, string error message otherwise
  * @author Jose Diaz-Gonzalez
  * @todo test me
@@ -238,13 +238,13 @@ class AdminShell extends Shell {
             $this->out();
             return false;
         }
-        if (!$this->generateController($admin)) {
+        if (($metadata = $this->generateController($admin)) == false) {
             $this->out();
             $this->out(sprintf('Failed to generate %s Controller', $this->_controllerName($admin->modelName)));
             $this->out();
             return false;
         }
-        if (!$this->generateModel($admin))  {
+        if (!$this->generateModel($admin, $metadata))  {
             $this->out();
             $this->out(sprintf('Failed to generate %s Model', $admin->modelName));
             $this->out();
@@ -285,8 +285,23 @@ class AdminShell extends Shell {
  * @return void
  * @author Jose Diaz-Gonzalez
  **/
-    function generateModel($admin) {
+    function generateModel($admin, $metadata) {
+        $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'methods';
+
+        $methods = $this->generateMethods($admin, $metadata);
+
+        $this->AdminTemplate->set(compact('methods', 'admin'));
+        $contents = $this->AdminTemplate->generate($path, 'model');
+
+        $path = APP . 'plugins' . DS . $admin->plugin . DS . 'models' . DS;
+        $filename = $path . Inflector::underscore($admin->modelName);
+        if ($this->createFile($filename, $contents)) {
+            return $contents;
+        }
+        return false;
     }
+
+
 
 /**
  * undocumented function
@@ -295,18 +310,23 @@ class AdminShell extends Shell {
  * @author Jose Diaz-Gonzalez
  **/
     function generateController($admin) {
-        $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
+        $path       = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
 
         $controllerName = $this->_controllerName($admin->modelName);
-        $actions = $this->generateActions($admin);
+        $actions    = $this->generateActions($admin);
+
+        if (!$actions) return false;
+
+        $metadata   = $actions['metadata'];
+        $actions    = $actions['actions'];
 
         $this->AdminTemplate->set(compact('controllerName', 'actions', 'admin'));
-        $contents = $this->AdminTemplate->generate($path, 'controller');
+        $contents   = $this->AdminTemplate->generate($path, 'controller');
 
-        $path = APP . 'plugins' . DS . $admin->plugin . DS . 'controllers' . DS;
-        $filename = $path . $this->_controllerPath($controllerName) . '_controller.php';
+        $path       = APP . 'plugins' . DS . $admin->plugin . DS . 'controllers' . DS;
+        $filename   = $path . $this->_controllerPath($controllerName) . '_controller.php';
         if ($this->createFile($filename, $contents)) {
-            return $contents;
+            return $metadata;
         }
         return false;
     }
@@ -328,7 +348,10 @@ class AdminShell extends Shell {
  **/
     function generateActions($admin) {
         $actions = '';
+        $actionMetadata = array();
         foreach ($admin->actions as $alias => $action) {
+            $this->out(sprintf("Action: %s", $action));
+
             $plugin = null;
             if (is_array($action)) {
                 $plugin = $action['plugin'];
@@ -336,17 +359,22 @@ class AdminShell extends Shell {
             }
             $actionAlias = (ctype_digit($alias)) ? $action : $alias;
 
-            $actions .= $this->getAction($admin, array(
+            $results = $this->getAction($admin, array(
                 'action' => $action,
                 'plugin' => $plugin,
                 'alias'  => $alias
-            )) . "\n\n";
+            ));
+            if (!$results) return false;
+
+            list($actionContents, $metadata) = $results;
+            $actionMetadata[$alias] = $metadata;
+            $actions .= "{$actionContents}\n\n";
         }
-        return $actions;
+        return array('actions' => $actions, 'metadata' => $actionMetadata);
     }
 
 /**
- * undocumented function
+ * Retrieves action contents and parses out yaml metadata
  *
  * @return void
  * @author Jose Diaz-Gonzalez
@@ -357,7 +385,7 @@ class AdminShell extends Shell {
         } else {
             $intermediate = 'plugins' . DS . 'cake_admin' . DS;
         }
-        
+
         $path = APP . $intermediate . 'libs' . DS . 'templates' . DS . 'actions';
 
         $alias = $options['alias'];
@@ -372,12 +400,13 @@ class AdminShell extends Shell {
             'admin',
             'currentModelName',
             'pluralName',
-            'singularName', 
+            'singularName',
             'singularHumanName',
             'pluralHumanName',
             'alias'
         ));
-        return $this->AdminTemplate->generate($path, $options['action']);
+        $content = $this->AdminTemplate->generate($path, $options['action']);
+        return $this->AdminTemplate->parseMetadata($content);
     }
 
 /**
