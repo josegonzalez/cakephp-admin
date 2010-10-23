@@ -24,22 +24,22 @@ echo "<?php\n";
 ?>
 class <?php echo $controllerName; ?>Controller extends <?php echo Inflector::humanize($admin->plugin); ?>AppController {
 
-    var $name = '<?php echo $controllerName; ?>';
+	var $name = '<?php echo $controllerName; ?>';
 <?php
-if (count($admin->helpers)):
-    echo "    var \$helpers = array(";
-    for ($i = 0, $len = count($admin->helpers); $i < $len; $i++):
+if (count($admin->components)):
+    echo "\tvar \$components = array(";
+    for ($i = 0, $len = count($admin->components); $i < $len; $i++):
         if ($i != $len - 1):
-            echo "'" . Inflector::camelize($admin->helpers[$i]) . "', ";
+            echo "'" . Inflector::camelize($admin->components[$i]) . "', ";
         else:
-            echo "'" . Inflector::camelize($admin->helpers[$i]) . "'";
+            echo "'" . Inflector::camelize($admin->components[$i]) . "'";
         endif;
     endfor;
     echo ");\n";
 endif;
 
 if (count($admin->helpers)):
-    echo "    var \$components = array(";
+    echo "\tvar \$helpers = array(";
     for ($i = 0, $len = count($admin->helpers); $i < $len; $i++):
         if ($i != $len - 1):
             echo "'" . Inflector::camelize($admin->helpers[$i]) . "', ";
