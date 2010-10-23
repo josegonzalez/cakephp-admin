@@ -1,3 +1,9 @@
+---
+title: "<?php echo $alias; ?> action",
+finders: ["<?php echo $alias; ?>"],
+related: ["<?php echo $alias; ?>"]
+---
+
     function <?php echo $alias; ?>($<?php echo $admin->primaryKey; ?> = null) {
         if (!$<?php echo $admin->primaryKey; ?> && empty($this->data)) {
 <?php if ($admin->sessions): ?>

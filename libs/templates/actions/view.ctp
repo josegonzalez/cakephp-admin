@@ -1,3 +1,8 @@
+---
+title: "<?php echo $alias; ?> action",
+finders: ["<?php echo $alias; ?>"]
+---
+
     function <?php echo $alias; ?>($<?php echo $admin->primaryKey; ?> = null) {
         $<?php echo $admin->primaryKey; ?> = (!$<?php echo $admin->primaryKey; ?> && !empty($this->params['named']['<?php echo $admin->primaryKey; ?>'])) ? $this->params['named']['<?php echo $admin->primaryKey; ?>'] : $<?php echo $admin->primaryKey; ?>;
         $<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('view', array('<?php echo $admin->primaryKey; ?>' => $<?php echo $admin->primaryKey; ?>));

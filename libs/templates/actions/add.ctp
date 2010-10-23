@@ -1,3 +1,8 @@
+---
+title: "<?php echo $alias ?> action",
+related: ["<?php echo $alias ?>"]
+---
+
     function <?php echo $alias ?>() {
         if (!empty($this->data)) {
             $this-><?php echo $currentModelName; ?>->create();
