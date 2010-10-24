@@ -44,14 +44,14 @@ foreach ($metadata as $action => $data) {
 		}
 	}
 }
-if (!empty($findMethods)) : ?>
+if (!empty($findMethods) && $hasFinders) : ?>
 	var $_findMethods = array(
 <?php foreach ($findMethods as $findMethod): ?>
 		'<?php echo $findMethod; ?>' => true,
 <?php endforeach; ?>
 	);
 <?php endif; ?>
-<?php if (!empty($relatedMethods)) : ?>
+<?php if (!empty($relatedMethods) && $hasRelated) : ?>
 	var $_relatedMethods = array(
 <?php foreach ($relatedMethods as $relatedMethod): ?>
 		'<?php echo $relatedMethod; ?>' => true,

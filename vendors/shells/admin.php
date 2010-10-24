@@ -314,7 +314,7 @@ class AdminShell extends Shell {
     function generateModel($admin, $metadata) {
         $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
 
-        $methods = $this->generateMethods($admin, $metadata);
+        list($methods, $hasFinders, $hasRelated) = $this->generateMethods($admin, $metadata);
 
         $modelObj = ClassRegistry::init(array(
             'class' => $admin->modelName,
@@ -332,7 +332,14 @@ class AdminShell extends Shell {
         $associations = $this->findHasOneAndMany($modelObj, $associations);
         $associations = $this->findHasAndBelongsToMany($modelObj, $associations);
 
-        $this->AdminTemplate->set(compact('methods', 'associations', 'metadata', 'admin'));
+        $this->AdminTemplate->set(compact(
+            'methods',
+            'associations',
+            'metadata',
+            'hasFinders',
+            'hasRelated',
+            'admin'
+        ));
         $contents = $this->AdminTemplate->generate($path, 'model');
 
         $path = APP . 'plugins' . DS . $admin->plugin . DS . 'models' . DS;
@@ -385,7 +392,11 @@ class AdminShell extends Shell {
                 }
             }
         }
-        return $finders . $related;
+        return array(
+            $finders . $related,
+            (!empty($finders)) ? true : false,
+            (!empty($related)) ? true : false,
+        );
     }
 
 /**
