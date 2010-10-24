@@ -12,6 +12,13 @@ class CakeAdmin {
     var $modelName      = 'cake';
 
 /**
+ * Name of database connection to use
+ *
+ * @var string
+ */
+    var $useDbConfig    = 'default';
+
+/**
  * Name of the primaryKey of the model
  *
  * @var string
