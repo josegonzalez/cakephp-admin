@@ -330,7 +330,7 @@ class CakeAdmin {
         'extension'     => '{{field}} must have a valid extension',
         'file'          => '{{field}} must be a valid file name',
         'ip'            => '{{field}} must be a valid IP address',
-        'inList'        => 'Your selection for {{field}} must be in the given list',
+        'inlist'        => 'Your selection for {{field}} must be in the given list',
         'isunique'      => 'This {{field}} has already been taken',
         'maxlength'     => '{{field}} must have less than {{length}} characters',
         'minlength'     => '{{field}} must have at least {{length}} characters',
