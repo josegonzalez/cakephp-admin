@@ -100,7 +100,7 @@ class AdminTemplateTask extends Shell {
 		if ($results > 1) return false;
 
 		return array(
-			str_replace($matches[0], '', $contents),
+			str_replace($matches[0], "\t", $contents),
 			$this->json_decode_nice("{{$matches[1]}}")
 		);
 	}
