@@ -41,6 +41,7 @@ class <?php echo $admin->modelName ?><?php echo Inflector::humanize($admin->plug
 <?php 				if ($option === 'rule') continue; ?>
 <?php 				if ($option === 'message') : ?>
 					'message' => __d('<?php echo $admin->plugin; ?>', '<?php echo $value; ?>', true),
+<?php					continue;?>
 <?php 				endif; ?>
 					'<?php echo $option; ?>' => '<?php echo $value; ?>',
 <?php 			endforeach; ?>
