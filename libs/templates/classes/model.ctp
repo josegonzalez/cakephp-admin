@@ -31,10 +31,16 @@ class <?php echo $admin->modelName ?><?php echo Inflector::humanize($admin->plug
 	var $recursive    = -1;
 <?php
 $findMethods = array();
+$relatedMethods = array();
 foreach ($metadata as $action => $data) {
 	if (!empty($data->finders)) {
 		foreach ($data->finders as $finder) {
 			$findMethods[] = $finder;
+		}
+	}
+	if (!empty($data->related)) {
+		foreach ($data->related as $relatedFinder) {
+			$relatedMethods[] = $relatedFinder;
 		}
 	}
 }
@@ -42,6 +48,13 @@ if (!empty($findMethods)) : ?>
 	var $_findMethods = array(
 <?php foreach ($findMethods as $findMethod): ?>
 		'<?php echo $findMethod; ?>' => true,
+<?php endforeach; ?>
+	);
+<?php endif; ?>
+<?php if (!empty($relatedMethods)) : ?>
+	var $_relatedMethods = array(
+<?php foreach ($relatedMethods as $relatedMethod): ?>
+		'<?php echo $relatedMethod; ?>' => true,
 <?php endforeach; ?>
 	);
 <?php endif; ?>
