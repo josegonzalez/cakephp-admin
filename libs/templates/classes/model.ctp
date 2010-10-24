@@ -67,9 +67,39 @@ if (!empty($findMethods)) : ?>
 			'<?php echo $field; ?>' => array(
 <?php 		foreach ($validations as $key => $options) : ?>
 				'<?php echo $key; ?>' => array(
-					'rule' => array('<?php echo $options['rule']; ?>'),
 <?php 			foreach ($options as $option => $value) : ?>
-<?php 				if ($option === 'rule') continue; ?>
+<?php 				if ($option === 'rule') : ?>
+					'rule' => array(<?php
+						if (is_array($options['rule'])) {
+							$ruleOptionsCount = count($options['rule']) - 1;
+							$i = 0;
+							foreach ($value as $k => $v) {
+								if (!is_array($v)) {
+									echo "'{$v}'";
+								} else {
+									$paramCount = count($v) - 1;
+									$j = 0;
+									echo "array(";
+									foreach ($v as $param => $paramValue) {
+										echo "'{$paramValue}'";
+										if ($j < $paramCount) {
+											echo ", ";
+										}
+										$j++;
+									}
+									echo ")";
+								}
+								if ($i < $ruleOptionsCount) {
+									echo ", ";
+								}
+								$i++;
+							}
+						} else {
+							echo "'{$value}'";
+						}
+?>),
+<?php 					continue; ?>
+<?php 				endif; ?>
 <?php 				if ($option === 'message') : ?>
 					'message' => __d('<?php echo $admin->plugin; ?>', '<?php echo $value; ?>', true),
 <?php					continue;?>
