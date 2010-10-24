@@ -22,11 +22,12 @@
 
 echo "<?php\n"; ?>
 class <?php echo $admin->modelName ?><?php echo Inflector::humanize($admin->plugin); ?> extends <?php echo Inflector::humanize($admin->plugin); ?>AppModel {
-	var $name        = '<?php echo $admin->modelName; ?><?php echo Inflector::humanize($admin->plugin); ?>';
-	var $useDbConfig = '<?php echo $admin->useDbConfig; ?>';
-	var $useTable    = '<?php echo $admin->useTable; ?>';
-	var $primaryKey  = '<?php echo $admin->primaryKey; ?>';
-	var $displayField= '<?php echo $admin->displayField; ?>';
+
+	var $name         = '<?php echo $admin->modelName; ?><?php echo Inflector::humanize($admin->plugin); ?>';
+	var $displayField = '<?php echo $admin->displayField; ?>';
+	var $useDbConfig  = '<?php echo $admin->useDbConfig; ?>';
+	var $useTable     = '<?php echo $admin->useTable; ?>';
+	var $primaryKey   = '<?php echo $admin->primaryKey; ?>';
 <?php if (!empty($admin->validations)): ?>
 
 	public function __construct($id = false, $table = null, $ds = null) {
