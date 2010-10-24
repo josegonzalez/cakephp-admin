@@ -3,13 +3,12 @@
 class CakeAdmin {
 
 /**
- * Name of the model. Must be overridden in order to create a
- * valid admin section, unless you want everything to reference
- * a Cake Model
+ * Name of the model. Defaults to the class name 
+ * minus the appended "Admin" string
  *
  * @var string
  */
-    var $modelName      = 'cake';
+    var $modelName      = null;
 
 /**
  * Name of database connection to use
@@ -65,12 +64,14 @@ class CakeAdmin {
  *
  * @var string
  **/
-    var $helpers    = array();
+    var $helpers        = array();
 
 /**
  * Model validation rules
  *
- * alias => rule, where rule can be an array. If the rule is a string or the
+ * field => array(alias => rule)
+ *
+ * where rule can be an array. If the rule is a string or the
  * message is missing, the message is set to some default.
  *
  * Validation rules are wrapped in __d() calls within the CakeAdmin model template,
@@ -86,65 +87,7 @@ class CakeAdmin {
  *
  * @var string
  */
-    var $relations = array();
-
-/**
- * Customize the views further from the base
- *
- * @var array
- */
-    var $views      = array(
-        'index' => array(
-            'fields'        => '*',
-            'list_filter'   => null,
-            'link'          => array('id'),                 // Link to object here
-            'order'         => 'id ASC',                    // Default ordering
-            'search'        => array('id'),                 // Allow searching of these fields
-            'sort'          => true,                        // Allow sorting. Also takes array of fields to enable sorting on
-        ),
-        'create' => array(
-            array('fields'  => array('title', 'content')),
-        ),
-        'update' => array(
-            array('fields' => array('title', 'content')),
-        )
-    );
-
-/**
- * The following actions are implemented, where alias => action
- *
- * @var array
- **/
-    var $actions = array(
-        'add'       => 'add',
-        'view'      => 'view',
-        'edit'      => 'edit',
-        'delete'    => 'delete',
-        'history'   => 'history',
-        'changelog' => 'changelog',
-    );
-
-/**
- * Auth Configuration
- * We can decide which actions we want to require auth for
- * Authentication can be implemented by some plugin adapter, app-wide
- *
- * @var string
- * @todo implement me
- */
-    var $auth = array();
-
-/**
- * AuthImplementation
- *
- * Either Acl, Auth, Authsome.Authsome, or Sanction.Permit, or the boolean false
- *
- * Acl requires Auth, Sanction.Permit requires Authsome
- *
- * @var array
- * @todo implement me
- */
-    var $authImplementation = false;
+    var $relations      = array();
 
 /**
  * Use sessions?
@@ -155,15 +98,6 @@ class CakeAdmin {
     var $sessions = true;
 
 /**
- * Automagic Webservice?
- *
- * @var boolean
- * @default false
- * @todo implement me
- **/
-    var $webservice = false;
-
-/**
  * Action to redirect to on errors
  *
  * @var string
@@ -171,47 +105,138 @@ class CakeAdmin {
  */
     var $redirectTo = 'index';
 
+/**
+ * Customize the admin
+ *
+ * @var array
+ */
+    var $_actions        = array(
+        'index' => array(
+            'type'      => 'index',                                     // If not set, type maps to the key of this action
+            'enabled'   => true,                                        // Index is enabled by default
+            'config'    => array(
+                'fields'                => array('*'),                  // array or string of fields to enable
+                'list_filter'           => null,                        // Allow these to be filterable
+                'link'                  => array('id'),                 // Link to object here. Must be in fields
+                'order'                 => 'id ASC',                    // Default ordering
+                'search'                => null,                        // Allow searching of these fields
+                'sort'                  => true,                        // Allow sorting. True or array of sortable fields
+            )
+        ),
+        'add' => array(
+            'type'      => 'add',                                       // If not set, type maps to the key of this action
+            'enabled'   => true,                                        // Add is enabled by default
+            'config'    => array(
+                array(
+                    'fields'            => array('*'),                  // These fields are editable.
+                    'readonly'          => array('created', 'modified'),// These fields are read-only
+                    'hidden'            => array(),                     // These fields are hidden
+                    'default'           => array(),                     // These fields are defaulted
+                    'exclude'           => array(),                     // These fields are excluded
+                )
+            )
+        ),
+        'edit' => array(
+            'type'      => 'edit',                                      // If not set, type maps to the key of this action
+            'enabled'   => true,                                        // Edit is enabled by default
+            'config'    => array(
+                array(
+                    'fields'            => array('*'),                  // These fields are editable. If empty, defaults to *
+                    'readonly'          => array('created', 'modified'),// These fields are read-only
+                    'hidden'            => array(),                     // These fields are hidden
+                    'default'           => array(),                     // These fields are defaulted
+                    'exclude'           => array(),                     // These fields are excluded
+                )
+            )
+        ),
+        'view' => array(
+            'type'      => 'view',                                      // If not set, type maps to the key of this action
+            'enabled'   => false,                                       // View is disabled by default
+            'config'    => array(
+                'fields'                => array('*'),                  // These fields are editable. If empty, defaults to *
+            )
+        ),
+        'delete' => array(
+            'type'      => 'delete',                                    // If not set, type maps to the key of this action
+            'enabled'   => true,                                        // Delete is enabled by default
+            'config'    => array(
+                'displayPrimaryKey'     => true,                        // Display the primary key of the record being deleted
+                'displayName'           => true,                        // Display the name of the record being deleted
+                'cascade'               => true,                        // Cascade delete queries
+            )
+        ),
+        'history' => array(
+            'type'      => 'history',                                   // If not set, type maps to the key of this action
+            'enabled'   => false,                                       // History is disabled by default. Requires Log.Logable
+        ),
+        'changelog' => array(
+            'type'      => 'changelog',                                 // If not set, type maps to the key of this action
+            'enabled'   => false,                                       // Changelog is disabled by default. Requires Log.Logable
+        ),
+    );
+
     function __construct() {
+        // Update the modelName if not set
+        if (empty($this->modelName)) {
+            $this->modelName = substr(get_class($this), 0 , -5);
+        }
+
         // Set a table if not already set
-        if (!isset($this->useTable)) {
+        if (empty($this->useTable)) {
             $this->useTable = Inflector::tableize($this->modelName);
         }
+
         // Iterate over validation rules to set proper defaults
         if (!empty($this->validations)) {
-            $validationRules = array();
-            foreach ($this->validations as $fieldName => $rules) {
-                if (is_string($rules)) {
-                    $options = array('rule' => $rules);
-                    $rule = $options['rule'];
+            $this->_updateValidationRules();
+        }
+
+        // Update the actions configuration
+        $this->actions = Set::merge($this->_actions, $this->actions);
+    }
+
+/**
+ * Update the class validation rules to conform to multiple validation 
+ * rule standards. Also updates the message if currently non-existent.
+ * Properly deals with all core validation rule use-cases
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ */
+    function _updateValidationRules() {
+        $validationRules = array();
+        foreach ($this->validations as $fieldName => $rules) {
+            if (is_string($rules)) {
+                $options = array('rule' => $rules);
+                $rule = $options['rule'];
+                $options['message'] = $this->_validationMessage(
+                    $fieldName,
+                    $rule,
+                    $options
+                );
+                $validationRules[$fieldName][$rule] = $options;
+                continue;
+            }
+
+            foreach ($rules as $alias => $options) {
+                if (is_string($options) || Set::numeric(array_keys($options))) {
+                    $options = array('rule' => $options);
+                }
+                $rule = $options['rule'];
+                if (is_array($rule)) {
+                    $rule = current($rule);
+                }
+                if (empty($options['message'])) {
                     $options['message'] = $this->_validationMessage(
                         $fieldName,
-                        $rule,
+                        strtolower($rule),
                         $options
                     );
-                    $validationRules[$fieldName][$rule] = $options;
-                    continue;
                 }
-
-                foreach ($rules as $alias => $options) {
-                    if (is_string($options) || Set::numeric(array_keys($options))) {
-                        $options = array('rule' => $options);
-                    }
-                    $rule = $options['rule'];
-                    if (is_array($rule)) {
-                        $rule = current($rule);
-                    }
-                    if (empty($options['message'])) {
-                        $options['message'] = $this->_validationMessage(
-                            $fieldName,
-                            strtolower($rule),
-                            $options
-                        );
-                    }
-                    $validationRules[$fieldName][$alias] = $options;
-                }
+                $validationRules[$fieldName][$alias] = $options;
             }
-            $this->validations = $validationRules;
         }
+        $this->validations = $validationRules;
     }
 
     function _validationMessage($fieldName, $rule, $options = array()) {
