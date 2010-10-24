@@ -183,13 +183,17 @@ class CakeAdmin {
                 if (is_string($rules)) {
                     $options = array('rule' => $rules);
                     $rule = $options['rule'];
-                    $options['message'] = $this->_validationMessage($fieldName, $rule, $options);
+                    $options['message'] = $this->_validationMessage(
+                        $fieldName,
+                        $rule,
+                        $options
+                    );
                     $validationRules[$fieldName][$rule] = $options;
                     continue;
                 }
 
                 foreach ($rules as $alias => $options) {
-                    if (!is_array($options)) {
+                    if (is_string($options) || Set::numeric(array_keys($options))) {
                         $options = array('rule' => $options);
                     }
                     $rule = $options['rule'];
@@ -197,7 +201,11 @@ class CakeAdmin {
                         $rule = current($rule);
                     }
                     if (empty($options['message'])) {
-                        $options['message'] = $this->_validationMessage($fieldName, $rule, $options);
+                        $options['message'] = $this->_validationMessage(
+                            $fieldName,
+                            strtolower($rule),
+                            $options
+                        );
                     }
                     $validationRules[$fieldName][$alias] = $options;
                 }
@@ -217,10 +225,10 @@ class CakeAdmin {
 
         // Requires only fieldName
         $fieldNameOnly = array(
-            'alphaNumeric', 'blank', 'boolean',
+            'alphanumeric', 'blank', 'boolean',
             'email', 'extension', 'file',
-            'ip', 'inList', 'isUnique',
-            'money', 'numeric', 'notEmpty',
+            'ip', 'inlist', 'isunique',
+            'money', 'numeric', 'notempty',
             'phone', 'postal', 'ssn', 'url'
         );
         $ruleMessage = str_replace("{{field}}", $fieldName, $ruleMessage);
@@ -229,31 +237,63 @@ class CakeAdmin {
         // Require min/max
         $minMaxRequired = array('between', 'multiple', 'range');
         if (in_array($rule, $minMaxRequired)) {
-            $min = (isset($options['min'])) ? $options['min'] : 'min';
-            $max = (isset($options['max'])) ? $options['max'] : 'max';
+            $min = 'min';
+            $max = 'max';
+            if (!empty($options['min'])) {
+                $min = $options['min'];
+            } else if (is_array($options['rule']) && count($options['rule']) === 3) {
+                $min = $options['rule'][1];
+            }
+            if (!empty($options['max'])) {
+                $max = $options['max'];
+            } else if (is_array($options['rule']) && count($options['rule']) === 3) {
+                $max = $options['rule'][2];
+            }
             $ruleMessage = str_replace("{{min}}", $min, $ruleMessage);
             return str_replace("{{max}}", $max, $ruleMessage);
         }
 
         // Require Length
-        $lengthRequired = array('decimal', 'maxLength', 'minLength');
+        $lengthRequired = array('decimal', 'maxlength', 'minlength');
         if (in_array($rule, $lengthRequired)) {
-            $length = (isset($options['length'])) ? $options['length'] : 'length';
+            $length = 'length';
+            if (!empty($options['length'])) {
+                $length = $options['length'];
+            } else if (is_array($options['rule']) && count($options['rule']) === 2) {
+                $length = $options['rule'][1];
+            }
             return str_replace("{{length}}", $length, $ruleMessage);
         }
+
         // Comparison, [comparison, value]
         if ($rule == 'comparison') {
-            $comparison = (isset($options['comparison'])) ? $options['comparison'] : 'comparison';
-            $value = (isset($options['value'])) ? $options['value'] : 'value';
+            $comparison = 'comparison';
+            $value = 'value';
+            if (!empty($options['comparison'])) {
+                $comparison = $options['comparison'];
+            } else if (is_array($options['rule']) && count($options['rule']) === 3) {
+                $comparison = $options['rule'][1];
+            }
+            if (!empty($options['value'])) {
+                $value = $options['value'];
+            } else if (is_array($options['rule']) && count($options['rule']) === 3) {
+                $value = $options['rule'][2];
+            }
             $ruleMessage = str_replace("{{comparison}}", $comparison, $ruleMessage);
             return str_replace("{{value}}", $value, $ruleMessage);
         }
 
         // Format
         if ($rule == 'format') {
-            $format = (isset($options['format'])) ? $options['format'] : 'format';
+            $format = 'format';
+            if (!empty($options['format'])) {
+                $format = $options['format'];
+            } else if (is_array($options['rule']) && count($options['rule']) === 2) {
+                $format = $options['rule'][1];
+            }
             return str_replace("{{format}}", $format, $ruleMessage);
         }
+
         return $ruleMessage;
     }
 
