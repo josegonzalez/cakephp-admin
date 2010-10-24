@@ -38,8 +38,8 @@ class CakeAdmin {
  * From everything else. One can also App::import() the plugin
  * Models/Views and import the admin goodness.
  *
- * Isolating the CakeAdmin'ed app from everything else is good 
- * for ease of updating code without have to worry about a 
+ * Isolating the CakeAdmin'ed app from everything else is good
+ * for ease of updating code without have to worry about a
  * re-admin deleting customizations
  *
  * @var string
@@ -116,7 +116,7 @@ class CakeAdmin {
         'view'      => 'view',
         'edit'      => 'edit',
         'delete'    => 'delete',
-        'history'   => 'history', 
+        'history'   => 'history',
         'changelog' => 'changelog',
     );
 
