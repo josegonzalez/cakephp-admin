@@ -77,8 +77,7 @@ Validation rules are parsed in two steps. The @CakeAdmin@ @__construct()@ method
 
 The default validation rules can be overridden easily. They are defined within the @CakeAdmin@ class. The following is default set:
 
-<pre><code>
-/**
+<pre><code>/**
  * Default Validation Messages
  *
  * Messages may contain the string `{{field}}` in order to support
@@ -124,8 +123,7 @@ The default validation rules can be overridden easily. They are defined within t
 
 If you would like to override them within your own admin classes, either include the above in your variable declaration, or override in the @__construct()@ method:
 
-<pre><code>
-    function __construct() {
+<pre><code>    function __construct() {
         $this->_validationMessages = array_merge(array(
             'custom' => 'Custom message for {{field}}'),
             $this->_validationMessages
@@ -136,8 +134,7 @@ If you would like to override them within your own admin classes, either include
 
 All the default validation rules work as normal, with option parsing and everything. For example, given:
 
-<pre><code>
-    var $validations    = array(
+<pre><code>    var $validations    = array(
         'content'   => array(
             'required'  => 'notempty',
             'maxLength' => array('maxLength', 255),
@@ -153,8 +150,7 @@ All the default validation rules work as normal, with option parsing and everyth
 
 @CakeAdmin@ will generate the following @__construct()@ method:
 
-<pre><code>
-    function __construct($id = false, $table = null, $ds = null) {
+<pre><code>    function __construct($id = false, $table = null, $ds = null) {
         parent::__construct($id, $table, $ds);
         $this->validate = array(
             'content' => array(
@@ -183,11 +179,10 @@ h2. TODO
 
 * Unit Tests!!!
 * View Templates and partials
-* More extensive docs
+* Behavior option parsing
 * Theme support
-* Better Warnings
 * App Template support
-* Support for admin files in plugins
+* Support for CakeAdmin files in plugins
 * Global layout partials
 * Screencast
 
