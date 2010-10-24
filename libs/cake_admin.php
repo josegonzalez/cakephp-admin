@@ -211,8 +211,8 @@ class CakeAdmin {
 
         // Retrieve rule message
         $ruleMessage = '{{field}} must be valid input';
-        if (in_array($rule, $this->_validationMessages)) {
-            $ruleMessage = $this->_validationMessages[$rule];
+        if ($this->_in_arrayi($rule, array_keys($this->_validationMessages))) {
+            $ruleMessage = $this->_validationMessages[strtolower($rule)];
         }
 
         // Requires only fieldName
@@ -257,6 +257,11 @@ class CakeAdmin {
         return $ruleMessage;
     }
 
+    function _in_arrayi($needle, $haystack) {
+        return in_array(strtolower($needle), array_map('strtolower', $haystack));
+    }
+
+
 /**
  * Default Validation Messages
  *
@@ -272,7 +277,7 @@ class CakeAdmin {
  * @var string
  */
     var $_validationMessages = array(
-        'alphaNumeric'  => '{{field}} must only contain letters and numbers',
+        'alphanumeric'  => '{{field}} must only contain letters and numbers',
         'between'       => '{{field}} must be between {{min}} and {{max}} characters long',
         'blank'         => '{{field}} must be blank or contain only whitespace characters',
         'boolean'       => 'Incorrect value for {{field}}',
@@ -286,13 +291,13 @@ class CakeAdmin {
         'file'          => '{{field}} must be a valid file name',
         'ip'            => '{{field}} must be a valid IP address',
         'inList'        => 'Your selection for {{field}} must be in the given list',
-        'isUnique'      => 'This {{field}} has already been taken',
-        'maxLength'     => '{{field}} must have less than {{length}} characters',
-        'minLength'     => '{{field}} must have at least {{length}} characters',
+        'isunique'      => 'This {{field}} has already been taken',
+        'maxlength'     => '{{field}} must have less than {{length}} characters',
+        'minlength'     => '{{field}} must have at least {{length}} characters',
         'money'         => '{{field}} must be a valid monetary amount',
         'multiple'      => 'You must select at least {{min}} and no more than {{max}} options for {{field}}',
         'numeric'       => '{{field}} must be numeric',
-        'notEmpty'      => '{{field}} cannot be empty',
+        'notempty'      => '{{field}} cannot be empty',
         'phone'         => '{{field}} must be a valid phone number',
         'postal'        => '{{field}} must be a valid postal code',
         'range'         => '{{field}} must be between {{min}} and {{max}}',
