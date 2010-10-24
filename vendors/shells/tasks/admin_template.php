@@ -132,6 +132,7 @@ class AdminTemplateTask extends Shell {
 		}
 
 		$this->err(sprintf(__('Could not find template for %s', true), $filename));
+		$this->err(sprintf(__('Error in path %s', true), $themeFile));
 		return false;
 	}
 }
