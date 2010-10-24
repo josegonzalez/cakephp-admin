@@ -334,7 +334,7 @@ class AdminShell extends Shell {
         $associations = $this->findHasOneAndMany($modelObj, $associations);
         $associations = $this->findHasAndBelongsToMany($modelObj, $associations);
 
-        $this->AdminTemplate->set(compact('methods', 'associations', 'admin'));
+        $this->AdminTemplate->set(compact('methods', 'associations', 'metadata', 'admin'));
         $contents = $this->AdminTemplate->generate($path, 'model');
 
         $path = APP . 'plugins' . DS . $admin->plugin . DS . 'models' . DS;
