@@ -29,6 +29,22 @@ class <?php echo $admin->modelName ?><?php echo Inflector::humanize($admin->plug
 	var $useTable     = '<?php echo $admin->useTable; ?>';
 	var $primaryKey   = '<?php echo $admin->primaryKey; ?>';
 	var $recursive    = -1;
+<?php
+$findMethods = array();
+foreach ($metadata as $action => $data) {
+	if (!empty($data->finders)) {
+		foreach ($data->finders as $finder) {
+			$findMethods[] = $finder;
+		}
+	}
+}
+if (!empty($findMethods)) : ?>
+	var $_findMethods = array(
+<?php foreach ($findMethods as $findMethod): ?>
+		'<?php echo $findMethod; ?>' => true,
+<?php endforeach; ?>
+	);
+<?php endif; ?>
 <?php if (!empty($admin->validations)): ?>
 
 	public function __construct($id = false, $table = null, $ds = null) {
