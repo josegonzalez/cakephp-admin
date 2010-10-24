@@ -75,13 +75,33 @@ if (!empty($findMethods)) : ?>
 							$i = 0;
 							foreach ($value as $k => $v) {
 								if (!is_array($v)) {
-									echo "'{$v}'";
+									if (is_numeric($v)) {
+										echo $v;
+									} else if ($v === false) {
+										echo "false";
+									} else if ($v === true) {
+										echo "true";
+									} else if ($v === null) {
+										echo "null";
+									} else {
+										echo "'{$v}'";
+									}
 								} else {
 									$paramCount = count($v) - 1;
 									$j = 0;
 									echo "array(";
 									foreach ($v as $param => $paramValue) {
-										echo "'{$paramValue}'";
+										if (is_numeric($paramValue)) {
+											echo $paramValue;
+										} else if ($paramValue === false) {
+											echo "false";
+										} else if ($paramValue === true) {
+											echo "true";
+										} else if ($paramValue === null) {
+											echo "null";
+										} else {
+											echo "'{$paramValue}'";
+										}
 										if ($j < $paramCount) {
 											echo ", ";
 										}
@@ -95,7 +115,17 @@ if (!empty($findMethods)) : ?>
 								$i++;
 							}
 						} else {
-							echo "'{$value}'";
+							if (is_numeric($value)) {
+								echo $value;
+							} else if ($value === false) {
+								echo "false";
+							} else if ($value === true) {
+								echo "true";
+							} else if ($value === null) {
+								echo "null";
+							} else {
+								echo "'{$value}'";
+							}
 						}
 ?>),
 <?php 					continue; ?>
@@ -104,7 +134,17 @@ if (!empty($findMethods)) : ?>
 					'message' => __d('<?php echo $admin->plugin; ?>', '<?php echo $value; ?>', true),
 <?php					continue;?>
 <?php 				endif; ?>
-					'<?php echo $option; ?>' => '<?php echo $value; ?>',
+					'<?php echo $option; ?>' => <?php  if (is_numeric($value)) {
+															echo $value;
+														} else if ($value === false) {
+															echo "false";
+														} else if ($value === true) {
+															echo "true";
+														} else if ($value === null) {
+															echo "null";
+														} else {
+															echo "'{$value}'";
+														} ?>,
 <?php 			endforeach; ?>
 				),
 <?php 		endforeach; ?>
