@@ -25,6 +25,7 @@ echo "<?php\n";
 class <?php echo $controllerName; ?>Controller extends <?php echo Inflector::humanize($admin->plugin); ?>AppController {
 
 	var $name = '<?php echo $controllerName; ?>';
+	var $uses = array('<?php echo Inflector::humanize($admin->plugin); ?>.<?php echo $currentModelName; ?>');
 <?php
 if (count($admin->components)):
     echo "\tvar \$components = array(";
