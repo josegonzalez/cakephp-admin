@@ -60,7 +60,7 @@ if (!empty($findMethods)) : ?>
 <?php endif; ?>
 <?php if (!empty($admin->validations)): ?>
 
-	public function __construct($id = false, $table = null, $ds = null) {
+	function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
 		$this->validate = array(
 <?php 	foreach ($admin->validations as $field => $validations) : ?>
