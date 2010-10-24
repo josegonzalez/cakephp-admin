@@ -16,7 +16,6 @@ class AdminShell extends Shell {
  * Tasks to be loaded by this Task
  *
  * @var array
- * @access public
  */
     var $tasks = array('AdminTemplate');
 
@@ -43,7 +42,6 @@ class AdminShell extends Shell {
 /**
  * Override main
  *
- * @access public
  */
     function main() {
         // Create the admin object
@@ -568,7 +566,6 @@ class AdminShell extends Shell {
  * outputs the a list of possible models or controllers from database
  *
  * @param string $useDbConfig Database configuration name
- * @access public
  */
     function listAll($useDbConfig = null) {
         $this->_tables = $this->getAllTables($useDbConfig);
