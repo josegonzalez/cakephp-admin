@@ -239,13 +239,19 @@ class AdminShell extends Shell {
     function generate($admin) {
         if (!$this->generateAppController($admin)) {
             $this->out();
-            $this->out(sprintf('Failed to generate %s App Controller', Inflector::humanize($admin->plugin)));
+            $this->out(sprintf('Failed to generate %s AppController', Inflector::humanize($admin->plugin)));
             $this->out();
             return false;
         }
         if (($metadata = $this->generateController($admin)) == false) {
             $this->out();
             $this->out(sprintf('Failed to generate %s Controller', $this->_controllerName($admin->modelName)));
+            $this->out();
+            return false;
+        }
+        if (!$this->generateAppModel($admin)) {
+            $this->out();
+            $this->out(sprintf('Failed to generate %s AppModel', Inflector::humanize($admin->plugin)));
             $this->out();
             return false;
         }
@@ -277,6 +283,25 @@ class AdminShell extends Shell {
 
         $path = APP . 'plugins' . DS . $admin->plugin . DS;
         $filename = $path . $admin->plugin . '_app_controller.php';
+        if ($this->createFile($filename, $contents)) {
+            return $contents;
+        }
+        return false;
+    }
+
+/**
+ * undocumented function
+ *
+ * @return void
+ **/
+    function generateAppModel($admin) {
+        $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
+
+        $this->AdminTemplate->set(compact('admin'));
+        $contents = $this->AdminTemplate->generate($path, 'app_model');
+
+        $path = APP . 'plugins' . DS . $admin->plugin . DS;
+        $filename = $path . $admin->plugin . '_app_model.php';
         if ($this->createFile($filename, $contents)) {
             return $contents;
         }

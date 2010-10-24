@@ -75,7 +75,6 @@ h2. TODO
 
 * Unit Tests!!!
 * View Templates and partials
-* Model Template and method templates
 * More extensive docs
 * Theme support
 * Better Warnings
