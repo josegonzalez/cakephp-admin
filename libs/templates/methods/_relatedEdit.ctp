@@ -1,13 +1,15 @@
-    function _related<?php echo $find; ?>() {
 <?php
 // Create a model object
-
-App::import('Model', 'Model', false);
-$modelObj =& new Model(array(
-    'name' => $admin->modelName,
-    'table' => $admin->useTable,
-    'ds' => $admin->dbConnection
+$modelObj = ClassRegistry::init(array(
+	'class' => $admin->modelName,
+	'table' => $admin->useTable,
+	'ds'    => $admin->useDbConfig
 ));
+if (!empty($modelObj->belongsTo) && !empty($modelObj->hasAndBelongsToMany)) :
+
+?>
+	function _related<?php echo Inflector::camelize($find); ?>() {
+<?php
 $compacts = array();
 
 foreach (array('belongsTo', 'hasAndBelongsToMany') as $assoc):
@@ -15,14 +17,15 @@ foreach (array('belongsTo', 'hasAndBelongsToMany') as $assoc):
         if (!empty($associationName)):
             $otherModelName = Inflector::camelize(Inflector::singularize($associationName));
             $otherPluralName = Inflector::variable(Inflector::pluralize($associationName));
-            echo "        \${$otherPluralName} = \$this->{$otherModelName}->find('list');\n";
+            echo "\t\t\${$otherPluralName} = \$this->{$otherModelName}->find('list');\n";
             $compact[] = "'{$otherPluralName}'";
         endif;
     endforeach;
 endforeach;
 if (!empty($compact)):
-    echo "        return compact(".join(', ', $compact).");\n";
+    echo "\t\treturn compact(".join(', ', $compact).");\n";
 endif;
 
 ?>
-    }
+	}
+<?php endif; ?>

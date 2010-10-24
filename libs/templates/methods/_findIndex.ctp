@@ -1,9 +1,9 @@
 <?php
-App::import('Model', 'Model', false);
-$modelObj =& new Model(array(
-    'name' => $admin->modelName,
-    'table' => $admin->useTable,
-    'ds' => $admin->dbConnection
+
+$modelObj = ClassRegistry::init(array(
+	'class' => $admin->modelName,
+	'table' => $admin->useTable,
+	'ds'    => $admin->useDbConfig
 ));
 
 // Iterate over all the fields displayed on this view
@@ -22,6 +22,9 @@ if (empty($admin->views[$find]['fields'])) {
 
 if (!empty($admin->views[$find]['order'])) {
     $order = $admin->views[$find]['order'];
+    if (count($order) == 1) {
+        $order = current($order);
+    }
 } else {
     $order = "{$admin->primaryKey} ASC";
 }
@@ -48,30 +51,31 @@ $filters = array_unique($filters);
 // Available variables: [modelObj, filters, fields, order]
 
 ?>
-    function _find<?php echo $find; ?>($state, $query, $results = array()) {
-        if ($state === 'before') {
+	function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
+		if ($state === 'before') {
 <?php foreach ($filters as $filter) : ?>
-            if (!empty($query['params']['named']['<?php echo $filter; ?>'])) {
-                $query['conditions']['<?php echo "{$admin->modelName}.{$filter}"; ?>'] = $query['params']['named']['<?php echo $filter; ?>'];
-            }
+			if (!empty($query['params']['named']['<?php echo $filter; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->modelName}.{$filter}"; ?>'] = $query['params']['named']['<?php echo $filter; ?>'];
+			}
 <?php endforeach; ?>
 
 <?php foreach ($searches as $search) : ?>
-            if (!empty($query['data']['<?php echo $admin->modelName; ?>']['<?php echo $search; ?>'])) {
-                $query['conditions']['<?php echo "{$admin->modelName}.{$search}"; ?>'] = $query['data']['<?php echo $admin->modelName; ?>']['<?php echo $search; ?>'];
-            }
+			if (!empty($query['data']['<?php echo $admin->modelName; ?>']['<?php echo $search; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->modelName}.{$search}"; ?>'] = $query['data']['<?php echo $admin->modelName; ?>']['<?php echo $search; ?>'];
+			}
 <?php endforeach; ?>
+<?php if (!empty($fields)) : ?>
+			$query['fields'] = array('<?php echo join("', '", $fields); ?>');
+<?php endif; ?>
+			$query['order'] = array('<?php echo $order; ?>');
 
-            $query['fields'] = array(<?php echo join("', '", $fields); ?>)
-            $query['order'] = array(<?php echo $order; ?>)
-
-            if (!empty($query['operation'])) {
-                return $this->_findCount($state, $query, $results);
-            }
-            return $query;
-        }
-        if (!empty($query['operation'])) {
-            return $this->_findCount($state, $query, $results);
-        }
-        return $results;
-    }
+			if (!empty($query['operation'])) {
+				return $this->_findCount($state, $query, $results);
+			}
+			return $query;
+		}
+		if (!empty($query['operation'])) {
+			return $this->_findCount($state, $query, $results);
+		}
+		return $results;
+	}
