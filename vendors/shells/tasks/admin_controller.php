@@ -135,7 +135,7 @@ class AdminControllerTask extends Shell {
 
         $this->AdminTemplate->set(compact(
             'admin',
-            'configuration'
+            'configuration',
             'currentModelName',
             'pluralName',
             'singularName',
