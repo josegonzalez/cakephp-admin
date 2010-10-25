@@ -128,6 +128,8 @@ class CakeAdmin {
             'enabled'   => true,                                        // Add is enabled by default
             'config'    => array(
                 array(
+                    'classes'           => null,                        // Wraps the section in these classes
+                    'description'       => null,                        // Used to describe this section
                     'fields'            => array('*'),                  // These fields are editable.
                     'readonly'          => array('created', 'modified'),// These fields are read-only
                     'hidden'            => array(),                     // These fields are hidden
@@ -141,6 +143,8 @@ class CakeAdmin {
             'enabled'   => true,                                        // Edit is enabled by default
             'config'    => array(
                 array(
+                    'classes'           => null,                        // Wraps the section in these classes
+                    'description'       => null,                        // Used to describe this section
                     'fields'            => array('*'),                  // These fields are editable. If empty, defaults to *
                     'readonly'          => array('created', 'modified'),// These fields are read-only
                     'hidden'            => array(),                     // These fields are hidden
