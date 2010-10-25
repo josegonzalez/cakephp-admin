@@ -114,6 +114,7 @@ class CakeAdmin {
         'index' => array(
             'type'      => 'index',                                     // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Index is enabled by default
+            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
             'config'    => array(
                 'fields'                => array('*'),                  // array or string of fields to enable
                 'list_filter'           => null,                        // Allow these to be filterable
@@ -126,8 +127,10 @@ class CakeAdmin {
         'add' => array(
             'type'      => 'add',                                       // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Add is enabled by default
+            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
             'config'    => array(
                 array(
+                    'title'             => null,                        // Defaults to null
                     'classes'           => null,                        // Wraps the section in these classes
                     'description'       => null,                        // Used to describe this section
                     'fields'            => array('*'),                  // These fields are editable.
@@ -141,8 +144,10 @@ class CakeAdmin {
         'edit' => array(
             'type'      => 'edit',                                      // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Edit is enabled by default
+            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
             'config'    => array(
                 array(
+                    'title'             => null,                        // Defaults to null
                     'classes'           => null,                        // Wraps the section in these classes
                     'description'       => null,                        // Used to describe this section
                     'fields'            => array('*'),                  // These fields are editable. If empty, defaults to *
@@ -156,6 +161,7 @@ class CakeAdmin {
         'view' => array(
             'type'      => 'view',                                      // If not set, type maps to the key of this action
             'enabled'   => false,                                       // View is disabled by default
+            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
             'config'    => array(
                 'fields'                => array('*'),                  // These fields are editable. If empty, defaults to *
             )
@@ -163,6 +169,7 @@ class CakeAdmin {
         'delete' => array(
             'type'      => 'delete',                                    // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Delete is enabled by default
+            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
             'config'    => array(
                 'displayPrimaryKey'     => true,                        // Display the primary key of the record being deleted
                 'displayName'           => true,                        // Display the name of the record being deleted
@@ -171,11 +178,13 @@ class CakeAdmin {
         ),
         'history' => array(
             'type'      => 'history',                                   // If not set, type maps to the key of this action
-            'enabled'   => false,                                       // History is disabled by default. Requires Log.Logable
+            'enabled'   => false,                                       // History is disabled by default. Requires Logable
+            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
         ),
         'changelog' => array(
             'type'      => 'changelog',                                 // If not set, type maps to the key of this action
-            'enabled'   => false,                                       // Changelog is disabled by default. Requires Log.Logable
+            'enabled'   => false,                                       // Changelog is disabled by default. Requires Logable
+            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
         ),
     );
 
@@ -196,7 +205,14 @@ class CakeAdmin {
         }
 
         // Update the actions configuration
-        $this->actions = Set::merge($this->_actions, $this->actions);
+        if (empty($this->actions)) {
+            $this->actions = $this->_actions;
+        } else {
+            $this->actions = Set::merge(
+                $this->_actions,
+                $this->actions
+            );
+        }
     }
 
 /**
