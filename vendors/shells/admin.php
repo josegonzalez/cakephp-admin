@@ -17,7 +17,12 @@ class AdminShell extends Shell {
  *
  * @var array
  */
-    var $tasks = array('AdminTemplate', 'AdminModel', 'AdminController', 'AdminView');
+    var $tasks = array(
+        'AdminTemplate',
+        'AdminModel',
+        'AdminController',
+        'AdminView'
+    );
 
 /**
  * Holds tables found on connection.
@@ -93,7 +98,7 @@ class AdminShell extends Shell {
 
         if ($fails !== 0) {
             $this->out(sprintf(
-                __('Please fix all %s errors before regenerating admin', true),
+                __('Fix all %s errors before regenerating admin', true),
                 $fails
             ));
         }
@@ -220,7 +225,9 @@ class AdminShell extends Shell {
         // Check that the directories and files are writeable by shell
         foreach ($required as $directory) {
             if (!$this->handler->chmod($path . DS .$directory)) {
-                return sprintf(__('Directory not writeable: %s', true), $directory);
+                return sprintf(__('Directory not writeable: %s', true), 
+                    $directory
+                );
             }
         }
 
@@ -237,31 +244,41 @@ class AdminShell extends Shell {
     function generate($admin) {
         if (!$this->AdminController->generateAppController($admin)) {
             $this->out();
-            $this->out(sprintf('Failed to generate %s AppController', Inflector::humanize($admin->plugin)));
+            $this->out(sprintf('Failed to generate %s AppController',
+                Inflector::humanize($admin->plugin)
+            ));
             $this->out();
             return false;
         }
         if (($metadata = $this->AdminController->generate($admin)) == false) {
             $this->out();
-            $this->out(sprintf('Failed to generate %s Controller', $this->_controllerName($admin->modelName)));
+            $this->out(sprintf('Failed to generate %s Controller',
+                $this->_controllerName($admin->modelName)
+            ));
             $this->out();
             return false;
         }
         if (!$this->AdminModel->generateAppModel($admin)) {
             $this->out();
-            $this->out(sprintf('Failed to generate %s AppModel', Inflector::humanize($admin->plugin)));
+            $this->out(sprintf('Failed to generate %s AppModel',
+                Inflector::humanize($admin->plugin)
+            ));
             $this->out();
             return false;
         }
         if (!$this->AdminModel->generate($admin, $metadata))  {
             $this->out();
-            $this->out(sprintf('Failed to generate %s Model', $admin->modelName));
+            $this->out(sprintf('Failed to generate %s Model',
+                $admin->modelName
+            ));
             $this->out();
             return false;
         }
         if (!$this->AdminView->generate($admin)) {
             $this->out();
-            $this->out(sprintf('Failed to generate %s Views', $this->_controllerName($admin->modelName)));
+            $this->out(sprintf('Failed to generate %s Views',
+                $this->_controllerName($admin->modelName)
+            ));
             $this->out();
             return false;
         }
