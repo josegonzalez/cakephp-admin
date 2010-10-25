@@ -1,6 +1,13 @@
 <?php
 class AdminControllerTask extends Shell {
 
+    var $pluginDir = null;
+
+    function __construct(&$dispatch) {
+        parent::__construct($dispatch);
+        $this->directories();
+    }
+
 /**
  * Tasks to be loaded by this Task
  *
@@ -8,18 +15,28 @@ class AdminControllerTask extends Shell {
  */
     var $tasks = array('AdminTemplate');
 
+    function directories() {
+        $this->pluginDir        = APP . 'plugins' . DS;
+        $this->templateDir      = array();
+        $this->templateDir[]    = $this->pluginDir;
+        $this->templateDir[]    = 'cake_admin' . DS;
+        $this->templateDir[]    = 'libs' . DS;
+        $this->templateDir[]    = 'templates' . DS;
+        $this->templateDir      = implode($this->templateDir);
+    }
+
 /**
  * undocumented function
  *
  * @return void
  **/
     function generateAppController($admin) {
-        $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
+        $path = $this->templateDir . 'classes';
 
         $this->AdminTemplate->set(compact('admin'));
         $contents = $this->AdminTemplate->generate($path, 'app_controller');
 
-        $path = APP . 'plugins' . DS . $admin->plugin . DS;
+        $path = $this->pluginDir . $admin->plugin . DS;
         $filename = $path . $admin->plugin . '_app_controller.php';
         if ($this->createFile($filename, $contents)) {
             return $contents;
@@ -32,23 +49,31 @@ class AdminControllerTask extends Shell {
  *
  * @return void
  **/
-    function generate($admin) {
-        $path       = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
-
+    function generate($admin) {;
         $controllerName = $this->_controllerName($admin->modelName);
-        $actions    = $this->generateContents($admin);
+        $controllerPath = $this->_controllerPath($controllerName);
+        $actions        = $this->generateContents($admin);
 
         if (!$actions) return false;
 
-        $metadata   = $actions['metadata'];
-        $actions    = $actions['actions'];
-
-        $currentModelName = $this->_modelName($this->_controllerName($admin->modelName)). 'Admin';
-        $this->AdminTemplate->set(compact('controllerName', 'currentModelName', 'actions', 'admin'));
+        $path           = $this->templateDir . 'classes';
+        $metadata       = $actions['metadata'];
+        $actions        = $actions['actions'];
+        $currentModelName = "{$admin->modelName}Admin";
+        $this->AdminTemplate->set(compact(
+            'controllerName',
+            'currentModelName',
+            'actions',
+            'admin'
+        ));
         $contents   = $this->AdminTemplate->generate($path, 'controller');
+        $filename   = array();
+        $filename[] = $this->pluginDir;
+        $filename[] = $admin->plugin . DS;
+        $filename[] = 'controllers' . DS;
+        $filename[] = $controllerPath . '_controller.php';
+        $filename   = implode($path);
 
-        $path       = APP . 'plugins' . DS . $admin->plugin . DS . 'controllers' . DS;
-        $filename   = $path . $this->_controllerPath($controllerName) . '_controller.php';
         if ($this->createFile($filename, $contents)) {
             return $metadata;
         }
@@ -61,28 +86,29 @@ class AdminControllerTask extends Shell {
  * @return void
  **/
     function generateContents($admin) {
-        $actions = '';
-        $actionMetadata = array();
-        foreach ($admin->actions as $alias => $action) {
-            $plugin = null;
-            if (is_array($action)) {
-                $plugin = $action['plugin'];
-                $action = $action['action'];
-            }
-            $actionAlias = (ctype_digit($alias)) ? $action : $alias;
+        $actions        = '';
+        $metadata       = array();
+
+        foreach ($admin->actions as $alias => $configuration) {
+            if ($configuration['enabled'] !== true) continue;
 
             $results = $this->getAction($admin, array(
-                'action' => $action,
-                'plugin' => $plugin,
-                'alias'  => $alias
+                'action' => $configuration['type'],
+                'plugin' => $configuration['plugin'],
+                'alias'  => $alias,
+                'config' => $configuration
             ));
             if (!$results) return false;
 
-            list($actionContents, $metadata) = $results;
-            $actionMetadata[$alias] = $metadata;
+            list($actionContents, $actionMetadata) = $results;
+            $metadata[$alias] = array(
+                'config'    => $configuration,
+                'metadata'  => $actionMetadata
+            );
             $actions .= "{$actionContents}\n\n";
         }
-        return array('actions' => $actions, 'metadata' => $actionMetadata);
+
+        return array('actions' => $actions, 'metadata' => $metadata);
     }
 
 /**
@@ -91,23 +117,25 @@ class AdminControllerTask extends Shell {
  * @return void
  **/
     function getAction($admin, $options = array()) {
-        if (!empty($options['plugin'])) {
-            $intermediate = 'plugins' . DS . $options['plugin'] . DS;
+        $endPath = 'libs' . DS . 'templates' . DS . 'actions';
+        if (empty($options['plugin'])) {
+            $path = APP . DS . $endPath;
         } else {
-            $intermediate = 'plugins' . DS . 'cake_admin' . DS;
+            $path = $this->pluginsDir . $options['plugin'] . $endPath;
         }
 
-        $path = APP . $intermediate . 'libs' . DS . 'templates' . DS . 'actions';
-
         $alias              = $options['alias'];
-        $currentModelName   = $this->_modelName($this->_controllerName($admin->modelName)). 'Admin';
+        $configuration      = $options['configuration'];
+        $currentModelName   = $admin->modelName . 'Admin';
+        $controllerName     = $this->_controllerName($admin->modelName);
         $pluralName         = $this->_pluralName($currentModelName);
         $singularName       = Inflector::variable($currentModelName);
-        $singularHumanName  = $this->_singularHumanName($this->_controllerName($admin->modelName));
-        $pluralHumanName    = $this->_pluralName($this->_controllerName($admin->modelName));
+        $singularHumanName  = $this->_singularHumanName($controllerName);
+        $pluralHumanName    = $this->_pluralName($controllerName);
 
         $this->AdminTemplate->set(compact(
             'admin',
+            'configuration'
             'currentModelName',
             'pluralName',
             'singularName',
