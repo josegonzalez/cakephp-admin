@@ -1,5 +1,15 @@
 <?php
-
+/**
+ * CakeAdmin
+ *
+ * Base admin class from which all descendent classes are derived.
+ *
+ * @copyright     Copyright 2010, Jose Diaz-Gonzalez. (http://josediazgonzalez.com)
+ * @link          http://josediazgonzalez.com
+ * @package       cake_admin
+ * @subpackage    cake_admin.libs
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ **/
 class CakeAdmin {
 
 /**
@@ -55,14 +65,14 @@ class CakeAdmin {
 /**
  * Apply all these Components to the Controller
  *
- * @var string
+ * @var array
  **/
     var $components     = array();
 
 /**
  * Apply all these Helpers to the Controller
  *
- * @var string
+ * @var array
  **/
     var $helpers        = array();
 
@@ -85,7 +95,7 @@ class CakeAdmin {
  * Relations to use on this model. Defaults to belongsTo.
  * Assumes conventions, but you can configure if necessary
  *
- * @var string
+ * @var array
  */
     var $relations      = array();
 
@@ -187,7 +197,10 @@ class CakeAdmin {
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
         ),
     );
-
+/**
+ * CakeAdmin constructor. Correctly merges descendent classes with
+ * itself for further use
+ */
     function __construct() {
         // Update the modelName if not set
         if (empty($this->modelName)) {
@@ -259,6 +272,14 @@ class CakeAdmin {
         $this->validations = $validationRules;
     }
 
+/**
+ * Constructs a validation message for a given fieldname/rule combination
+ *
+ * @param string $fieldName fieldname
+ * @param string $rule name of a rule
+ * @param array $options validation rule options
+ * @return string
+ */
     function _validationMessage($fieldName, $rule, $options = array()) {
         $fieldName = Inflector::humanize((preg_replace('/_id$/', '', $fieldName)));
 
@@ -342,7 +363,15 @@ class CakeAdmin {
         return $ruleMessage;
     }
 
-    function _in_arrayi($needle, $haystack) {
+/**
+ * Searches haystack for needle. Case-insensitive on the haystack
+ *
+ * @param mixed $needle The searched value
+ * @param array $haystack The stack
+ * @param bool $strict If the third parameter strict is set to TRUE then the in_array() function will also check the types of the needle in the haystack.
+ * @return bool
+ */
+    function _in_arrayi($needle, $haystack, $strict = false) {
         return in_array(strtolower($needle), array_map('strtolower', $haystack));
     }
 
@@ -359,7 +388,7 @@ class CakeAdmin {
  * in the __construct() method to array_merge with the defaults, or
  * specify all the messages that may be used
  *
- * @var string
+ * @var array
  */
     var $_validationMessages = array(
         'alphanumeric'  => '{{field}} must only contain letters and numbers',
