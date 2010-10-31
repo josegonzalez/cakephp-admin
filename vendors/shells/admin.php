@@ -2,14 +2,17 @@
 /**
  * Admin Shell
  *
- * [Short Description]
+ * Generates admin-like plugins based on composition of cakephp templates
  *
- * @package cake_admin
- * @subpackage cake_admin.vendors.shells
- * @author Jose Diaz-Gonzalez
- * @version $Id$
+ * @copyright     Copyright 2010, Jose Diaz-Gonzalez. (http://josediazgonzalez.com)
+ * @link          http://josediazgonzalez.com
+ * @package       cake_admin
+ * @subpackage    cake_admin.vendors.shells
+ * @since         ApiGenerator 0.1
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  **/
-App::import('Lib', 'CakeAdmin.cake_admin');
+if (!class_exists('CakeAdmin')) App::import('Lib', 'CakeAdmin.cake_admin');
+if (!class_exists('Shell')) App::import('Core', 'Shell');
 class AdminShell extends Shell {
 
 /**
