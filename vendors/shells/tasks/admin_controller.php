@@ -1,13 +1,6 @@
 <?php
 class AdminControllerTask extends Shell {
 
-    var $pluginDir = null;
-
-    function __construct(&$dispatch) {
-        parent::__construct($dispatch);
-        $this->directories();
-    }
-
 /**
  * Tasks to be loaded by this Task
  *
@@ -15,6 +8,34 @@ class AdminControllerTask extends Shell {
  */
     var $tasks = array('AdminTemplate');
 
+/**
+ * Constructed plugin directory
+ *
+ * @var string
+ */
+    var $pluginDir = null;
+
+/**
+ * Constructed base templateDir
+ *
+ * @var string
+ **/
+    var $templateDir = null;
+
+/**
+ *  Constructs this Shell instance.
+ *
+ */
+    function __construct(&$dispatch) {
+        parent::__construct($dispatch);
+        $this->directories();
+    }
+
+/**
+ * Populates the plugin and template directory properties
+ *
+ * @return void
+ */
     function directories() {
         $this->pluginDir        = APP . 'plugins' . DS;
         $this->templateDir      = array();
@@ -72,7 +93,7 @@ class AdminControllerTask extends Shell {
         $filename[] = $admin->plugin . DS;
         $filename[] = 'controllers' . DS;
         $filename[] = $controllerPath . '_controller.php';
-        $filename   = implode($path);
+        $filename   = implode($filename);
 
         if ($this->createFile($filename, $contents)) {
             return $metadata;
@@ -121,11 +142,11 @@ class AdminControllerTask extends Shell {
         if (empty($options['plugin'])) {
             $path = APP . DS . $endPath;
         } else {
-            $path = $this->pluginsDir . $options['plugin'] . $endPath;
+            $path = $this->pluginDir . $options['plugin'] . DS. $endPath;
         }
 
         $alias              = $options['alias'];
-        $configuration      = $options['configuration'];
+        $configuration      = $options['config'];
         $currentModelName   = $admin->modelName . 'Admin';
         $controllerName     = $this->_controllerName($admin->modelName);
         $pluralName         = $this->_pluralName($currentModelName);
@@ -135,13 +156,13 @@ class AdminControllerTask extends Shell {
 
         $this->AdminTemplate->set(compact(
             'admin',
+            'alias',
             'configuration',
             'currentModelName',
             'pluralName',
             'singularName',
             'singularHumanName',
-            'pluralHumanName',
-            'alias'
+            'pluralHumanName'
         ));
         $content = $this->AdminTemplate->generate($path, $options['action']);
         return $this->AdminTemplate->parseMetadata($content);

@@ -9,6 +9,43 @@ class AdminModelTask extends Shell {
     var $tasks = array('AdminTemplate');
 
 /**
+ * Constructed plugin directory
+ *
+ * @var string
+ */
+    var $pluginDir = null;
+
+/**
+ * Constructed base templateDir
+ *
+ * @var string
+ **/
+    var $templateDir = null;
+
+/**
+ *  Constructs this Shell instance.
+ *
+ */
+    function __construct(&$dispatch) {
+        parent::__construct($dispatch);
+        $this->directories();
+    }
+
+/**
+ * Populates the plugin and template directory properties
+ *
+ * @return void
+ */
+    function directories() {
+        $this->pluginDir        = APP . 'plugins' . DS;
+        $this->templateDir      = array();
+        $this->templateDir[]    = $this->pluginDir;
+        $this->templateDir[]    = 'cake_admin' . DS;
+        $this->templateDir[]    = 'libs' . DS;
+        $this->templateDir[]    = 'templates' . DS;
+        $this->templateDir      = implode($this->templateDir);
+    }
+/**
  * undocumented function
  *
  * @return void
@@ -81,33 +118,37 @@ class AdminModelTask extends Shell {
     function generateContents($admin, $metadata) {
         $finders = '';
         $related = '';
-        foreach ($admin->actions as $alias => $action) {
-            $plugin = null;
-            if (is_array($action)) {
-                $plugin = $action['plugin'];
-                $action = $action['action'];
+
+        foreach ($admin->actions as $alias => $configuration) {
+            if ($configuration['enabled'] !== true) continue;
+
+            if (empty($metadata[$alias])) {
+                $actionMetadata = array();
+            } else {
+                $actionMetadata = $metadata[$alias]['metadata'];
             }
-            $actionAlias = (ctype_digit($alias)) ? $action : $alias;
-            $actionMetadata = (isset($metadata[$alias])) ? $metadata[$alias] : array() ;
 
             if (!empty($actionMetadata->finders)) {
                 foreach ($actionMetadata->finders as $finder) {
                     $contents = $this->getFinder($admin, array(
-                        'action'    => $action,
-                        'plugin'    => $plugin,
+                        'config'    => $metadata[$alias]['config'],
+                        'action'    => $configuration['type'],
+                        'plugin'    => $configuration['plugin'],
                         'alias'     => $alias,
-                        'finder'    => $finder
+                        'finder'    => $finder,
                     ));
                     if (!empty($contents)) $finders .= "{$contents}\n\n";
                 }
             }
+
             if (!empty($actionMetadata->related)) {
                 foreach ($actionMetadata->related as $relatedFinder) {
                     $contents = $this->getRelatedFinder($admin, array(
-                        'action'    => $action,
-                        'plugin'    => $plugin,
+                        'config'    => $metadata[$alias]['config'],
+                        'action'    => $configuration['type'],
+                        'plugin'    => $configuration['plugin'],
                         'alias'     => $alias,
-                        'related'   => $relatedFinder
+                        'related'   => $relatedFinder,
                     ));
                     if (!empty($contents)) $related .= "{$contents}\n\n";
                 }
@@ -129,7 +170,7 @@ class AdminModelTask extends Shell {
  */
     function getFinder($admin, $options) {
         $path = $this->_getModelMethod($admin, $options['finder'], $options);
-        $find = Inflector::camelize($options['finder']);
+        $find = Inflector::camelize($options['action']);
         return $this->AdminTemplate->generate($path, "_find{$find}");
     }
 
@@ -142,7 +183,7 @@ class AdminModelTask extends Shell {
  */
     function getRelatedFinder($admin, $options) {
         $path = $this->_getModelMethod($admin, $options['related'], $options);
-        $find = Inflector::camelize($options['related']);
+        $find = Inflector::camelize($options['action']);
         return $this->AdminTemplate->generate($path, "_related{$find}");
     }
 
@@ -154,30 +195,32 @@ class AdminModelTask extends Shell {
  * @return void
  */
     function _getModelMethod($admin, $find, $options) {
-        if (!empty($options['plugin'])) {
-            $intermediate = 'plugins' . DS . $options['plugin'] . DS;
+        $endPath = 'libs' . DS . 'templates' . DS . 'methods';
+        if (empty($options['plugin'])) {
+            $path = APP . DS . $endPath;
         } else {
-            $intermediate = 'plugins' . DS . 'cake_admin' . DS;
+            $path = $this->pluginDir . $options['plugin'] . DS. $endPath;
         }
 
-        $path = APP . $intermediate . 'libs' . DS . 'templates' . DS . 'methods';
-
         $alias              = $options['alias'];
-        $currentModelName   = $this->_modelName($this->_controllerName($admin->modelName)). 'Admin';
+        $configuration      = $options['config'];
+        $currentModelName   = $admin->modelName . 'Admin';
+        $controllerName     = $this->_controllerName($admin->modelName);
         $pluralName         = $this->_pluralName($currentModelName);
         $singularName       = Inflector::variable($currentModelName);
-        $singularHumanName  = $this->_singularHumanName($this->_controllerName($admin->modelName));
-        $pluralHumanName    = $this->_pluralName($this->_controllerName($admin->modelName));
+        $singularHumanName  = $this->_singularHumanName($controllerName);
+        $pluralHumanName    = $this->_pluralName($controllerName);
 
         $this->AdminTemplate->set(compact(
+            'find',
             'admin',
+            'alias',
+            'configuration',
             'currentModelName',
             'pluralName',
             'singularName',
             'singularHumanName',
-            'pluralHumanName',
-            'alias',
-            'find'
+            'pluralHumanName'
         ));
         return $path;
     }
