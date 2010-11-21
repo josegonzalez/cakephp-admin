@@ -141,7 +141,7 @@ class CakeAdmin {
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
             'methods'   => array('find'),                               // Has Finders? Has Related Finders?
             'config'    => array(
-                'fields'                => array('*'),                  // array or string of fields to enable
+                'fields'                => array('*'),                  // Array or string of fields to enable
                 'list_filter'           => null,                        // Allow these to be filterable
                 'link'                  => array('id'),                 // Link to object here. Must be in fields
                 'order'                 => 'id ASC',                    // Default ordering
@@ -191,7 +191,7 @@ class CakeAdmin {
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
             'methods'   => array('find'),                               // Has Finders? Has Related Finders?
             'config'    => array(
-                'fields'                => array('*'),                  // These fields are editable. If empty, defaults to *
+                'fields'                => array('*'),                  // Array or string of fields to enable
             )
         ),
         'delete' => array(
