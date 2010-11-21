@@ -178,13 +178,13 @@ All validation rules are wrapped in domain-specific internationalization calls -
 h2. TODO
 
 * Unit Tests!!!
-* View Templates and partials
+* View Templates, partials, and layouts
 * Behavior option parsing
 * Theme support
-* App Template support
-* Support for CakeAdmin files in plugins
+* Support for CakeAdmin class files in plugins
 * Global layout partials
 * Screencast
+* -Refactor template paths-
 
 h2. License
 
