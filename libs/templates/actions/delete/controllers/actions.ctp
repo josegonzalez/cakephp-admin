@@ -1,8 +1,3 @@
----
-title: "<?php echo $alias; ?> action",
-finders: ["<?php echo $alias; ?>"]
----
-
 	function <?php echo $alias; ?>($<?php echo $admin->primaryKey; ?> = null) {
 		if (!empty($this->data['<?php echo $currentModelName; ?>']['<?php echo $admin->primaryKey; ?>'])) {
 			if ($this-><?php echo $currentModelName; ?>->delete($this->data['<?php echo $currentModelName; ?>']['<?php echo $admin->primaryKey; ?>'])) {

@@ -46,29 +46,6 @@ Once your @post_admin.php@ file has been created, run @cake admin@ from the shel
 
 h2. Parsing
 
-CakeAdmin constructs templates from a controller-centric approach. Many of the class methods in a @CakeAdmin@ subclass may seem to be related to Views, but in fact are used to describe the Controller and how it should shuffle data between the model and the view. In fact, the parsing order is as follows:
-
-AppController => Controller => AppModel => Model => View
-
-Because CakeAdmin takes a template agnostic approach, it may be useful to tell the @Model@ or @View@ to do something based upon the @Controller@ or @Action@ template's needs. It will not always be possible to complete these tasks, depending upon the templates in use, but CakeAdmin will allow the use of template Frontmatter to define needs for each template.
-
-CakeAdmin Frontmatter is much the same as for "Jekyll":http://github.com/mojombo/jekyll, but is more json-ish for ease of native parsing. All frontmatter is removed from the resulting template, but is passed on as a json_decoded object to future templates. For the moment, only controller actions can have frontmatter, but this is subject to change as needed.
-
-h3. Frontmatter
-
-Frontmatter can be specified in a json-like manner. It is relatively lenient, but commas must be specified to separate key->value pairs. The outermost wrapping @{}@ - curly braces - have been replaced with wrapping @---@ - a sequence of three dashes - as is done for Jekyll templates.
-
-Keys need not be wrapped in quotation marks, but string values MUST be wrapped as such.
-
-Arrays and objects work just as in normal json, except for the outermost braces.
-
-For controllers, Standard keys and their usages are:
-
-* title: Title of the action name
-* description: Description of the action name
-
-Using frontmatter is a neat way of specifying extra data that can be used by other templates further on down the compilation step. It can be thought of as a really bad implementation of evented programming.
-
 h3. Model Validation Rules
 
 Validation rules are parsed in two steps. The @CakeAdmin@ @__construct()@ method parses each validation rule for a message and a rule. If the message is not found, then a generic message is attached. This avoids the need to edit the model file at a later date.
@@ -208,7 +185,7 @@ The following is an example implementation of @mergeVars($configuration)@:
 h2. TODO
 
 * Implement mergeVars
-* Deprecate Frontmatter
+* -Deprecate Frontmatter-
 * View Templates, partials, and layouts
 * Behavior option parsing
 * Support for CakeAdmin class files in plugins

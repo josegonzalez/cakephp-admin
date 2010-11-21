@@ -70,10 +70,10 @@ class AdminModelTask extends Shell {
  *
  * @return void
  **/
-    function generate($admin, $metadata) {
+    function generate($admin) {
         $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
 
-        list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin, $metadata);
+        list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin);
 
         $modelObj = ClassRegistry::init(array(
             'class' => $admin->modelName,
@@ -116,7 +116,7 @@ class AdminModelTask extends Shell {
  * @param string $metadata
  * @return void
  */
-    function generateContents($admin, $metadata) {
+    function generateContents($admin) {
         $methods = '';
         $finders = false;
         $related = false;
@@ -125,7 +125,6 @@ class AdminModelTask extends Shell {
             if ($configuration['enabled'] !== true) continue;
 
             $contents = $this->getMethods($admin, array(
-                'config'    => $metadata[$alias]['config'],
                 'action'    => $configuration['type'],
                 'plugin'    => $configuration['plugin'],
                 'alias'     => $alias,
@@ -160,7 +159,6 @@ class AdminModelTask extends Shell {
 
         $find               = $options['alias'];
         $alias              = $options['alias'];
-        $configuration      = $options['config'];
         $currentModelName   = $admin->modelName . 'Admin';
         $controllerName     = $this->_controllerName($admin->modelName);
         $pluralName         = $this->_pluralName($currentModelName);
@@ -172,7 +170,6 @@ class AdminModelTask extends Shell {
             'find',
             'admin',
             'alias',
-            'configuration',
             'currentModelName',
             'pluralName',
             'singularName',

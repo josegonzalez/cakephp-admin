@@ -253,7 +253,7 @@ class AdminShell extends Shell {
             $this->out();
             return false;
         }
-        if (($metadata = $this->AdminController->generate($admin)) == false) {
+        if (!$this->AdminController->generate($admin)) {
             $this->out();
             $this->out(sprintf('Failed to generate %s Controller',
                 $this->_controllerName($admin->modelName)
@@ -269,7 +269,7 @@ class AdminShell extends Shell {
             $this->out();
             return false;
         }
-        if (!$this->AdminModel->generate($admin, $metadata))  {
+        if (!$this->AdminModel->generate($admin))  {
             $this->out();
             $this->out(sprintf('Failed to generate %s Model',
                 $admin->modelName

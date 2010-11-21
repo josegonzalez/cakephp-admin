@@ -74,12 +74,9 @@ class AdminControllerTask extends Shell {
         $controllerName = $this->_controllerName($admin->modelName);
         $controllerPath = $this->_controllerPath($controllerName);
         $actions        = $this->generateContents($admin);
-
         if (!$actions) return false;
 
         $path           = $this->templateDir . 'classes';
-        $metadata       = $actions['metadata'];
-        $actions        = $actions['actions'];
         $currentModelName = "{$admin->modelName}Admin";
         $this->AdminTemplate->set(compact(
             'controllerName',
@@ -96,7 +93,7 @@ class AdminControllerTask extends Shell {
         $filename   = implode($filename);
 
         if ($this->createFile($filename, $contents)) {
-            return $metadata;
+            return $contents;
         }
         return false;
     }
@@ -108,32 +105,25 @@ class AdminControllerTask extends Shell {
  **/
     function generateContents($admin) {
         $actions        = '';
-        $metadata       = array();
 
         foreach ($admin->actions as $alias => $configuration) {
             if ($configuration['enabled'] !== true) continue;
 
-            $results = $this->getAction($admin, array(
+            $actionContents = $this->getAction($admin, array(
                 'action' => $configuration['type'],
                 'plugin' => $configuration['plugin'],
                 'alias'  => $alias,
                 'config' => $configuration
             ));
-            if (!$results) return false;
-
-            list($actionContents, $actionMetadata) = $results;
-            $metadata[$alias] = array(
-                'config'    => $configuration,
-                'metadata'  => $actionMetadata
-            );
+            if (!$actionContents) return false;
             $actions .= "{$actionContents}\n\n";
         }
 
-        return array('actions' => $actions, 'metadata' => $metadata);
+        return $actions;
     }
 
 /**
- * Retrieves action contents and parses out yaml metadata
+ * Retrieves action contents
  *
  * @return void
  **/
@@ -165,8 +155,7 @@ class AdminControllerTask extends Shell {
             'singularHumanName',
             'pluralHumanName'
         ));
-        $content = $this->AdminTemplate->generate($path, 'actions');
-        return $this->AdminTemplate->parseMetadata($content);
+        return $this->AdminTemplate->generate($path, 'actions');
     }
 
 }
