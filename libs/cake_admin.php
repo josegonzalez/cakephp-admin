@@ -77,6 +77,20 @@ class CakeAdmin {
     var $helpers        = array();
 
 /**
+ * Finders to enable for the Model
+ *
+ * @var array
+ **/
+    var $finders        = array();
+
+/**
+ * Finders to enable for the Model
+ *
+ * @var array
+ **/
+    var $relatedFinders = array();
+
+/**
  * Model validation rules
  *
  * field => array(alias => rule)
@@ -125,6 +139,7 @@ class CakeAdmin {
             'type'      => 'index',                                     // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Index is enabled by default
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'methods'   => array('find'),                               // Has Finders? Has Related Finders?
             'config'    => array(
                 'fields'                => array('*'),                  // array or string of fields to enable
                 'list_filter'           => null,                        // Allow these to be filterable
@@ -138,6 +153,7 @@ class CakeAdmin {
             'type'      => 'add',                                       // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Add is enabled by default
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'methods'   => array('related'),                            // Has Finders? Has Related Finders?
             'config'    => array(
                 array(
                     'title'             => null,                        // Defaults to null
@@ -155,6 +171,7 @@ class CakeAdmin {
             'type'      => 'edit',                                      // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Edit is enabled by default
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'methods'   => array('find', 'related'),                    // Has Finders? Has Related Finders?
             'config'    => array(
                 array(
                     'title'             => null,                        // Defaults to null
@@ -172,6 +189,7 @@ class CakeAdmin {
             'type'      => 'view',                                      // If not set, type maps to the key of this action
             'enabled'   => false,                                       // View is disabled by default
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'methods'   => array('find'),                               // Has Finders? Has Related Finders?
             'config'    => array(
                 'fields'                => array('*'),                  // These fields are editable. If empty, defaults to *
             )
@@ -180,6 +198,7 @@ class CakeAdmin {
             'type'      => 'delete',                                    // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Delete is enabled by default
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'methods'   => array('find'),                               // Has Finders? Has Related Finders?
             'config'    => array(
                 'displayPrimaryKey'     => true,                        // Display the primary key of the record being deleted
                 'displayName'           => true,                        // Display the name of the record being deleted
@@ -190,13 +209,16 @@ class CakeAdmin {
             'type'      => 'history',                                   // If not set, type maps to the key of this action
             'enabled'   => false,                                       // History is disabled by default. Requires Logable
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'methods'   => false,                                       // Has Finders? Has Related Finders?
         ),
         'changelog' => array(
             'type'      => 'changelog',                                 // If not set, type maps to the key of this action
             'enabled'   => false,                                       // Changelog is disabled by default. Requires Logable
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'methods'   => false,                                       // Has Finders? Has Related Finders?
         ),
     );
+
 /**
  * CakeAdmin constructor. Correctly merges descendent classes with
  * itself for further use
@@ -226,6 +248,27 @@ class CakeAdmin {
                 $this->actions
             );
         }
+
+        $this->_setModelMethods();
+    }
+
+/**
+ * Sets the used find and related methods for this model
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+    function _setModelMethods() {
+        foreach ($this->actions as $alias => $configuration) {
+            if ($configuration['enabled'] !== true) continue;
+            if (empty($configuration['methods'])) continue;
+
+            if (in_array('find', (array) $configuration['methods'])) $this->finders[] = $alias;
+            if (in_array('related', (array) $configuration['methods'])) $this->relatedFinders[] = $alias;
+        }
+
+        $this->finders = array_unique($this->finders);
+        $this->relatedFinders = array_unique($this->relatedFinders);
     }
 
 /**
