@@ -30,9 +30,25 @@ class CakeAdminActionConfig {
  **/
     var $type = null;
 
+/**
+ * Constructor. Throws exceptions on invalid class properties
+ *
+ * @author Jose Diaz-Gonzalez
+ */
     function __construct() {
         if (!$this->type) throw new Exception('undefined property "$type"');
         if (!$this->plugin) throw new Exception('undefined property "$plugin"');
+    }
+
+/**
+ * Merges instantiated configuration with the class defaults
+ *
+ * @param array $configuration action configuration
+ * @return array
+ * @author Jose Diaz-Gonzalez
+ */
+    function mergeVars($configuration = array()) {
+        return array_merge($configuration, $this->defaults);
     }
 
 }
