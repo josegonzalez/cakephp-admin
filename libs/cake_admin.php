@@ -226,7 +226,7 @@ class CakeAdmin {
     function __construct() {
         // Update the modelName if not set
         if (empty($this->modelName)) {
-            $this->modelName = substr(get_class($this), 0 , -5);
+            $this->modelName = substr(get_class($this), 0 , -9);
         }
 
         // Set a table if not already set
