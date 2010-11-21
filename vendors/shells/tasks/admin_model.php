@@ -116,49 +116,29 @@ class AdminModelTask extends Shell {
  * @return void
  */
     function generateContents($admin, $metadata) {
-        $finders = '';
-        $related = '';
+        $methods = '';
+        $finders = false;
+        $related = false;
 
         foreach ($admin->actions as $alias => $configuration) {
             if ($configuration['enabled'] !== true) continue;
 
-            if (empty($metadata[$alias])) {
-                $actionMetadata = array();
-            } else {
-                $actionMetadata = $metadata[$alias]['metadata'];
-            }
+            $contents = $this->getMethods($admin, array(
+                'config'    => $metadata[$alias]['config'],
+                'action'    => $configuration['type'],
+                'plugin'    => $configuration['plugin'],
+                'alias'     => $alias,
+            ));
 
-            if (!empty($actionMetadata->finders)) {
-                foreach ($actionMetadata->finders as $finder) {
-                    $contents = $this->getFinder($admin, array(
-                        'config'    => $metadata[$alias]['config'],
-                        'action'    => $configuration['type'],
-                        'plugin'    => $configuration['plugin'],
-                        'alias'     => $alias,
-                        'finder'    => $finder,
-                    ));
-                    if (!empty($contents)) $finders .= "{$contents}\n\n";
-                }
-            }
-
-            if (!empty($actionMetadata->related)) {
-                foreach ($actionMetadata->related as $relatedFinder) {
-                    $contents = $this->getRelatedFinder($admin, array(
-                        'config'    => $metadata[$alias]['config'],
-                        'action'    => $configuration['type'],
-                        'plugin'    => $configuration['plugin'],
-                        'alias'     => $alias,
-                        'related'   => $relatedFinder,
-                    ));
-                    if (!empty($contents)) $related .= "{$contents}\n\n";
-                }
+            if (!empty($contents)) {
+                $this->out($alias);
+                $methods .= "{$contents}\n\n";
+                if (in_array('find', (array) $configuration['methods'])) $finders = true;
+                if (in_array('related', (array) $configuration['methods'])) $related = true;
             }
         }
-        return array(
-            $finders . $related,
-            (!empty($finders)) ? true : false,
-            (!empty($related)) ? true : false,
-        );
+
+        return array($methods, $finders, $related);
     }
 
 /**
@@ -168,40 +148,16 @@ class AdminModelTask extends Shell {
  * @param string $options
  * @return void
  */
-    function getFinder($admin, $options) {
-        $path = $this->_getModelMethod($admin, $options['finder'], $options);
-        $find = Inflector::camelize($options['action']);
-        return $this->AdminTemplate->generate($path, "_find{$find}");
-    }
-
-/**
- * undocumented function
- *
- * @param string $admin
- * @param string $options
- * @return void
- */
-    function getRelatedFinder($admin, $options) {
-        $path = $this->_getModelMethod($admin, $options['related'], $options);
-        $find = Inflector::camelize($options['action']);
-        return $this->AdminTemplate->generate($path, "_related{$find}");
-    }
-
-/**
- * undocumented function
- *
- * @param string $admin
- * @param string $options
- * @return void
- */
-    function _getModelMethod($admin, $find, $options) {
-        $endPath = 'libs' . DS . 'templates' . DS . 'methods';
+    function getMethods($admin, $options) {
+        $endPath = 'libs' . DS . 'templates' . DS . 'actions' . DS;
         if (empty($options['plugin'])) {
             $path = APP . DS . $endPath;
         } else {
             $path = $this->pluginDir . $options['plugin'] . DS. $endPath;
         }
+        $path .= $options['action'] . DS . 'models';
 
+        $find               = $options['alias'];
         $alias              = $options['alias'];
         $configuration      = $options['config'];
         $currentModelName   = $admin->modelName . 'Admin';
@@ -222,7 +178,7 @@ class AdminModelTask extends Shell {
             'singularHumanName',
             'pluralHumanName'
         ));
-        return $path;
+        return $this->AdminTemplate->generate($path, "methods");
     }
 
 /**

@@ -138,12 +138,13 @@ class AdminControllerTask extends Shell {
  * @return void
  **/
     function getAction($admin, $options = array()) {
-        $endPath = 'libs' . DS . 'templates' . DS . 'actions';
+        $endPath = 'libs' . DS . 'templates' . DS . 'actions' . DS;
         if (empty($options['plugin'])) {
             $path = APP . DS . $endPath;
         } else {
             $path = $this->pluginDir . $options['plugin'] . DS. $endPath;
         }
+        $path .= $options['action'] . DS . 'controllers';
 
         $alias              = $options['alias'];
         $configuration      = $options['config'];
@@ -164,7 +165,7 @@ class AdminControllerTask extends Shell {
             'singularHumanName',
             'pluralHumanName'
         ));
-        $content = $this->AdminTemplate->generate($path, $options['action']);
+        $content = $this->AdminTemplate->generate($path, 'actions');
         return $this->AdminTemplate->parseMetadata($content);
     }
 
