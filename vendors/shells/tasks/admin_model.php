@@ -101,7 +101,7 @@ class AdminModelTask extends Shell {
         $contents = $this->AdminTemplate->generate($path, 'model');
 
         $path = APP . 'plugins' . DS . $admin->plugin . DS . 'models' . DS;
-        $filename = $path . Inflector::underscore($admin->modelName) . '.php';
+        $filename = $path . Inflector::underscore($admin->modelName) . '_admin.php';
         if ($this->createFile($filename, $contents)) {
             return $contents;
         }
@@ -151,7 +151,7 @@ class AdminModelTask extends Shell {
     function getMethods($admin, $options) {
         $endPath = 'libs' . DS . 'templates' . DS . 'actions' . DS;
         if (empty($options['plugin'])) {
-            $path = APP . DS . $endPath;
+            $path = APP . $endPath;
         } else {
             $path = $this->pluginDir . $options['plugin'] . DS. $endPath;
         }

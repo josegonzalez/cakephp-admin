@@ -140,7 +140,7 @@ class AdminControllerTask extends Shell {
     function getAction($admin, $options = array()) {
         $endPath = 'libs' . DS . 'templates' . DS . 'actions' . DS;
         if (empty($options['plugin'])) {
-            $path = APP . DS . $endPath;
+            $path = APP . $endPath;
         } else {
             $path = $this->pluginDir . $options['plugin'] . DS. $endPath;
         }
