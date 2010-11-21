@@ -31,8 +31,8 @@ class CakeAdminActionConfig {
     var $type = null;
 
     function __construct() {
-        if (!$type) throw new Exception('undefined variable "$type"');
-        if (!$plugin) throw new Exception('undefined variable "$plugin"');
+        if (!$this->type) throw new Exception('undefined property "$type"');
+        if (!$this->plugin) throw new Exception('undefined property "$plugin"');
     }
 
 }
