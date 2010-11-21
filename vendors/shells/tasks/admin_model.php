@@ -45,6 +45,7 @@ class AdminModelTask extends Shell {
         $this->templateDir[]    = 'templates' . DS;
         $this->templateDir      = implode($this->templateDir);
     }
+
 /**
  * undocumented function
  *
@@ -153,7 +154,7 @@ class AdminModelTask extends Shell {
         if (empty($options['plugin'])) {
             $path = APP . $endPath;
         } else {
-            $path = $this->pluginDir . $options['plugin'] . DS. $endPath;
+            $path = $this->pluginDir . $options['plugin'] . DS . $endPath;
         }
         $path .= $options['action'] . DS . 'models';
 

@@ -142,7 +142,7 @@ class AdminControllerTask extends Shell {
         if (empty($options['plugin'])) {
             $path = APP . $endPath;
         } else {
-            $path = $this->pluginDir . $options['plugin'] . DS. $endPath;
+            $path = $this->pluginDir . $options['plugin'] . DS . $endPath;
         }
         $path .= $options['action'] . DS . 'controllers';
 
