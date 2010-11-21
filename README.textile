@@ -1,6 +1,6 @@
 h1. CakeAdmin Plugin
 
-The best way to generate an awesome backend. Under heavy development.
+The best way to generate an awesome backend. Under **EXTREMELY** heavy development.
 
 h2. Background
 
@@ -66,8 +66,6 @@ For controllers, Standard keys and their usages are:
 
 * title: Title of the action name
 * description: Description of the action name
-* finders: Finder methods that need to be set for the model
-* related: Related finder methods that need to be set for the model
 
 Using frontmatter is a neat way of specifying extra data that can be used by other templates further on down the compilation step. It can be thought of as a really bad implementation of evented programming.
 
@@ -175,15 +173,48 @@ All the default validation rules work as normal, with option parsing and everyth
 
 All validation rules are wrapped in domain-specific internationalization calls - @__d()@ - meaning it is possible to further internationalize your generated admin section without mucking with the included classes.
 
+h3. Action Configuration
+
+When defining custom actions, there may be certain defaults that need to be set. All the included actions in CakeAdmin come with @CakeAdminActionConfig@ classes. These define various properties, such as the action type, the plugin that the action is included in, whether it is enabled by default, and configuration defaults. Because the process of merging default configurations and your personal configuration is not standard, each @CakeAdminActionConfig@ class can define it's own @mergeVars($configuration)@ method. It can then proceed to merge the configuration as it wants, and returns the merged configuration. If omitted from the class implementation, an @array_merge@ will be performed upon the configuration and the defaults.
+
+The following is an example implementation of @mergeVars($configuration)@:
+
+<pre><code> function mergeVars($configuration = array()) {
+        if (empty($configuration)) return $this->defaults;
+
+        if ($configuration['fields'] !== '*') {
+            $fields = array();
+            $possibleFields = $configuration['fields'];
+            foreach ($possibleFields as $field) {
+                if ($field !== '*') $fields[] = $field;
+            }
+        }
+
+        $sort = $fields;
+        if ($configuration['sort'] == false) {
+            $sort = array();
+        } else if (is_array($configuration['sort'])) {
+            $sort = $configuration['sort'];
+        }
+
+        $configuration = array_merge($configuration, $this->defaults);
+        $configuration['fields'] = $fields;
+        $configuration['sort'] = $sort;
+
+        return $configuration;
+    }
+</code></pre>
+
 h2. TODO
 
-* Unit Tests!!!
+* Implement mergeVars
+* Deprecate Frontmatter
 * View Templates, partials, and layouts
 * Behavior option parsing
-* Theme support
 * Support for CakeAdmin class files in plugins
-* Global layout partials
 * Screencast
+* Unit Tests!!!
+* Theme support
 * -Refactor template paths-
 
 h2. License
