@@ -30,30 +30,16 @@ class <?php echo $admin->modelName ?><?php echo Inflector::humanize($admin->plug
 	var $primaryKey   = '<?php echo $admin->primaryKey; ?>';
 	var $recursive    = -1;
 <?php
-$findMethods = array();
-$relatedMethods = array();
-foreach ($metadata as $action => $data) {
-	if (!empty($data->finders)) {
-		foreach ($data->finders as $finder) {
-			$findMethods[] = $finder;
-		}
-	}
-	if (!empty($data->related)) {
-		foreach ($data->related as $relatedFinder) {
-			$relatedMethods[] = $relatedFinder;
-		}
-	}
-}
-if (!empty($findMethods) && $hasFinders) : ?>
+if (!empty($admin->finders)) : ?>
 	var $_findMethods = array(
-<?php foreach ($findMethods as $findMethod): ?>
+<?php foreach ($admin->finders as $findMethod): ?>
 		'<?php echo $findMethod; ?>' => true,
 <?php endforeach; ?>
 	);
 <?php endif; ?>
-<?php if (!empty($relatedMethods) && $hasRelated) : ?>
+<?php if (!empty($admin->relatedFinders)) : ?>
 	var $_relatedMethods = array(
-<?php foreach ($relatedMethods as $relatedMethod): ?>
+<?php foreach ($admin->relatedFinders as $relatedMethod): ?>
 		'<?php echo $relatedMethod; ?>' => true,
 <?php endforeach; ?>
 	);
