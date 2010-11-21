@@ -1,4 +1,12 @@
-<?php
+	function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
+		if ($state === 'before') {
+			$query['conditions']['<?php echo $admin->modelName; ?>.<?php echo $admin->primaryKey?>'] = $query['<?php echo $admin->primaryKey; ?>'];
+			unset($query['<?php echo $admin->primaryKey; ?>']);
+
+			return $query;
+		}
+		return $results;
+	}<?php
 // Create a model object
 $modelObj = ClassRegistry::init(array(
 	'class' => $admin->modelName,
@@ -8,6 +16,7 @@ $modelObj = ClassRegistry::init(array(
 if (!empty($modelObj->belongsTo) && !empty($modelObj->hasAndBelongsToMany)) :
 
 ?>
+
 	function _related<?php echo Inflector::camelize($find); ?>() {
 <?php
 $compacts = array();
