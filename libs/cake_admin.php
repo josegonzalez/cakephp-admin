@@ -271,7 +271,7 @@ class CakeAdmin {
             $configClass = new $className;
             $this->actions[$alias]['methods'] = $configClass->methods;
             if (!isset($this->actions[$alias]['config'])) $this->actions[$alias]['config'] = array();
-            $this->actions[$alias]['config'] = $configClass->mergeVars($this->actions[$alias]['config']);
+            $this->actions[$alias]['config'] = $configClass->mergeVars($this, $this->actions[$alias]['config']);
         }
     }
 
