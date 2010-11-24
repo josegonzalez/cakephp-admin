@@ -156,13 +156,23 @@ When defining custom actions, there may be certain defaults that need to be set.
 
 The following is an example implementation of @mergeVars($configuration)@:
 
-<pre><code>    function mergeVars($configuration = array()) {
+<pre><code>    function mergeVars($admin, $configuration = array()) {
         if (empty($configuration)) return $this->defaults;
 
-        if ($configuration['fields'] !== '*') {
-            $fields = array();
-            $possibleFields = $configuration['fields'];
-            foreach ($possibleFields as $field) {
+        $modelObj = ClassRegistry::init(array(
+            'class' => $admin->modelName,
+            'table' => $admin->useTable,
+            'ds'    => $admin->useDbConfig
+        ));
+
+        $fields = array();
+        if (empty($configuration['fields']) || (in_array('*', (array) $configuration['fields']))) {
+            // $fields is all fields
+            foreach (array_keys($modelObj->schema()) as $field) {
+                $fields[] = $field;
+            }
+        } else {
+            foreach ((array) $configuration['fields'] as $field) {
                 if ($field !== '*') $fields[] = $field;
             }
         }
