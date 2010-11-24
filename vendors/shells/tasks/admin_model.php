@@ -133,7 +133,6 @@ class AdminModelTask extends Shell {
             ));
 
             if (!empty($contents)) {
-                $this->out($alias);
                 $methods .= "{$contents}\n\n";
                 if (in_array('find', (array) $configuration['methods'])) $finders = true;
                 if (in_array('related', (array) $configuration['methods'])) $related = true;
