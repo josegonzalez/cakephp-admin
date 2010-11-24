@@ -31,6 +31,25 @@ $filters = $admin->actions[$find]['config']['filters'];
 			$query['fields'] = array('<?php echo join("', '", $fields); ?>');
 <?php endif; ?>
 			$query['order'] = array('<?php echo $order; ?>');
+<?php $contains = array(); ?>
+<?php if (!empty($fields)) : ?>
+<?php	foreach (array_keys($modelObj->schema()) as $field) : ?>
+<?php		if (!in_array($field, $fields)) continue; ?>
+<?php		if (!empty($associations['belongsTo'])) : ?>
+<?php			foreach ($associations['belongsTo'] as $alias => $details) : ?>
+<?php				if ($field === $details['foreignKey']) : ?>
+<?php					$contains[] = "{$details['alias']}.{$details['primaryKey']}"; ?>
+<?php					$contains[] = "{$details['alias']}.{$details['displayField']}"; ?>
+<?php				endif; ?>
+<?php			endforeach; ?>
+<?php		endif; ?>
+<?php	endforeach; ?>
+<?php endif; ?>
+<?php if (!empty($contains)) : ?>
+			$query['contain'] = array('<?php echo join("', '", $contains); ?>');
+<?php else : ?>
+			$query['contain'] = false;
+<?php endif; ?>
 
 			if (!empty($query['operation'])) {
 				return $this->_findCount($state, $query, $results);
