@@ -17,23 +17,6 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 ?>
-<?
-
-if ($configuration['config']['fields'] !== '*') {
-    $fields = array();
-    $possibleFields = $configuration['config']['fields'];
-    foreach ($possibleFields as $field) {
-        if ($field !== '*') $fields[] = $field;
-    }
-}
-$sort = $fields;
-if ($configuration['config']['sort'] == false) {
-    $sort = array();
-} else if (is_array($configuration['config']['sort'])) {
-    $sort = $configuration['config']['sort'];
-}
-
-?>
 <div class="<?php echo $pluralVar;?> <?php echo $action; ?>">
 	<h2><?php echo "<?php __('{$pluralHumanName}');?>";?></h2>
 	<table cellpadding="0" cellspacing="0">
