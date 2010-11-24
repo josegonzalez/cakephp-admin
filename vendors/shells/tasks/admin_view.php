@@ -106,7 +106,7 @@ class AdminViewTask extends Shell {
         $fields             = array_keys($schema);
 
         $currentModelName   = $admin->modelName . 'Admin';
-        $controllerName     = $this->_controllerName($admin->modelName);
+        $controllerName     = $this->_controllerName($admin->modelName . 'Admin');
 
         $singularVar        = Inflector::variable($modelClass);
         $singularName       = Inflector::variable($currentModelName);

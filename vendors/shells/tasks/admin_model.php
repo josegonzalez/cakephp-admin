@@ -198,16 +198,21 @@ class AdminModelTask extends Shell {
             $offset = strpos($fieldName, '_id');
             if ($fieldName != $model->primaryKey && $fieldName != 'parent_id' && $offset !== false) {
                 $tmpModelName = $this->_modelNameFromKey($fieldName);
+                $tmpModelObj = ClassRegistry::init($tmpModelName);
                 $associations['belongsTo'][] = array(
                     'alias' => $tmpModelName,
                     'className' => $tmpModelName,
                     'foreignKey' => $fieldName,
+                    'primaryKey' => $tmpModelObj->primaryKey,
+                    'displayField' => $tmpModelObj->displayField,
                 );
             } elseif ($fieldName == 'parent_id') {
                 $associations['belongsTo'][] = array(
                     'alias' => 'Parent' . $model->name,
                     'className' => $model->name,
                     'foreignKey' => $fieldName,
+                    'primaryKey' => $model->primaryKey,
+                    'displayField' => $model->displayField,
                 );
             }
         }
@@ -238,13 +243,17 @@ class AdminModelTask extends Shell {
                     $assoc = array(
                         'alias' => $tempOtherModel->name,
                         'className' => $tempOtherModel->name,
-                        'foreignKey' => $fieldName
+                        'foreignKey' => $fieldName,
+                        'primaryKey' => $tempOtherModel->primaryKey,
+                        'displayField' => $tempOtherModel->displayField,
                     );
                 } elseif ($otherTable == $model->table && $fieldName == 'parent_id') {
                     $assoc = array(
                         'alias' => 'Child' . $model->name,
                         'className' => $model->name,
-                        'foreignKey' => $fieldName
+                        'foreignKey' => $fieldName,
+                        'primaryKey' => $model->primaryKey,
+                        'displayField' => $model->displayField,
                     );
                 }
                 if ($assoc) {
@@ -281,7 +290,7 @@ class AdminModelTask extends Shell {
                     'className' => $habtmName,
                     'foreignKey' => $foreignKey,
                     'associationForeignKey' => $this->_modelKey($habtmName),
-                    'joinTable' => $otherTable
+                    'joinTable' => $otherTable,
                 );
             } elseif ($otherOffset !== false) {
                 $habtmName = $this->_modelName(substr($otherTable, 0, $otherOffset));
@@ -290,7 +299,7 @@ class AdminModelTask extends Shell {
                     'className' => $habtmName,
                     'foreignKey' => $foreignKey,
                     'associationForeignKey' => $this->_modelKey($habtmName),
-                    'joinTable' => $otherTable
+                    'joinTable' => $otherTable,
                 );
             }
         }
