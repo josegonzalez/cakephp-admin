@@ -73,8 +73,6 @@ class AdminModelTask extends Shell {
     function generate($admin) {
         $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
 
-        list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin);
-
         $modelObj = ClassRegistry::init(array(
             'class' => $admin->modelName,
             'table' => $admin->useTable,
@@ -90,6 +88,8 @@ class AdminModelTask extends Shell {
         $associations = $this->findBelongsTo($modelObj, $associations);
         $associations = $this->findHasOneAndMany($modelObj, $associations);
         $associations = $this->findHasAndBelongsToMany($modelObj, $associations);
+
+        list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin, $modelObj, $associations);
 
         $this->AdminTemplate->set(compact(
             'methods',
@@ -116,7 +116,7 @@ class AdminModelTask extends Shell {
  * @param string $metadata
  * @return void
  */
-    function generateContents($admin) {
+    function generateContents($admin, $modelObj, $associations) {
         $methods = '';
         $finders = false;
         $related = false;
@@ -125,9 +125,11 @@ class AdminModelTask extends Shell {
             if ($configuration['enabled'] !== true) continue;
 
             $contents = $this->getMethods($admin, array(
-                'action'    => $configuration['type'],
-                'plugin'    => $configuration['plugin'],
-                'alias'     => $alias,
+                'action'        => $configuration['type'],
+                'plugin'        => $configuration['plugin'],
+                'alias'         => $alias,
+                'modelObj'      => $modelObj,
+                'associations'  => $associations,
             ));
 
             if (!empty($contents)) {
@@ -165,11 +167,15 @@ class AdminModelTask extends Shell {
         $singularName       = Inflector::variable($currentModelName);
         $singularHumanName  = $this->_singularHumanName($controllerName);
         $pluralHumanName    = $this->_pluralName($controllerName);
+        $modelObj           = $options['modelObj'];
+        $associations       = $options['associations'];
 
         $this->AdminTemplate->set(compact(
             'find',
             'admin',
             'alias',
+            'modelObj',
+            'associations',
             'currentModelName',
             'pluralName',
             'singularName',
