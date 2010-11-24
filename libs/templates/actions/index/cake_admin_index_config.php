@@ -51,16 +51,53 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
  * @return array
  * @author Jose Diaz-Gonzalez
  */
-    function mergeVars($configuration = array()) {
+    function mergeVars($admin, $configuration = array()) {
         if (empty($configuration)) return $this->defaults;
 
-        if ($configuration['fields'] !== '*') {
-            $fields = array();
-            $possibleFields = $configuration['fields'];
-            foreach ($possibleFields as $field) {
+        $modelObj = ClassRegistry::init(array(
+            'class' => $admin->modelName,
+            'table' => $admin->useTable,
+            'ds'    => $admin->useDbConfig
+        ));
+
+        $searches = array();
+        $filters = array();
+        $fields = array();
+        $order = "{$admin->primaryKey} ASC";
+
+        if (empty($configuration['fields']) || (in_array('*', (array) $configuration['fields']))) {
+            // $fields is all fields
+            foreach (array_keys($modelObj->schema()) as $field) {
+                $fields[] = $field;
+            }
+        } else {
+            foreach ((array) $configuration['fields'] as $field) {
                 if ($field !== '*') $fields[] = $field;
             }
         }
+
+        if (!empty($configuration['order'])) {
+            $order = $configuration['order'];
+            if (count($order) == 1) {
+                $order = current($order);
+            }
+            if (is_array($order)) {
+                $order = join("', '", $fields);
+            }
+        }
+
+        if (!empty($configuration['search'])) {
+            foreach ($configuration['search'] as $filter) {
+                $searches[] = $filter;
+                $filters[] = $filter;
+            }
+        }
+        if (!empty($configuration['list_filter'])) {
+            foreach (array_keys($configuration['list_filter']) as $filter) {
+                $filters[] = $filter;
+            }
+        }
+        $filters = array_unique($filters);
 
         $sort = $fields;
         if ($configuration['sort'] == false) {
@@ -70,7 +107,10 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
         }
 
         $configuration = array_merge($configuration, $this->defaults);
+        $configuration['searches'] = $searches;
+        $configuration['filters'] = $filters;
         $configuration['fields'] = $fields;
+        $configuration['order'] = $order;
         $configuration['sort'] = $sort;
 
         return $configuration;
