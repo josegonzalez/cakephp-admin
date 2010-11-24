@@ -10,6 +10,7 @@
  * @subpackage    cake_admin.libs
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  **/
+if (!class_exists('CakeAdminActionConfig')) App::import('Lib', 'CakeAdmin.cake_admin_action_config');
 class CakeAdmin {
 
 /**
@@ -240,16 +241,38 @@ class CakeAdmin {
         }
 
         // Update the actions configuration
-        if (empty($this->actions)) {
-            $this->actions = $this->_actions;
-        } else {
-            $this->actions = Set::merge(
-                $this->_actions,
-                $this->actions
-            );
-        }
+        $this->_mergeVars();
 
         $this->_setModelMethods();
+    }
+
+    function _mergeVars() {
+        if (empty($this->actions)) {
+            $this->actions = $this->_actions;
+        }
+
+        foreach ($this->actions as $alias => $configuration) {
+            if (empty($configuration['plugin'])) $this->actions[$alias]['plugin'] = 'cake_admin';
+
+            $plugin = Inflector::camelize($this->actions[$alias]['plugin']);
+            $type = $configuration['type'];
+            $className = 'CakeAdmin' . Inflector::camelize($configuration['type']) . 'Config';
+            $fileName = "cake_admin_{$configuration['type']}_config.php";
+
+            if (!class_exists($className)) {
+                App::import('Lib', "{$plugin}.{$className}", array(
+                    'file' => 'templates' . DS . 'actions' . DS . $type . DS . $fileName,
+                ));
+            }
+            if (!class_exists($className)) {
+                throw new Exception(sprintf("Undefined class %s", $className));
+            }
+
+            $configClass = new $className;
+            $this->actions[$alias]['methods'] = $configClass->methods;
+            if (!isset($this->actions[$alias]['config'])) $this->actions[$alias]['config'] = array();
+            $this->actions[$alias]['config'] = $configClass->mergeVars($this->actions[$alias]['config']);
+        }
     }
 
 /**

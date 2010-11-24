@@ -31,6 +31,13 @@ class CakeAdminActionConfig {
     var $type = null;
 
 /**
+ * Model methods this action contains
+ *
+ * @var array
+ **/
+    var $methods = array();
+
+/**
  * Constructor. Throws exceptions on invalid class properties
  *
  * @author Jose Diaz-Gonzalez

@@ -156,7 +156,7 @@ When defining custom actions, there may be certain defaults that need to be set.
 
 The following is an example implementation of @mergeVars($configuration)@:
 
-<pre><code> function mergeVars($configuration = array()) {
+<pre><code>    function mergeVars($configuration = array()) {
         if (empty($configuration)) return $this->defaults;
 
         if ($configuration['fields'] !== '*') {
@@ -184,7 +184,7 @@ The following is an example implementation of @mergeVars($configuration)@:
 
 h2. TODO
 
-* Implement mergeVars
+* -Implement mergeVars-
 * -Deprecate Frontmatter-
 * View Templates, partials, and layouts
 * Behavior option parsing
