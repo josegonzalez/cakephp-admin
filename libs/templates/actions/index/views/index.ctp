@@ -25,7 +25,7 @@
 <?php if (in_array($field, $configuration['config']['sort'])) : ?>
 		<th><?php echo "<?php echo \$this->Paginator->sort('{$field}');?>";?></th>
 <?php else : ?>
-		<th><?php echo Inflector::humanize($field); ?></th>
+		<th><?php echo Inflector::humanize(preg_replace('/_id$/', '', $field)); ?></th>
 <?php endif; ?>
 <?php endforeach;?>
 		<th class="actions"><?php echo "<?php __('Actions');?>";?></th>
