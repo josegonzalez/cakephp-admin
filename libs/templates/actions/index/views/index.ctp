@@ -21,8 +21,8 @@
 	<h2><?php echo "<?php __('{$pluralHumanName}');?>";?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
-<?php  foreach ($fields as $field): ?>
-<?php if (in_array($field, $sort)) : ?>
+<?php  foreach ($configuration['config']['fields'] as $field): ?>
+<?php if (in_array($field, $configuration['config']['sort'])) : ?>
 		<th><?php echo "<?php echo \$this->Paginator->sort('{$field}');?>";?></th>
 <?php else : ?>
 		<th><?php echo Inflector::humanize($field); ?></th>
@@ -33,7 +33,7 @@
 	<?php
 	echo "<?php \$i = 0; foreach (\${$pluralVar} as \${$singularVar}) : ?>\n";
 	echo "\t<tr<?php if (\$i++ %2 == 0) echo ' class=\"altrow\"';?>>\n";
-		foreach ($fields as $field) {
+		foreach ($configuration['config']['fields'] as $field) {
 			$isKey = false;
 			if (!empty($associations['belongsTo'])) {
 				foreach ($associations['belongsTo'] as $alias => $details) {
