@@ -28,7 +28,6 @@ class <?php echo $admin->modelName ?><?php echo Inflector::humanize($admin->plug
 	var $useDbConfig  = '<?php echo $admin->useDbConfig; ?>';
 	var $useTable     = '<?php echo $admin->useTable; ?>';
 	var $primaryKey   = '<?php echo $admin->primaryKey; ?>';
-	var $recursive    = -1;
 <?php
 if (!empty($admin->finders)) : ?>
 	var $_findMethods = array(

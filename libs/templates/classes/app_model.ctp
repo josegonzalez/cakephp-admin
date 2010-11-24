@@ -3,6 +3,9 @@ echo "<?php\n";
 ?>
 class <?php echo Inflector::humanize($admin->plugin); ?>AppModel extends AppModel {
 
+	var $actsAs = array('Containable');
+	var $recursive = -1;
+
 	function related($type) {
 		if (isset($this->_relatedMethods[$type]) && $this->_relatedMethods[$type] === true) {
 			return $this->{'_related' . Inflector::camelize($type)}();
