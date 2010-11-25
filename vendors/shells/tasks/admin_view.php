@@ -105,14 +105,13 @@ class AdminViewTask extends Shell {
         $schema             = $modelObj->schema(true);
         $fields             = array_keys($schema);
 
-        $currentModelName   = $admin->modelName . 'Admin';
         $controllerName     = $this->_controllerName($admin->modelName . 'Admin');
 
         $singularVar        = Inflector::variable($modelClass);
-        $singularName       = Inflector::variable($currentModelName);
+        $singularName       = $this->_singularName($modelClass);
         $singularHumanName  = $this->_singularHumanName($controllerName);
         $pluralVar          = Inflector::variable($controllerName);
-        $pluralName         = $this->_pluralName($currentModelName);
+        $pluralName         = $this->_pluralName($modelClass);
         $pluralHumanName    = $this->_pluralName($controllerName);
         $associations       = $this->__associations($modelObj);
 
@@ -122,7 +121,6 @@ class AdminViewTask extends Shell {
             'displayField',
             'schema',
             'fields',
-            'currentModelName',
             'controllerName',
             'singularVar',
             'singularName',
