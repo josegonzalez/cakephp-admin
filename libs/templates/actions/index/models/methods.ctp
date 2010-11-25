@@ -16,14 +16,35 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 	function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
 		if ($state === 'before') {
 <?php foreach ($list_filter as $field => $config) : ?>
-			if (!empty($query['params']['named']['<?php echo $field; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}"; ?>'] = $query['params']['named']['<?php echo $field; ?>'];
+			if (!empty($query['named']['<?php echo $field; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}"; ?>'] = $query['named']['<?php echo $field; ?>'];
+			}
+<?php endforeach; ?>
+<?php foreach ($searches as $field => $config) : ?>
+<?php if ($field !== 'id' && ($config['type'] == 'text' || $config['type'] == 'string')) {
+	$modifier = ' LIKE';
+	$query = "'%' . \$query['named']['{$admin->modelName}.{$field}'] . '%';\n";
+} else {
+	$modifier = '';
+	$query = "\$query['named']['{$admin->modelName}.{$field}'];\n";
+}
+?>
+			if (!empty($query['named']['<?php echo "{$admin->modelName}.{$field}"; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}{$modifier}"; ?>'] = <?php echo $query; ?>
 			}
 <?php endforeach; ?>
 
 <?php foreach ($searches as $field => $config) : ?>
-			if (!empty($query['data']['<?php echo $admin->modelName; ?>']['<?php echo $field; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}"; ?>'] = $query['data']['<?php echo $admin->modelName; ?>Admin']['<?php echo $field; ?>'];
+<?php if ($field !== 'id' && ($config['type'] == 'text' || $config['type'] == 'string')) {
+	$modifier = ' LIKE';
+	$query = "'%' . \$query['data']['{$admin->modelName}Admin']['{$field}'] . '%';\n";
+} else {
+	$modifier = '';
+	$query = "\$query['data']['{$admin->modelName}Admin']['{$field}'];\n";
+}
+?>
+			if (!empty($query['data']['<?php echo "{$admin->modelName}Admin"; ?>']['<?php echo $field; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}{$modifier}"; ?>'] = <?php echo $query; ?>
 			}
 <?php endforeach; ?>
 
