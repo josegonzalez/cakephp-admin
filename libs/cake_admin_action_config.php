@@ -55,7 +55,7 @@ class CakeAdminActionConfig {
  * @author Jose Diaz-Gonzalez
  */
     function mergeVars($admin, $configuration = array()) {
-        return array_merge($configuration, $this->defaults);
+        return array_merge($this->defaults, $configuration);
     }
 
 }

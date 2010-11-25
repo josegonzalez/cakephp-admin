@@ -89,7 +89,6 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
         if (!empty($configuration['search'])) {
             foreach ($configuration['search'] as $filter) {
                 $searches[] = $filter;
-                $filters[] = $filter;
             }
         }
         if (!empty($configuration['list_filter'])) {
@@ -106,7 +105,7 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
             $sort = $configuration['sort'];
         }
 
-        $configuration = array_merge($configuration, $this->defaults);
+        $configuration = array_merge($this->defaults, $configuration);
         $configuration['searches'] = $searches;
         $configuration['filters'] = $filters;
         $configuration['fields'] = $fields;
