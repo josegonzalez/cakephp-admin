@@ -86,17 +86,20 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
             }
         }
 
-        if (!empty($configuration['search'])) {
-            foreach ($configuration['search'] as $filter) {
-                $searches[] = $filter;
-            }
-        }
         if (!empty($configuration['list_filter'])) {
             foreach (array_keys($configuration['list_filter']) as $filter) {
                 $filters[] = $filter;
             }
         }
+
+        if (!empty($configuration['search'])) {
+            foreach ($configuration['search'] as $filter) {
+                if (!in_array($filter, $searches)) $searches[] = $filter;
+            }
+        }
+
         $filters = array_unique($filters);
+        $searches = array_unique($searches);
 
         $sort = $fields;
         if ($configuration['sort'] == false) {
