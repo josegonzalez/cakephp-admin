@@ -17,4 +17,18 @@ class <?php echo Inflector::humanize($admin->plugin); ?>AppModel extends AppMode
 		);
 	}
 
+	function paginateCount($conditions = array(), $recursive = 0, $extra = array()) {
+		$parameters = compact('conditions');
+		$find = '_findCount';
+		if (isset($extra['type'])) {
+			$extra['operation'] = 'count';
+			$find = '_find' . Inflector::camelize($extra['type']);
+			$params = $this->$find('before', array_merge($parameters, $extra));
+			unset($params['fields']);
+			unset($params['limit']);
+			return $this->find('count', $params);
+		}
+		return $this->find('count', array_merge($parameters, $extra));
+	}
+
 }
