@@ -18,7 +18,7 @@
  */
 ?>
 <div class="<?php echo $pluralVar;?> <?php echo $action; ?>">
-	<h2><?php echo "<?php __('{$pluralHumanName}');?>";?></h2>
+	<h2><?php echo "<?php __('" . Inflector::pluralize(Inflector::humanize($admin->modelName)) . "');?>";?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 <?php foreach ($configuration['config']['fields'] as $field): ?>
