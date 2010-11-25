@@ -7,11 +7,10 @@ $modelObj = ClassRegistry::init(array(
 ));
 
 $fields = $admin->actions[$find]['config']['fields'];
-$order = $admin->actions[$find]['config']['order'];
 $searches = $admin->actions[$find]['config']['search'];
 $list_filter = $admin->actions[$find]['config']['list_filter'];
 
-// Available variables: [modelObj, list_filter, searches, fields, order]
+// Available variables: [modelObj, list_filter, searches, fields]
 
 ?>
 	function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
@@ -31,7 +30,6 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 <?php if (!empty($fields)) : ?>
 			$query['fields'] = array('<?php echo join("', '", $fields); ?>');
 <?php endif; ?>
-			$query['order'] = array('<?php echo $order; ?>');
 <?php $contains = array(); ?>
 <?php if (!empty($fields)) : ?>
 <?php	foreach (array_keys($modelObj->schema()) as $field) : ?>

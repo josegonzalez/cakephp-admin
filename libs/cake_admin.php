@@ -145,7 +145,6 @@ class CakeAdmin {
                 'fields'                => array('*'),                  // Array or string of fields to enable
                 'list_filter'           => null,                        // Allow these to be filterable
                 'link'                  => array('id'),                 // Link to object here. Must be in fields
-                'order'                 => 'id ASC',                    // Default ordering
                 'search'                => null,                        // Allow searching of these fields
                 'sort'                  => true,                        // Allow sorting. True or array of sortable fields
             )

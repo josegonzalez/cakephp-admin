@@ -10,7 +10,6 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
         'fields'        => array('*'),      // array or string of fields to enable
         'list_filter'   => array(),         // Allow these to be filterable
         'link'          => array('id'),     // Link to object here. Must be in fields
-        'order'         => 'id ASC',        // Default ordering
         'search'        => array(),         // Allow searching of these fields
         'sort'          => true,            // Allow sorting. True or array of sortable fields
     );
@@ -63,7 +62,6 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
         $filters = array();
         $search = array();
         $fields = array();
-        $order = "{$admin->primaryKey} ASC";
         $schema = $modelObj->schema();
 
         if (empty($configuration['fields']) || (in_array('*', (array) $configuration['fields']))) {
@@ -74,16 +72,6 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
         } else {
             foreach ((array) $configuration['fields'] as $field) {
                 if ($field !== '*') $fields[] = $field;
-            }
-        }
-
-        if (!empty($configuration['order'])) {
-            $order = $configuration['order'];
-            if (count($order) == 1) {
-                $order = current($order);
-            }
-            if (is_array($order)) {
-                $order = join("', '", $fields);
             }
         }
 
@@ -117,7 +105,6 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
         $configuration['list_filter'] = $filters;
         $configuration['search'] = $search;
         $configuration['fields'] = $fields;
-        $configuration['order'] = $order;
         $configuration['sort'] = $sort;
 
         return $configuration;
