@@ -165,7 +165,11 @@ The following is an example implementation of @mergeVars($configuration)@:
             'ds'    => $admin->useDbConfig
         ));
 
+        $searches = array();
+        $filters = array();
         $fields = array();
+        $order = "{$admin->primaryKey} ASC";
+
         if (empty($configuration['fields']) || (in_array('*', (array) $configuration['fields']))) {
             // $fields is all fields
             foreach (array_keys($modelObj->schema()) as $field) {
@@ -177,6 +181,29 @@ The following is an example implementation of @mergeVars($configuration)@:
             }
         }
 
+        if (!empty($configuration['order'])) {
+            $order = $configuration['order'];
+            if (count($order) == 1) {
+                $order = current($order);
+            }
+            if (is_array($order)) {
+                $order = join("', '", $fields);
+            }
+        }
+
+        if (!empty($configuration['search'])) {
+            foreach ($configuration['search'] as $filter) {
+                $searches[] = $filter;
+                $filters[] = $filter;
+            }
+        }
+        if (!empty($configuration['list_filter'])) {
+            foreach (array_keys($configuration['list_filter']) as $filter) {
+                $filters[] = $filter;
+            }
+        }
+        $filters = array_unique($filters);
+
         $sort = $fields;
         if ($configuration['sort'] == false) {
             $sort = array();
@@ -184,8 +211,11 @@ The following is an example implementation of @mergeVars($configuration)@:
             $sort = $configuration['sort'];
         }
 
-        $configuration = array_merge($configuration, $this->defaults);
+        $configuration = array_merge($this->defaults, $configuration);
+        $configuration['searches'] = $searches;
+        $configuration['filters'] = $filters;
         $configuration['fields'] = $fields;
+        $configuration['order'] = $order;
         $configuration['sort'] = $sort;
 
         return $configuration;
