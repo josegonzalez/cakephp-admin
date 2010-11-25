@@ -8,25 +8,26 @@ $modelObj = ClassRegistry::init(array(
 
 $fields = $admin->actions[$find]['config']['fields'];
 $order = $admin->actions[$find]['config']['order'];
-$searches = $admin->actions[$find]['config']['searches'];
-$filters = $admin->actions[$find]['config']['filters'];
+$searches = $admin->actions[$find]['config']['search'];
+$list_filter = $admin->actions[$find]['config']['list_filter'];
 
-// Available variables: [modelObj, filters, searches, fields, order]
+// Available variables: [modelObj, list_filter, searches, fields, order]
 
 ?>
 	function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
 		if ($state === 'before') {
-<?php foreach ($filters as $filter) : ?>
-			if (!empty($query['params']['named']['<?php echo $filter; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$filter}"; ?>'] = $query['params']['named']['<?php echo $filter; ?>'];
+<?php foreach ($list_filter as $field => $config) : ?>
+			if (!empty($query['params']['named']['<?php echo $field; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}"; ?>'] = $query['params']['named']['<?php echo $field; ?>'];
 			}
 <?php endforeach; ?>
 
-<?php foreach ($searches as $search) : ?>
-			if (!empty($query['data']['<?php echo $admin->modelName; ?>']['<?php echo $search; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$search}"; ?>'] = $query['data']['<?php echo $admin->modelName; ?>Admin']['<?php echo $search; ?>'];
+<?php foreach ($searches as $field => $config) : ?>
+			if (!empty($query['data']['<?php echo $admin->modelName; ?>']['<?php echo $field; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}"; ?>'] = $query['data']['<?php echo $admin->modelName; ?>Admin']['<?php echo $field; ?>'];
 			}
 <?php endforeach; ?>
+
 <?php if (!empty($fields)) : ?>
 			$query['fields'] = array('<?php echo join("', '", $fields); ?>');
 <?php endif; ?>

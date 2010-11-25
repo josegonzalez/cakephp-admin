@@ -60,10 +60,11 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
             'ds'    => $admin->useDbConfig
         ));
 
-        $searches = array();
         $filters = array();
+        $search = array();
         $fields = array();
         $order = "{$admin->primaryKey} ASC";
+        $schema = $modelObj->schema();
 
         if (empty($configuration['fields']) || (in_array('*', (array) $configuration['fields']))) {
             // $fields is all fields
@@ -87,19 +88,23 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
         }
 
         if (!empty($configuration['list_filter'])) {
-            foreach (array_keys($configuration['list_filter']) as $filter) {
-                $filters[] = $filter;
+            foreach ($configuration['list_filter'] as $field => $config) {
+                $filters[$field] = (array) $config;
             }
         }
 
+        $configuration['search'] = Set::normalize($configuration['search']);
         if (!empty($configuration['search'])) {
-            foreach ($configuration['search'] as $filter) {
-                if (!in_array($filter, $searches)) $searches[] = $filter;
+            foreach ($configuration['search'] as $field => $alias) {
+                if (!in_array($field, array_keys($filters))) {
+                    $type = ($schema[$field]['type'] == 'text') ? 'text' : $schema[$field]['type'];
+                    $search[$field] = array(
+                        'type' => ($field === 'id') ? 'text' : $type,
+                        'alias' => empty($alias) ? $field : $alias,
+                    );
+                }
             }
         }
-
-        $filters = array_unique($filters);
-        $searches = array_unique($searches);
 
         $sort = $fields;
         if ($configuration['sort'] == false) {
@@ -109,8 +114,8 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
         }
 
         $configuration = array_merge($this->defaults, $configuration);
-        $configuration['searches'] = $searches;
-        $configuration['filters'] = $filters;
+        $configuration['list_filter'] = $filters;
+        $configuration['search'] = $search;
         $configuration['fields'] = $fields;
         $configuration['order'] = $order;
         $configuration['sort'] = $sort;

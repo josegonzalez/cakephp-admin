@@ -91,8 +91,8 @@
 ?>
 	</ul>
 
-	<h3><?php echo "<?php __('Filter'); ?>"; ?></h3>
 <?php if (!empty($configuration['config']['list_filter'])) : ?>
+	<h3><?php echo "<?php __('Filter'); ?>"; ?></h3>
 <?php	foreach ($configuration['config']['list_filter'] as $field => $filter) : ?>
 	<h4><?php printf("<?php __('By %s'); ?>", Inflector::humanize(preg_replace('/_id$/', '', $field))); ?></h4>
 	<ul>
@@ -102,4 +102,18 @@
 	</ul>
 <?php	endforeach; ?>
 <?php endif; ?>
+
+
+<?php if (!empty($configuration['config']['search'])) : ?>
+	<h3><?php echo "<?php __('Search'); ?>"; ?></h3>
+	<?php echo "<?php echo \$this->Form->create('{$modelClass}'); ?>"; ?>
+
+	<ul>
+<?php	foreach ($configuration['config']['search'] as $field => $config) : ?>
+		<li><?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => '{$config['type']}')); ?>"; ?></li>
+<?php	endforeach; ?>
+	</ul>
+	<?php echo "<?php echo \$this->Form->end(); ?>"; ?>
+<?php endif; ?>
+
 </div>
