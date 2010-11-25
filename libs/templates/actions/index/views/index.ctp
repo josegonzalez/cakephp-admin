@@ -90,4 +90,16 @@
 	}
 ?>
 	</ul>
+
+	<h3><?php echo "<?php __('Filter'); ?>"; ?></h3>
+<?php if (!empty($configuration['config']['list_filter'])) : ?>
+<?php	foreach ($configuration['config']['list_filter'] as $field => $filter) : ?>
+	<h4><?php printf("<?php __('By %s'); ?>", Inflector::humanize(preg_replace('/_id$/', '', $field))); ?></h4>
+	<ul>
+<?php foreach ($filter as $key => $value) : ?>
+		<li><?php echo "<?php echo \$this->Html->link(__('Show {$value}', true), array('{$field}' => {$key})); ?>"; ?></li>
+<?php endforeach; ?>
+	</ul>
+<?php	endforeach; ?>
+<?php endif; ?>
 </div>

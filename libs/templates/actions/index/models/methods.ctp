@@ -18,13 +18,13 @@ $filters = $admin->actions[$find]['config']['filters'];
 		if ($state === 'before') {
 <?php foreach ($filters as $filter) : ?>
 			if (!empty($query['params']['named']['<?php echo $filter; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->modelName}.{$filter}"; ?>'] = $query['params']['named']['<?php echo $filter; ?>'];
+				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$filter}"; ?>'] = $query['params']['named']['<?php echo $filter; ?>'];
 			}
 <?php endforeach; ?>
 
 <?php foreach ($searches as $search) : ?>
 			if (!empty($query['data']['<?php echo $admin->modelName; ?>']['<?php echo $search; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->modelName}.{$search}"; ?>'] = $query['data']['<?php echo $admin->modelName; ?>']['<?php echo $search; ?>'];
+				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$search}"; ?>'] = $query['data']['<?php echo $admin->modelName; ?>Admin']['<?php echo $search; ?>'];
 			}
 <?php endforeach; ?>
 <?php if (!empty($fields)) : ?>
