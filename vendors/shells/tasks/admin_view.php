@@ -106,6 +106,7 @@ class AdminViewTask extends Shell {
         $fields             = array_keys($schema);
 
         $controllerName     = $this->_controllerName($admin->modelName . 'Admin');
+        $pluginControllerName= $this->_pluralName($admin->modelName);
 
         $singularVar        = Inflector::variable($modelClass);
         $singularName       = $this->_singularName($modelClass);
@@ -122,6 +123,7 @@ class AdminViewTask extends Shell {
             'schema',
             'fields',
             'controllerName',
+            'pluginControllerName',
             'singularVar',
             'singularName',
             'singularHumanName',

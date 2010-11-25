@@ -93,11 +93,12 @@
 
 <?php if (!empty($configuration['config']['list_filter'])) : ?>
 	<h3><?php echo "<?php __('Filter'); ?>"; ?></h3>
+	<?php echo "<?php \$current = array_diff_key(\$this->params['named'], Set::normalize(array('direction', 'sort', 'order', 'page'))); ?>\n"; ?>
 <?php	foreach ($configuration['config']['list_filter'] as $field => $filter) : ?>
 	<h4><?php printf("<?php __('By %s'); ?>", Inflector::humanize(preg_replace('/_id$/', '', $field))); ?></h4>
 	<ul>
 <?php foreach ($filter as $key => $value) : ?>
-		<li><?php echo "<?php echo \$this->Html->link(__('Show {$value}', true), array('{$field}' => {$key})); ?>"; ?></li>
+		<li><?php echo "<?php echo \$this->Html->link(__('Show {$value}', true), array_merge(\$current, array('{$field}' => {$key}))); ?>"; ?></li>
 <?php endforeach; ?>
 	</ul>
 <?php	endforeach; ?>
@@ -106,13 +107,14 @@
 
 <?php if (!empty($configuration['config']['search'])) : ?>
 	<h3><?php echo "<?php __('Search'); ?>"; ?></h3>
-	<?php echo "<?php echo \$this->Form->create('{$modelClass}'); ?>"; ?>
-
+	<?php echo "<?php echo \$this->Form->create('{$modelClass}', array('url' => array(
+		'plugin' => '{$admin->plugin}', 'controller' => '{$pluginControllerName}', 'action' => '{$action}'))); ?>\n"; ?>
 	<ul>
 <?php	foreach ($configuration['config']['search'] as $field => $config) : ?>
 		<li><?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => '{$config['type']}')); ?>"; ?></li>
 <?php	endforeach; ?>
 	</ul>
+	<?php echo "<?php echo \$this->Form->submit(); ?>\n"; ?>
 	<?php echo "<?php echo \$this->Form->end(); ?>"; ?>
 <?php endif; ?>
 
