@@ -52,7 +52,6 @@ class AdminViewTask extends Shell {
  * @return void
  **/
     function generate($admin) {
-        $success = true;
         foreach ($admin->actions as $alias => $configuration) {
             if ($configuration['enabled'] !== true) continue;
 
@@ -64,8 +63,9 @@ class AdminViewTask extends Shell {
             $path[] = $this->_controllerPath($this->_controllerName($admin->modelName)) . DS;
             $path[] = $alias . '.ctp';
 
-            if (!$this->createFile(implode($path), $content)) $success = false;
+            if (!$this->createFile(implode($path), $content)) return false;
         }
+        return true;
     }
 
     function getContent($admin, $action, $configuration) {
