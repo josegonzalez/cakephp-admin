@@ -45,7 +45,12 @@
 				}
 			}
 			if ($isKey !== true) {
-				echo "\t\t<td><?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>&nbsp;</td>\n";
+				if ($field == $primaryKey) {
+					echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$modelClass}']['{$field}'], array(";
+					echo "'action' => '{$admin->linkTo}', \${$singularVar}['{$modelClass}']['{$field}'])); ?></td>\n";
+				} else {
+					echo "\t\t<td><?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>&nbsp;</td>\n";
+				}
 			}
 		}
 
@@ -92,7 +97,7 @@
 						$end .= ", {$confirmMessage}";
 					}
 				}
-				echo "\t\t\t<?php echo \$this->Html->link(__('{$config['title']}', true), {$url}{$end});?>\n";
+				echo "\t\t\t<?php echo \$this->Html->link(__('{$config['title']}', true), {$url}{$end}); ?>\n";
 			}
 		}
 		echo "\t\t</td>\n";
