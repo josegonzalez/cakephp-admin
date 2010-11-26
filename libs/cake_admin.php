@@ -138,6 +138,14 @@ class CakeAdmin {
     var $redirectTo = 'index';
 
 /**
+ * Alias to link to on a record-level link
+ *
+ * @var string
+ * @default index
+ */
+    var $linkTo = 'edit';
+
+/**
  * Customize the admin
  *
  * @var array
