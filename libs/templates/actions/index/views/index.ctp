@@ -50,9 +50,51 @@
 		}
 
 		echo "\t\t<td class=\"actions\">\n";
-		echo "\t\t\t<?php echo \$this->Html->link(__('View', true), array('action' => 'view', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n";
-	 	echo "\t\t\t<?php echo \$this->Html->link(__('Edit', true), array('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n";
-	 	echo "\t\t\t<?php echo \$this->Html->link(__('Delete', true), array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']), null, sprintf(__('Are you sure you want to delete # %s?', true), \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n";
+		foreach ($admin->links as $alias => $config) {
+			if ($alias == $action) continue;
+			if (is_array($config)) {
+				$url     = array();
+				$options = array();
+				$confirmMessage = $config['confirmMessage'];
+				if (is_array($config['url'])) {
+					foreach ($config['url'] as $key => $value) {
+						if (!empty($value)) {
+							$url[] = "'{$key}' => '{$value}'";
+						} else {
+							$url[] = "'{$key}'";
+						}
+					}
+					$url[] = "\${$singularVar}['{$modelClass}']['{$primaryKey}']";
+					$url = 'array(' . implode(', ', $url) . ')';
+				} else {
+					$url = "'{$config['url']}'";
+				}
+				if (is_array($config['options'])) {
+					foreach ($config['options'] as $key => $value) {
+						if (!empty($value)) {
+							$url[] = "'{$key}' => '{$value}'";
+						} else {
+							$url[] = "'{$key}'";
+						}
+					}
+					$options = 'array(' . implode(', ', $options) . ')';
+				} else {
+					$options = $config['options'];
+				}
+				$end = '';
+				if (empty($options)) {
+					if (!empty($confirmMessage)) {
+						$end = ", null, {$confirmMessage}";
+					}
+				} else {
+					$end .= ", '{$options}'";
+					if (!empty($confirmMessage)) {
+						$end .= ", {$confirmMessage}";
+					}
+				}
+				echo "\t\t\t<?php echo \$this->Html->link(__('{$config['title']}', true), {$url}{$end});?>\n";
+			}
+		}
 		echo "\t\t</td>\n";
 	echo "\t</tr>\n";
 
@@ -80,7 +122,8 @@
 foreach ($admin->links as $alias => $config) :
 	if ($config !== false && is_string($config)) : ?>
 		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
-<?php	endif;
+<?php
+	endif;
 endforeach;
 ?>
 <?php

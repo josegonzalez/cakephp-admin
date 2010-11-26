@@ -65,11 +65,56 @@
 <div class="actions">
 	<h3><?php echo "<?php __('Actions'); ?>"; ?></h3>
 	<ul>
-
-<?php if (strpos($action, 'add') === false): ?>
-		<li><?php echo "<?php echo \$this->Html->link(__('Delete', true), array('action' => 'delete', \$this->Form->value('{$modelClass}.{$primaryKey}')), null, sprintf(__('Are you sure you want to delete # %s?', true), \$this->Form->value('{$modelClass}.{$primaryKey}'))); ?>";?></li>
-<?php endif;?>
-		<li><?php echo "<?php echo \$this->Html->link(__('List " . $pluralHumanName . "', true), array('action' => 'index'));?>";?></li>
+<?php
+foreach ($admin->links as $alias => $config) {
+	if ($alias == $action) continue;
+	if ($config !== false && is_string($config)) { ?>
+		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
+<?php
+	} elseif (is_array($config)) {
+		$url     = array();
+		$options = array();
+		$confirmMessage = $config['confirmMessage'];
+		if (is_array($config['url'])) {
+			foreach ($config['url'] as $key => $value) {
+				if (!empty($value)) {
+					$url[] = "'{$key}' => '{$value}'";
+				} else {
+					$url[] = "'{$key}'";
+				}
+			}
+			$url[] = "\$this->Form->value('{$modelClass}.{$primaryKey}')";
+			$url = 'array(' . implode(', ', $url) . ')';
+		} else {
+			$url = "'{$config['url']}'";
+		}
+		if (is_array($config['options'])) {
+			foreach ($config['options'] as $key => $value) {
+				if (!empty($value)) {
+					$url[] = "'{$key}' => '{$value}'";
+				} else {
+					$url[] = "'{$key}'";
+				}
+			}
+			$options = 'array(' . implode(', ', $options) . ')';
+		} else {
+			$options = $config['options'];
+		}
+		$end = '';
+		if (empty($options)) {
+			if (!empty($confirmMessage)) {
+				$end = ", null, {$confirmMessage}";
+			}
+		} else {
+			$end .= ", '{$options}'";
+			if (!empty($confirmMessage)) {
+				$end .= ", {$confirmMessage}";
+			}
+		}
+		echo "\t\t<li><?php echo \$this->Html->link(__('{$config['title']}', true), {$url}{$end});?></li>\n";
+	}
+}
+?>
 <?php
 		$done = array();
 		foreach ($associations as $type => $data) {

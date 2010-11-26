@@ -295,6 +295,23 @@ class CakeAdmin {
                 $this->actions[$alias]['linkable'] = $configClass->linkable;
             }
 
+            if (is_array($this->actions[$alias]['linkable'])) {
+                if (!isset($this->actions[$alias]['linkable']['title'])) {
+                    $this->actions[$alias]['linkable']['title'] = Inflector::humanize($alias);
+                }
+                if (!isset($this->actions[$alias]['linkable']['url'])) {
+                    $this->actions[$alias]['linkable']['url'] = array('action' => $alias);
+                } else {
+                    $this->actions[$alias]['linkable']['url'] = Set::normalize($this->actions[$alias]['linkable']['url']);
+                }
+                if (!isset($this->actions[$alias]['linkable']['options'])) {
+                    $this->actions[$alias]['linkable']['options'] = null;
+                }
+                if (!isset($this->actions[$alias]['linkable']['confirmMessage'])) {
+                    $this->actions[$alias]['linkable']['confirmMessage'] = false;
+                }
+            }
+
             $this->actions[$alias]['config'] = $configClass->mergeVars($this, $this->actions[$alias]['config']);
         }
 
