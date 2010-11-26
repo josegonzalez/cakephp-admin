@@ -210,12 +210,14 @@ class CakeAdmin {
             'enabled'   => false,                                       // History is disabled by default. Requires Logable
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
             'methods'   => false,                                       // Has Finders? Has Related Finders?
+            'config'    => array(),
         ),
         'changelog' => array(
             'type'      => 'changelog',                                 // If not set, type maps to the key of this action
             'enabled'   => false,                                       // Changelog is disabled by default. Requires Logable
             'plugin'    => 'cake_admin',                                // Path where the associated templates are located
             'methods'   => false,                                       // Has Finders? Has Related Finders?
+            'config'    => array(),
         ),
     );
 
@@ -250,6 +252,12 @@ class CakeAdmin {
             $this->actions = $this->_actions;
         }
 
+        foreach ($this->_actions as $alias => $configuration) {
+            if (!isset($this->actions[$alias])) {
+                $this->actions[$alias] = $configuration;
+            }
+        }
+
         foreach ($this->actions as $alias => $configuration) {
             if (empty($configuration['plugin'])) $this->actions[$alias]['plugin'] = 'cake_admin';
 
@@ -268,6 +276,12 @@ class CakeAdmin {
             }
 
             $configClass = new $className;
+            if (isset($this->actions[$alias]['enabled'])) {
+                $this->actions[$alias]['enabled'] = (bool) $this->actions[$alias]['enabled'];
+            } else {
+                $this->actions[$alias]['enabled'] = true;
+            }
+
             $this->actions[$alias]['methods'] = $configClass->methods;
             $this->actions[$alias]['linkable'] = $configClass->linkable;
             if (!isset($this->actions[$alias]['config'])) $this->actions[$alias]['config'] = array();
