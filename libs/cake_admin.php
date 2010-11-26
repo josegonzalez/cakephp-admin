@@ -123,6 +123,13 @@ class CakeAdmin {
     var $sessions = true;
 
 /**
+ * Array of links for the model
+ *
+ * @var array
+ **/
+    var $links = array();
+
+/**
  * Action to redirect to on errors
  *
  * @var string
@@ -283,10 +290,27 @@ class CakeAdmin {
             }
 
             $this->actions[$alias]['methods'] = $configClass->methods;
-            $this->actions[$alias]['linkable'] = $configClass->linkable;
-            if (!isset($this->actions[$alias]['config'])) $this->actions[$alias]['config'] = array();
+
+            if (!isset($this->actions[$alias]['linkable'])) {
+                $this->actions[$alias]['linkable'] = $configClass->linkable;
+            }
+
             $this->actions[$alias]['config'] = $configClass->mergeVars($this, $this->actions[$alias]['config']);
         }
+
+        $actions = array();
+        foreach ($this->actions as $alias => $configuration) {
+            if ($configuration['enabled'] === true) {
+                $actions[$alias] = $configuration;
+
+                if ($configuration['linkable'] === true || $configuration['linkable'] === false) {
+                    $this->links[$alias] = Inflector::humanize($alias);
+                } else {
+                    $this->links[$alias] = $configuration['linkable'];
+                }
+            }
+        }
+        $this->actions = $actions;
     }
 
 /**

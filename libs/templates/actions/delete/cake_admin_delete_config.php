@@ -53,7 +53,7 @@ class CakeAdminDeleteConfig extends CakeAdminActionConfig {
  *
  * @var mixed
  **/
-    var $linkable = true;
+    var $linkable = array('title' => 'Delete');
 
 /**
  * Model methods this action contains

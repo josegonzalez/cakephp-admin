@@ -40,7 +40,8 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
  * Whether this action is linkable
  *
  * False to produce no links anywhere (except when specified within a template)
- * True when linkable on a model-level
+ * True when linkable on a model-level. Link prefix defaults to humanized action alias
+ * String when linkable on a model-level. Link prefix is then the string
  * An array when linkable on the record-level. The mappings for the array are:
  * - (string) title: The content to be wrapped by <a> tags.
  * - (array) options: Array of HTML attributes
@@ -52,7 +53,7 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
  *
  * @var mixed
  **/
-    var $linkable = true;
+    var $linkable = 'List';
 
 /**
  * Model methods this action contains

@@ -76,7 +76,13 @@
 <div class="actions">
 	<h3><?php echo "<?php __('Actions'); ?>"; ?></h3>
 	<ul>
-		<li><?php echo "<?php echo \$this->Html->link(__('New " . $singularHumanName . "', true), array('action' => 'add')); ?>";?></li>
+<?php
+foreach ($admin->links as $alias => $config) :
+	if ($config !== false && is_string($config)) : ?>
+		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
+<?php	endif;
+endforeach;
+?>
 <?php
 	$done = array();
 	foreach ($associations as $type => $data) {
