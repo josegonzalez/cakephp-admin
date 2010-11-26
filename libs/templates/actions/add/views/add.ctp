@@ -44,15 +44,19 @@
 			$options = (empty($options)) ? '' : ", array(" . implode(', ', $options). ")";
 			echo "\t\t\techo \$this->Form->input('{$field}'{$options});\n";
 		}
-		if ($config['habtm'] === true && !empty($associations['hasAndBelongsToMany'])) {
-			foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) {
-				echo "\t\t\techo \$this->Form->input('{$assocName}');\n";
-			}
-		}
 		echo "\t\t?>\n";
 ?>
 	</fieldset>
 <?php endforeach; ?>
+<?php
+if ($config['habtm'] === true && !empty($associations['hasAndBelongsToMany'])) {
+	echo "\t<fieldset>";
+	foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) {
+		echo "\t\t<?php echo \$this->Form->input('{$assocName}'); ?>\n";
+	}
+	echo "\t</fieldset";
+}
+?>
 <?php
 	echo "<?php echo \$this->Form->end(__('Submit', true));?>\n";
 ?>
