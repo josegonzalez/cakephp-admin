@@ -17,9 +17,11 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 ?>
+<?php $id = false; ?>
 <div class="<?php echo $pluralVar;?> form">
 <h2><?php printf("<?php __('%s %s'); ?>", Inflector::humanize($action), $singularHumanName); ?></h2>
-<?php echo "<?php echo \$this->Form->create('{$modelClass}');?>\n";?>
+<?php echo "<?php echo \$this->Form->create('{$modelClass}', array('url' => array(
+	'plugin' => '{$admin->plugin}', 'controller' => '{$controllerRoute}', 'action' => '{$action}')));?>\n";?>
 <?php foreach ($configuration['config'] as $i => $config): ?>
 	<fieldset<?php if (!empty($config['classes'])) echo ' class="' . $config['classes'] . '"'; ?>>
 <?php if (!empty($config['title'])) : ?>
@@ -31,6 +33,7 @@
 <?php
 		echo "\t\t<?php\n";
 		foreach ($config['fields'] as $field => $fieldConfig) {
+			if (in_array($field, array("{$admin->primaryKey}", "{$modelClass}.{$admin->primaryKey}"))) $id = true;
 			$options = array();
 			if (!empty($fieldConfig)) {
 				foreach ($fieldConfig as $key => $value) {
@@ -52,6 +55,9 @@
 ?>
 	</fieldset>
 <?php endforeach; ?>
+<?php if (!$id) : ?>
+	<?php echo "<?php echo \$this->Form->input('id');?>\n"; ?>
+<?php endif; ?>
 <?php
 	echo "<?php echo \$this->Form->end(__('Submit', true));?>\n";
 ?>
