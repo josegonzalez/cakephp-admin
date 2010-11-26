@@ -84,7 +84,7 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
 
         if (empty($configuration['fields']) || (in_array('*', (array) $configuration['fields']))) {
             // $fields is all fields
-            foreach (array_keys($modelObj->schema()) as $field) {
+            foreach (array_keys($schema) as $field) {
                 $fields[] = $field;
             }
         } else {
