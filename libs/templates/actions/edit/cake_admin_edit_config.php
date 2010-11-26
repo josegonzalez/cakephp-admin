@@ -7,16 +7,14 @@ class CakeAdminEditConfig extends CakeAdminActionConfig {
  * @var array
  **/
     var $defaults = array(
-        array(
-            'title'         => null,                        // Defaults to null
-            'classes'       => null,                        // Wraps the section in these classes
-            'description'   => null,                        // Used to describe this section
-            'fields'        => array('*'),                  // These fields are editable.
-            'readonly'      => array('created', 'modified'),// These fields are read-only
-            'hidden'        => array(),                     // These fields are hidden
-            'default'       => array(),                     // These fields are defaulted
-            'exclude'       => array(),                     // These fields are excluded
-        )
+        'title'         => null,                        // Defaults to null
+        'classes'       => null,                        // Wraps the section in these classes
+        'description'   => null,                        // Used to describe this section
+        'fields'        => array('*'),                  // These fields are editable. if associative, field => label
+        'readonly'      => array(),                     // These fields are read-only
+        'hidden'        => array(),                     // These fields are hidden
+        'exclude'       => array('created', 'modified', 'updated'),// These fields are excluded
+        'habtm'         => false,                       // Allow editing of habtm data
     );
 
 /**
