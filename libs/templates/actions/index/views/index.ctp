@@ -108,7 +108,7 @@
 <?php if (!empty($configuration['config']['search'])) : ?>
 	<h3><?php echo "<?php __('Search'); ?>"; ?></h3>
 	<?php echo "<?php echo \$this->Form->create('{$modelClass}', array('url' => array(
-		'plugin' => '{$admin->plugin}', 'controller' => '{$pluginControllerName}', 'action' => '{$action}'))); ?>\n"; ?>
+		'plugin' => '{$admin->plugin}', 'controller' => '{$controllerRoute}', 'action' => '{$action}'))); ?>\n"; ?>
 	<ul>
 <?php	foreach ($configuration['config']['search'] as $field => $config) : ?>
 		<li><?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => '{$config['type']}')); ?>"; ?></li>
