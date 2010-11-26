@@ -64,10 +64,14 @@ if ($config['habtm'] === true && !empty($associations['hasAndBelongsToMany'])) {
 <div class="actions">
 	<h3><?php echo "<?php __('Actions'); ?>"; ?></h3>
 	<ul>
-
-<?php if (strpos($action, 'add') === false): ?>
-		<li><?php echo "<?php echo \$this->Html->link(__('Delete', true), array('action' => 'delete', \$this->Form->value('{$modelClass}.{$primaryKey}')), null, sprintf(__('Are you sure you want to delete # %s?', true), \$this->Form->value('{$modelClass}.{$primaryKey}'))); ?>";?></li>
-<?php endif;?>
-		<li><?php echo "<?php echo \$this->Html->link(__('List " . $pluralHumanName . "', true), array('action' => 'index'));?>";?></li>
+<?php
+foreach ($admin->links as $alias => $config) {
+	if ($alias == $action) continue;
+	if ($config !== false && is_string($config)) { ?>
+		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
+<?php
+	}
+}
+?>
 	</ul>
 </div>
