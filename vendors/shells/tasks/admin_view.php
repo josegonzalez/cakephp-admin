@@ -105,15 +105,16 @@ class AdminViewTask extends Shell {
         $schema             = $modelObj->schema(true);
         $fields             = array_keys($schema);
 
-        $controllerName     = $this->_controllerName($admin->modelName . 'Admin');
-        $pluginControllerName= $this->_pluralName($admin->modelName);
+        $controllerName     = $this->_controllerName($admin->modelName);
+        $controllerRoute    = $this->_pluralName($admin->modelName);
+        $pluginControllerName= $this->_controllerName($admin->modelName . 'Admin');
 
         $singularVar        = Inflector::variable($modelClass);
         $singularName       = $this->_singularName($modelClass);
-        $singularHumanName  = $this->_singularHumanName($controllerName);
-        $pluralVar          = Inflector::variable($controllerName);
+        $singularHumanName  = $this->_singularHumanName($this->_controllerName($admin->modelName));
+        $pluralVar          = Inflector::variable($pluginControllerName);
         $pluralName         = $this->_pluralName($modelClass);
-        $pluralHumanName    = $this->_pluralName($controllerName);
+        $pluralHumanName    = Inflector::humanize($this->_pluralName($controllerName));
         $associations       = $this->__associations($modelObj);
 
         return compact(
@@ -123,6 +124,7 @@ class AdminViewTask extends Shell {
             'schema',
             'fields',
             'controllerName',
+            'controllerRoute',
             'pluginControllerName',
             'singularVar',
             'singularName',
