@@ -59,20 +59,12 @@ class AdminShell extends Shell {
         }
         $build = 0;
         $plugins = array();
-
+        $adminClasses = array();
         foreach ($files as $file) {
             // Create an instance of the particular admin class
             $className = Inflector::camelize(str_replace('.php', '', $file));
             App::import('Lib', $className, array('file' => "admin/{$file}"));
             $admin = new $className;
-
-            if (!in_array($admin->plugin, array_keys($plugins))) {
-                $plugins[$admin->plugin][] = array(
-                    'title' => $this->_controllerName($admin->modelName),
-                    'controller' => $this->_pluralName($this->_controllerName($admin->modelName)),
-                    'action' => $admin->redirectTo,
-                );
-            }
 
             // Validate the admin class
             if (!$this->validate($admin)) {
@@ -89,6 +81,17 @@ class AdminShell extends Shell {
                 continue;
             }
 
+            $adminClasses[$file] = $admin;
+            if (!in_array($admin->plugin, array_keys($plugins))) {
+                $plugins[$admin->plugin][] = array(
+                    'title' => $this->_controllerName($admin->modelName),
+                    'controller' => $this->_pluralName($this->_controllerName($admin->modelName)),
+                    'action' => $admin->redirectTo,
+                );
+            }
+        }
+
+        foreach ($adminClasses as $file => $admin) {
             if (!$this->generate($admin)) {
                 $this->err(sprintf(
                     __('Error in generating admin for %s', true),
