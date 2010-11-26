@@ -83,27 +83,53 @@ class CakeAdminAddConfig extends CakeAdminActionConfig {
             }
 
             $fields = array();
-            if (empty($config['fields']) || (in_array('*', (array) $config['fields']))) {
+            if (empty($configuration[$i]['fields']) || (in_array('*', (array) $configuration[$i]['fields']))) {
                 // $fields is all fields
                 foreach (array_keys($schema) as $field) {
-                    $fields[] = $field;
+                    if ($field == $modelObj->primaryKey) continue;
+                    $fields[$field] = array();
                 }
             } else {
-                $config['fields'] = Set::normalize($config['fields']);
-                foreach ((array) $config['fields'] as $field => $alias) {
-                    if ($field !== '*') $fields[$field] = $alias;
+                $configuration[$i]['fields'] = Set::normalize($configuration[$i]['fields']);
+                foreach ((array) $configuration[$i]['fields'] as $field => $config) {
+                    if ($field == $modelObj->primaryKey) continue;
+
+                    if (empty($configuration[$i])) {
+                        $config = array();
+                    } else if (is_string($config)) {
+                        $config = array('label' => $config);
+                    }
+                    if ($field !== '*') $fields[$field] = $config;
                 }
             }
 
-            if (!empty($config['exclude'])) {
-                foreach ($config['exclude'] as $field) {
+            if (!empty($configuration[$i]['exclude'])) {
+                foreach ($configuration[$i]['exclude'] as $field) {
                     if (in_array($field, array_keys($fields))) {
                         $fields = array_diff_key($fields, array($field => $field));
                     }
                 }
             }
 
+            if (!empty($configuration[$i]['hidden'])) {
+                foreach ((array) $configuration[$i]['hidden'] as $field) {
+                    if (in_array($field, array_keys($fields))) {
+                        $fields[$field]['type'] = 'hidden';
+                    }
+                }
+            }
+
+            if (!empty($configuration[$i]['default'])) {
+                foreach ((array) $configuration[$i]['default'] as $field => $value) {
+                    if (in_array($field, array_keys($fields))) {
+                        $fields[$field]['value'] = $value;
+                    }
+                }
+            }
+
             $configuration[$i]['fields'] = $fields;
+            $configuration[$i]['classes'] = (string) $configuration[$i]['classes'];
+            $configuration[$i]['description'] = (string) $configuration[$i]['description'];
         }
 
         return $configuration;
