@@ -60,7 +60,7 @@ if ($config['habtm'] === true && !empty($associations['hasAndBelongsToMany'])) {
 }
 ?>
 <?php if (!$id) : ?>
-	<?php echo "<?php echo \$this->Form->input('id');?>\n"; ?>
+	<?php echo "<?php echo \$this->Form->input('{$admin->primaryKey}');?>\n"; ?>
 <?php endif; ?>
 <?php
 	echo "<?php echo \$this->Form->end(__('Submit', true));?>\n";
