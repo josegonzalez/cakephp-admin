@@ -31,6 +31,24 @@ class CakeAdminActionConfig {
     var $type = null;
 
 /**
+ * Whether this action is linkable
+ *
+ * False to produce no links anywhere (except when specified within a template)
+ * True when linkable on a model-level
+ * An array when linkable on the record-level. The mappings for the array are:
+ * - (string) title: The content to be wrapped by <a> tags.
+ * - (array) options: Array of HTML attributes
+ * - (string) confirmMessage: JavaScript confirmation message. Literal string will be output
+ *          the following will be replaced within the confirmMessage
+ *              {{primaryKey}} : alias of the primaryKey
+ *              {{modelName}} : alias of the humanized application modelName
+ *              {{pluginModelName}} : alias of the humanized generated modelName
+ *
+ * @var mixed
+ **/
+    var $linkable = false;
+
+/**
  * Model methods this action contains
  *
  * @var array

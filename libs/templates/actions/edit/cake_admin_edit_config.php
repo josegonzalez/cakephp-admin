@@ -42,10 +42,87 @@ class CakeAdminEditConfig extends CakeAdminActionConfig {
     var $type = 'edit';
 
 /**
+ * Whether this action is linkable
+ *
+ * False to produce no links anywhere (except when specified within a template)
+ * True when linkable on a model-level
+ * An array when linkable on the record-level. The mappings for the array are:
+ * - (string) title: The content to be wrapped by <a> tags.
+ * - (array) options: Array of HTML attributes
+ * - (string) confirmMessage: JavaScript confirmation message. Literal string will be output
+ *          the following will be replaced within the confirmMessage
+ *              {{primaryKey}} : alias of the primaryKey
+ *              {{modelName}} : alias of the humanized application modelName
+ *              {{pluginModelName}} : alias of the humanized generated modelName
+ *
+ * @var mixed
+ **/
+    var $linkable = array('title' => 'Edit');
+
+/**
  * Model methods this action contains
  *
  * @var array
  **/
     var $methods = array('find', 'related');
+
+    function mergeVars($admin, $configuration) {
+        if (empty($configuration)) return array($this->defaults);
+
+        $modelObj = ClassRegistry::init(array(
+            'class' => $admin->modelName,
+            'table' => $admin->useTable,
+            'ds'    => $admin->useDbConfig
+        ));
+
+        $schema = $modelObj->schema();
+
+        foreach ($configuration as $i => $config) {
+
+            foreach ($this->defaults as $key => $value) {
+                if (!isset($config[$key])) $configuration[$i][$key] = $value;
+            }
+
+            $fields = array();
+            if (empty($configuration[$i]['fields']) || (in_array('*', (array) $configuration[$i]['fields']))) {
+                // $fields is all fields
+                foreach (array_keys($schema) as $field) {
+                    $fields[$field] = array();
+                }
+            } else {
+                $configuration[$i]['fields'] = Set::normalize($configuration[$i]['fields']);
+                foreach ((array) $configuration[$i]['fields'] as $field => $config) {
+                    if (empty($configuration[$i])) {
+                        $config = array();
+                    } else if (is_string($config)) {
+                        $config = array('label' => $config);
+                    }
+                    if ($field !== '*') $fields[$field] = $config;
+                }
+            }
+
+            if (!empty($configuration[$i]['exclude'])) {
+                foreach ($configuration[$i]['exclude'] as $field) {
+                    if (in_array($field, array_keys($fields))) {
+                        $fields = array_diff_key($fields, array($field => $field));
+                    }
+                }
+            }
+
+            if (!empty($configuration[$i]['hidden'])) {
+                foreach ((array) $configuration[$i]['hidden'] as $field) {
+                    if (in_array($field, array_keys($fields))) {
+                        $fields[$field]['type'] = 'hidden';
+                    }
+                }
+            }
+
+            $configuration[$i]['fields'] = $fields;
+            $configuration[$i]['classes'] = (string) $configuration[$i]['classes'];
+            $configuration[$i]['description'] = (string) $configuration[$i]['description'];
+        }
+
+        return $configuration;
+    }
 
 }
