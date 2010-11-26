@@ -1,11 +1,15 @@
 	function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
 		if ($state === 'before') {
 			$query['conditions']['<?php echo $admin->modelName; ?>Admin.<?php echo $admin->primaryKey?>'] = $query['<?php echo $admin->primaryKey; ?>'];
+			$query['limit'] = 1;
 			unset($query['<?php echo $admin->primaryKey; ?>']);
 
 			return $query;
 		}
-		return $results;
+		if (empty($results[0])) {
+			return false;
+		}
+		return $results[0];
 	}<?php
 // Create a model object
 $modelObj = ClassRegistry::init(array(
