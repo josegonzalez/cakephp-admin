@@ -1,1 +1,1 @@
-<div class="flash information"><?php echo $message; ?></div>
+<?php echo "<div class=\"flash information\"><?php echo \$message; ?></div>"; ?>
