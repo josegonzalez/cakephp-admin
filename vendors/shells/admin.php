@@ -58,11 +58,21 @@ class AdminShell extends Shell {
             $this->error(__('Admin files not found', true));
         }
         $build = 0;
+        $plugins = array();
+
         foreach ($files as $file) {
             // Create an instance of the particular admin class
             $className = Inflector::camelize(str_replace('.php', '', $file));
             App::import('Lib', $className, array('file' => "admin/{$file}"));
             $admin = new $className;
+
+            if (!in_array($admin->plugin, array_keys($plugins))) {
+                $plugins[$admin->plugin][] = array(
+                    'title' => $this->_controllerName($admin->modelName),
+                    'controller' => $this->_pluralName($this->_controllerName($admin->modelName)),
+                    'action' => $admin->redirectTo,
+                );
+            }
 
             // Validate the admin class
             if (!$this->validate($admin)) {
@@ -86,8 +96,11 @@ class AdminShell extends Shell {
                 ));
                 continue;
             }
+
             $build++;
         }
+
+        $this->generateMisc($plugins);
 
         $fails = count($files) - $build;
         if ($build == 0) {
@@ -286,6 +299,45 @@ class AdminShell extends Shell {
             return false;
         }
         return true;
+    }
+
+/**
+ * Adds extra data for each generated plugin, such as
+ * layouts, css, and elements
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+    function generateMisc($plugins) {
+        foreach ($plugins as $plugin => $cakeAdmins) {
+            // Generate flash elements
+            $files = array('error', 'info', 'notice', 'success');
+
+            $templatePath = array();
+            $templatePath[] = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS;
+            $templatePath[] = 'templates' . DS . 'misc' . DS;
+
+            foreach ($files as $file) {
+                $contents = $this->AdminTemplate->generate(implode($templatePath) . 'flash' . DS, $file);
+
+                $path = APP . 'plugins' . DS . $plugin . DS . 'views' . DS . 'elements' . DS . 'flash' . DS;
+                $this->createFile("{$path}{$file}.ctp", $contents);
+            }
+
+            // Generate CSS
+            $contents = $this->AdminTemplate->generate(implode($templatePath), 'cake.admin.generic');
+            $path = APP . 'plugins' . DS . $plugin . DS . 'webroot' . DS . 'css' . DS;
+            $this->createFile("{$path}cake.admin.generic.css", $contents);
+
+            // Generate Layout
+            $this->AdminTemplate->set(compact(
+                'plugin',
+                'plugins'
+            ));
+            $contents = $this->AdminTemplate->generate(implode($templatePath), 'layout.default');
+            $path = APP . 'plugins' . DS . $plugin . DS . 'views' . DS . 'layouts' . DS;
+            $this->createFile("{$path}default.ctp", $contents);
+        }
     }
 
 /**
