@@ -106,6 +106,13 @@ class AdminControllerTask extends Shell {
     function generateContents($admin) {
         $actions        = '';
 
+        $plugin = Inflector::camelize($admin->plugin);
+        $modelObj = ClassRegistry::init(array(
+            'class' => "{$plugin}.{$admin->modelName}Admin",
+            'table' => $admin->useTable,
+            'ds'    => $admin->useDbConfig
+        ));
+
         foreach ($admin->actions as $alias => $configuration) {
             if ($configuration['enabled'] !== true) continue;
 
@@ -113,7 +120,8 @@ class AdminControllerTask extends Shell {
                 'action' => $configuration['type'],
                 'plugin' => $configuration['plugin'],
                 'alias'  => $alias,
-                'config' => $configuration
+                'config' => $configuration,
+                'modelObj'=>$modelObj,
             ));
             if (!$actionContents) return false;
             $actions .= "{$actionContents}\n\n";
@@ -138,16 +146,19 @@ class AdminControllerTask extends Shell {
 
         $alias              = $options['alias'];
         $configuration      = $options['config'];
+        $modelObj           = $options['modelObj'];
         $currentModelName   = $admin->modelName . 'Admin';
         $controllerName     = $this->_controllerName($admin->modelName);
         $pluralName         = $this->_pluralName($currentModelName);
         $singularName       = Inflector::variable($currentModelName);
         $singularHumanName  = $this->_singularHumanName($controllerName);
         $pluralHumanName    = $this->_pluralName($controllerName);
+        $associations       = $this->__associations($modelObj);
 
         $this->AdminTemplate->set(compact(
             'admin',
             'alias',
+            'associations',
             'configuration',
             'currentModelName',
             'pluralName',
@@ -156,6 +167,28 @@ class AdminControllerTask extends Shell {
             'pluralHumanName'
         ));
         return $this->AdminTemplate->generate($path, 'actions');
+    }
+
+/**
+ * Returns associations for controllers models.
+ *
+ * @return  array $associations
+ * @access private
+ */
+    function __associations(&$model) {
+        $keys = array('belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany');
+        $associations = array();
+
+        foreach ($keys as $key => $type) {
+            foreach ($model->{$type} as $assocKey => $assocData) {
+                $associations[$type][$assocKey]['primaryKey'] = $model->{$assocKey}->primaryKey;
+                $associations[$type][$assocKey]['displayField'] = $model->{$assocKey}->displayField;
+                $associations[$type][$assocKey]['foreignKey'] = $assocData['foreignKey'];
+                $associations[$type][$assocKey]['controller'] = Inflector::pluralize(Inflector::underscore($assocData['className']));
+                $associations[$type][$assocKey]['fields'] =  array_keys($model->{$assocKey}->schema(true));
+            }
+        }
+        return $associations;
     }
 
 }

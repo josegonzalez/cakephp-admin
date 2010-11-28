@@ -262,18 +262,18 @@ class AdminShell extends Shell {
  * @todo test me
  **/
     function generate($admin) {
-        if (!$this->AdminController->generate($admin)) {
-            $this->out();
-            $this->out(sprintf('Failed to generate %s Controller',
-                $this->_controllerName($admin->modelName)
-            ));
-            $this->out();
-            return false;
-        }
         if (!$this->AdminModel->generate($admin))  {
             $this->out();
             $this->out(sprintf('Failed to generate %s Model',
                 $admin->modelName
+            ));
+            $this->out();
+            return false;
+        }
+        if (!$this->AdminController->generate($admin)) {
+            $this->out();
+            $this->out(sprintf('Failed to generate %s Controller',
+                $this->_controllerName($admin->modelName)
             ));
             $this->out();
             return false;
