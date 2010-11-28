@@ -82,7 +82,7 @@ class AdminModelTask extends Shell {
 
         list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin, $modelObj);
 
-        $associations = $this->AdminVariables->loadAssociations($modelObj, $admin->useDbConfig);
+        $associations = $this->AdminVariables->loadAssociations($modelObj, $admin);
         $this->AdminTemplate->set(compact(
             'methods',
             'associations',

@@ -32,8 +32,9 @@ class AdminVariablesTask extends Shell {
         $pluralVar          = Inflector::variable($pluginControllerName);
         $pluralName         = $this->_pluralName($modelClass);
         $pluralHumanName    = Inflector::humanize($this->_pluralName($controllerName));
+
         if ($useDbAssociations) {
-            $associations   = $this->loadAssociations($modelObj, $admin->useDbConfig);
+            $associations   = $this->loadAssociations($modelObj, $admin);
         } else {
             $associations   = $this->__associations($adminModelObj);
         }
@@ -60,7 +61,19 @@ class AdminVariablesTask extends Shell {
         );
     }
 
-    function loadAssociations($modelObj, $dbConfig) {
+    function loadAssociations($modelObj, $admin) {
+        $possibleAssociations = array(
+            'belongsTo' => array(),
+            'hasMany' => array(),
+            'hasOne'=> array(),
+            'hasAndBelongsToMany' => array()
+        );
+
+        $this->listAll($admin->useDbConfig, false);
+        $possibleAssociations = $this->findBelongsTo($modelObj, $possibleAssociations);
+        $possibleAssociations = $this->findHasOneAndMany($modelObj, $possibleAssociations);
+        $possibleAssociations = $this->findHasAndBelongsToMany($modelObj, $possibleAssociations);
+
         $associations = array(
             'belongsTo' => array(),
             'hasMany' => array(),
@@ -68,10 +81,15 @@ class AdminVariablesTask extends Shell {
             'hasAndBelongsToMany' => array()
         );
 
-        $this->listAll($dbConfig, false);
-        $associations = $this->findBelongsTo($modelObj, $associations);
-        $associations = $this->findHasOneAndMany($modelObj, $associations);
-        $associations = $this->findHasAndBelongsToMany($modelObj, $associations);
+        foreach ($possibleAssociations as $possibleAssocType => $possibleAssocs) {
+            if (!isset($admin->relations[$possibleAssocType])) continue;
+
+            foreach ($possibleAssocs as $alias => $associationConfiguration) {
+                if (in_array($alias, array_keys($admin->relations[$possibleAssocType]))) {
+                    $associations[$possibleAssocType][$alias] = $associationConfiguration;
+                }
+            }
+        }
         return $associations;
     }
 
