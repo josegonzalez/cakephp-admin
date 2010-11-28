@@ -12,7 +12,7 @@ h2. Requirements
 
 * CakePHP 1.3
 * Patience
-* PHP 5.2+ with json_decode or PECL json 1.2+ (For Frontmatter parsing)
+* PHP 5.2+
 
 h2. Installation
 
