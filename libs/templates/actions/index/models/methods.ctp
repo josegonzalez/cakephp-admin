@@ -15,11 +15,14 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 ?>
 	function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
 		if ($state === 'before') {
+<?php if (!empty($list_filter)) : ?>
 <?php foreach ($list_filter as $field => $config) : ?>
 			if (!empty($query['named']['<?php echo $field; ?>'])) {
 				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}"; ?>'] = $query['named']['<?php echo $field; ?>'];
 			}
 <?php endforeach; ?>
+<?php endif; ?>
+<?php if (!empty($searches)) : ?>
 <?php foreach ($searches as $field => $config) : ?>
 <?php if ($field !== 'id' && ($config['type'] == 'text' || $config['type'] == 'string')) {
 	$modifier = ' LIKE';
@@ -34,6 +37,8 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 			}
 <?php endforeach; ?>
 
+<?php endif; ?>
+<?php if (!empty($searches)) : ?>
 <?php foreach ($searches as $field => $config) : ?>
 <?php if ($field !== 'id' && ($config['type'] == 'text' || $config['type'] == 'string')) {
 	$modifier = ' LIKE';
@@ -48,6 +53,7 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 			}
 <?php endforeach; ?>
 
+<?php endif; ?>
 <?php if (!empty($fields)) : ?>
 			$query['fields'] = array('<?php echo join("', '", $fields); ?>');
 <?php endif; ?>

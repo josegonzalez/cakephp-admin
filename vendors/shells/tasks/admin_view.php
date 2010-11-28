@@ -6,7 +6,7 @@ class AdminViewTask extends Shell {
  *
  * @var array
  */
-    var $tasks = array('AdminTemplate');
+    var $tasks = array('AdminTemplate',  'AdminVariables');
 
 /**
  * Constructed plugin directory
@@ -77,11 +77,9 @@ class AdminViewTask extends Shell {
         }
         $path .= $configuration['type'] . DS . 'views';
 
-        $vars               = $this->__loadVariables($admin);
+        $vars               = $this->AdminVariables->load($admin);
         $this->AdminTemplate->set($vars);
         $this->AdminTemplate->set(compact(
-            'admin',
-            'modelObj',
             'action',
             'configuration'
         ));
@@ -89,73 +87,6 @@ class AdminViewTask extends Shell {
         $template = $configuration['type'];
         if (!$template) return false;
         return $this->AdminTemplate->generate($path, $template);
-    }
-
-    function __loadVariables($admin) {
-        $plugin = Inflector::camelize($admin->plugin);
-        $modelObj = ClassRegistry::init(array(
-            'class' => "{$plugin}.{$admin->modelName}Admin",
-            'table' => $admin->useTable,
-            'ds'    => $admin->useDbConfig
-        ));
-
-        $modelClass         = $admin->modelName . 'Admin';
-        $primaryKey         = $modelObj->primaryKey;
-        $displayField       = $modelObj->displayField;
-        $schema             = $modelObj->schema(true);
-        $fields             = array_keys($schema);
-
-        $controllerName     = $this->_controllerName($admin->modelName);
-        $controllerRoute    = $this->_pluralName($admin->modelName);
-        $pluginControllerName= $this->_controllerName($admin->modelName . 'Admin');
-
-        $singularVar        = Inflector::variable($modelClass);
-        $singularName       = $this->_singularName($modelClass);
-        $singularHumanName  = $this->_singularHumanName($this->_controllerName($admin->modelName));
-        $pluralVar          = Inflector::variable($pluginControllerName);
-        $pluralName         = $this->_pluralName($modelClass);
-        $pluralHumanName    = Inflector::humanize($this->_pluralName($controllerName));
-        $associations       = $this->__associations($modelObj);
-
-        return compact(
-            'modelClass',
-            'primaryKey',
-            'displayField',
-            'schema',
-            'fields',
-            'controllerName',
-            'controllerRoute',
-            'pluginControllerName',
-            'singularVar',
-            'singularName',
-            'singularHumanName',
-            'pluralVar',
-            'pluralName',
-            'pluralHumanName',
-            'associations'
-        );
-    }
-
-/**
- * Returns associations for controllers models.
- *
- * @return  array $associations
- * @access private
- */
-    function __associations(&$model) {
-        $keys = array('belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany');
-        $associations = array();
-
-        foreach ($keys as $key => $type) {
-            foreach ($model->{$type} as $assocKey => $assocData) {
-                $associations[$type][$assocKey]['primaryKey'] = $model->{$assocKey}->primaryKey;
-                $associations[$type][$assocKey]['displayField'] = $model->{$assocKey}->displayField;
-                $associations[$type][$assocKey]['foreignKey'] = $assocData['foreignKey'];
-                $associations[$type][$assocKey]['controller'] = Inflector::pluralize(Inflector::underscore($assocData['className']));
-                $associations[$type][$assocKey]['fields'] =  array_keys($model->{$assocKey}->schema(true));
-            }
-        }
-        return $associations;
     }
 
 }

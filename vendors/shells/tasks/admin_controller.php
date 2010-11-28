@@ -6,7 +6,7 @@ class AdminControllerTask extends Shell {
  *
  * @var array
  */
-    var $tasks = array('AdminTemplate');
+    var $tasks = array('AdminTemplate', 'AdminVariables');
 
 /**
  * Constructed plugin directory
@@ -77,10 +77,10 @@ class AdminControllerTask extends Shell {
         if (!$actions) return false;
 
         $path           = $this->templateDir . 'classes';
-        $currentModelName = "{$admin->modelName}Admin";
+        $modelClass = "{$admin->modelName}Admin";
         $this->AdminTemplate->set(compact(
             'controllerName',
-            'currentModelName',
+            'modelClass',
             'actions',
             'admin'
         ));
@@ -146,25 +146,12 @@ class AdminControllerTask extends Shell {
 
         $alias              = $options['alias'];
         $configuration      = $options['config'];
-        $modelObj           = $options['modelObj'];
-        $currentModelName   = $admin->modelName . 'Admin';
-        $controllerName     = $this->_controllerName($admin->modelName);
-        $pluralName         = $this->_pluralName($currentModelName);
-        $singularName       = Inflector::variable($currentModelName);
-        $singularHumanName  = $this->_singularHumanName($controllerName);
-        $pluralHumanName    = $this->_pluralName($controllerName);
-        $associations       = $this->__associations($modelObj);
 
+        $vars               = $this->AdminVariables->load($admin);
+        $this->AdminTemplate->set($vars);
         $this->AdminTemplate->set(compact(
-            'admin',
             'alias',
-            'associations',
-            'configuration',
-            'currentModelName',
-            'pluralName',
-            'singularName',
-            'singularHumanName',
-            'pluralHumanName'
+            'configuration'
         ));
         return $this->AdminTemplate->generate($path, 'actions');
     }

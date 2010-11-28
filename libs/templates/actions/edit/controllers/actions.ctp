@@ -8,7 +8,7 @@
 <?php endif; ?>
 		}
 		if (!empty($this->data)) {
-			if ($this-><?php echo $currentModelName; ?>->save($this->data)) {
+			if ($this-><?php echo $modelClass; ?>->save($this->data)) {
 <?php if ($admin->sessions): ?>
 				$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'The <?php echo ucfirst(strtolower($singularHumanName)); ?> has been saved', true), 'flash/success');
 				$this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
@@ -22,7 +22,7 @@
 			}
 		}
 		if (empty($this->data)) {
-			$this->data = $this-><?php echo $currentModelName; ?>->find('<?php echo $alias; ?>', array('<?php echo $admin->primaryKey; ?>' => $<?php echo $admin->primaryKey; ?>));
+			$this->data = $this-><?php echo $modelClass; ?>->find('<?php echo $alias; ?>', array('<?php echo $admin->primaryKey; ?>' => $<?php echo $admin->primaryKey; ?>));
 		}
 		if (empty($this->data)) {
 <?php if ($admin->sessions): ?>
@@ -33,6 +33,6 @@
 <?php endif; ?>
 		}
 <?php if (!empty($associations['belongsTo']) || !empty($assocations['hasAndBelongsToMany'])) : ?>
-		$this->set($this-><?php echo $currentModelName; ?>->related('<?php echo $alias; ?>'));
+		$this->set($this-><?php echo $modelClass; ?>->related('<?php echo $alias; ?>'));
 <?php endif; ?>
 	}
