@@ -14,5 +14,7 @@
 <?php endif; ?>
 			}
 		}
+<?php if (!empty($associations['belongsTo']) || !empty($assocations['hasAndBelongsToMany'])) : ?>
 		$this->set($this-><?php echo $currentModelName; ?>->related('<?php echo $alias; ?>'));
+<?php endif; ?>
 	}

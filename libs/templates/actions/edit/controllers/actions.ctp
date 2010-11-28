@@ -32,5 +32,7 @@
 			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php endif; ?>
 		}
+<?php if (!empty($associations['belongsTo']) || !empty($assocations['hasAndBelongsToMany'])) : ?>
 		$this->set($this-><?php echo $currentModelName; ?>->related('<?php echo $alias; ?>'));
+<?php endif; ?>
 	}
