@@ -58,7 +58,7 @@ echo "\n{$actions}";
 		$query = array();
 		foreach ($mapping as $field) {
 			if (!empty($this->data['<?php echo "{$admin->modelName}Admin"; ?>'][$field])) {
-				$query["Post.{$field}"] = $this->data['<?php echo "{$admin->modelName}Admin"; ?>'][$field];
+				$query["{$admin->modelName}.{$field}"] = $this->data['<?php echo "{$admin->modelName}Admin"; ?>'][$field];
 			}
 		}
 		if (!empty($query)) $this->redirect($query);
@@ -66,14 +66,14 @@ echo "\n{$actions}";
 		$this->paginate = array($findMethod) + array(
 			'named' => $this->params['named'],
 		);
-		$postAdmins = $this->paginate();
+		$results = $this->paginate();
 
 		foreach ($mapping as $field) {
 			if (!empty($this->params['named']["<?php echo "{$admin->modelName}"; ?>.{$field}"])) {
 				$this->data['<?php echo "{$admin->modelName}Admin"; ?>'][$field] = $this->params['named']["<?php echo "{$admin->modelName}"; ?>.{$field}"];
 			}
 		}
-		return $postAdmins;
+		return $results;
 	}
 
 }
