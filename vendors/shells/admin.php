@@ -82,14 +82,15 @@ class AdminShell extends Shell {
             }
 
             $adminClasses[$file] = $admin;
-            if (!in_array($admin->plugin, array_keys($plugins))) {
-                $plugins[$admin->plugin][] = array(
-                    'title' => $this->_controllerName($admin->modelName),
-                    'controller' => $this->_pluralName($this->_controllerName($admin->modelName)),
-                    'action' => $admin->redirectTo,
-                );
-            }
+            $plugins[$admin->plugin][] = array(
+                'title'     => $this->_controllerName($admin->modelName),
+                'controller'=> $this->_pluralName($this->_controllerName($admin->modelName)),
+                'action'    => $admin->redirectTo,
+                'adminClass'=> $admin,
+            );
         }
+
+        $this->generateApp($plugins);
 
         foreach ($adminClasses as $file => $admin) {
             if (!$this->generate($admin)) {
@@ -261,26 +262,10 @@ class AdminShell extends Shell {
  * @todo test me
  **/
     function generate($admin) {
-        if (!$this->AdminController->generateAppController($admin)) {
-            $this->out();
-            $this->out(sprintf('Failed to generate %s AppController',
-                Inflector::humanize($admin->plugin)
-            ));
-            $this->out();
-            return false;
-        }
         if (!$this->AdminController->generate($admin)) {
             $this->out();
             $this->out(sprintf('Failed to generate %s Controller',
                 $this->_controllerName($admin->modelName)
-            ));
-            $this->out();
-            return false;
-        }
-        if (!$this->AdminModel->generateAppModel($admin)) {
-            $this->out();
-            $this->out(sprintf('Failed to generate %s AppModel',
-                Inflector::humanize($admin->plugin)
             ));
             $this->out();
             return false;
@@ -300,6 +285,42 @@ class AdminShell extends Shell {
             ));
             $this->out();
             return false;
+        }
+        return true;
+    }
+
+/**
+ * Generates App classes for each plugin
+ *
+ * @return boolean
+ * @author Jose Diaz-Gonzalez
+ **/
+    function generateApp($plugins) {
+        $generated = array();
+
+        foreach ($plugins as $plugin => $cakeAdmins) {
+            if (in_array($plugin, $generated)) continue;
+            $generated[] = $plugin;
+
+            $admin = current($cakeAdmins);
+            $admin = $admin['adminClass'];
+
+            if (!$this->AdminController->generateAppController($admin)) {
+                $this->out();
+                $this->out(sprintf('Failed to generate %s AppController',
+                    Inflector::humanize($admin->plugin)
+                ));
+                $this->out();
+                return false;
+            }
+            if (!$this->AdminModel->generateAppModel($admin)) {
+                $this->out();
+                $this->out(sprintf('Failed to generate %s AppModel',
+                    Inflector::humanize($admin->plugin)
+                ));
+                $this->out();
+                return false;
+            }
         }
         return true;
     }
