@@ -52,6 +52,8 @@ echo"
 				foreach ($links as $i => $link) {
 					if ($i === 0) {
 						echo "\t\t\t<li class=\"first<?php if (\$this->params['plugin'] === '{$link['plugin']}' && \$this->params['controller'] === '{$link['controller']}') echo ' on'?>\">\n\t\t\t\t<?php echo {$link['link']} ?>\n\t\t\t</li>\n";
+					} else {
+						echo "\t\t\t<li class=\"<?php if (\$this->params['plugin'] === '{$link['plugin']}' && \$this->params['controller'] === '{$link['controller']}') echo 'on'?>\">\n\t\t\t\t<?php echo {$link['link']} ?>\n\t\t\t</li>\n";
 					}
 				}
 echo "			</ul>
