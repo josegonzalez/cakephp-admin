@@ -4,7 +4,7 @@
 
 		if (!$<?php echo $singularName; ?>) {
 <?php if ($admin->sessions): ?>
-			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
+			$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php else: ?>
 			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => '<?php echo $admin->redirectTo; ?>'));

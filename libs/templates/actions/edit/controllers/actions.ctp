@@ -1,23 +1,23 @@
 	function <?php echo $alias; ?>($<?php echo $admin->primaryKey; ?> = null) {
 		if (!$<?php echo $admin->primaryKey; ?> && empty($this->data)) {
 <?php if ($admin->sessions): ?>
-			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
+			$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
+			$this->flash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php endif; ?>
 		}
 		if (!empty($this->data)) {
 			if ($this-><?php echo $currentModelName; ?>->save($this->data)) {
 <?php if ($admin->sessions): ?>
-				$this->Session->setFlash(__('The <?php echo ucfirst(strtolower($singularHumanName)); ?> has been saved', true), 'flash/success');
+				$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'The <?php echo ucfirst(strtolower($singularHumanName)); ?> has been saved', true), 'flash/success');
 				$this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php else: ?>
-				$this->flash(__('The <?php echo ucfirst(strtolower($singularHumanName)); ?> has been saved.', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
+				$this->flash(__d('<?php echo $admin->plugin; ?>', 'The <?php echo ucfirst(strtolower($singularHumanName)); ?> has been saved.', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php endif; ?>
 			} else {
 <?php if ($admin->sessions): ?>
-				$this->Session->setFlash(__('The <?php echo ucfirst(strtolower($singularHumanName)); ?> could not be saved.', true), 'flash/error');
+				$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'The <?php echo ucfirst(strtolower($singularHumanName)); ?> could not be saved.', true), 'flash/error');
 <?php endif; ?>
 			}
 		}
@@ -26,10 +26,10 @@
 		}
 		if (empty($this->data)) {
 <?php if ($admin->sessions): ?>
-			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
+			$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
+			$this->flash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php endif; ?>
 		}
 <?php if (!empty($associations['belongsTo']) || !empty($assocations['hasAndBelongsToMany'])) : ?>
