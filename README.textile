@@ -42,9 +42,9 @@ h2. Usage
 
 Create a folder in your @app/libs@ folder called @admin@. This folder will contain all of your @CakeAdmin@ classes. We'll use a @Post@ model for our example admin section.
 
-Create a @post_admin.php@ file in your @app/libs/admin@ folder. This will contain your @PostAdmin@ class. "This gist":http://gist.github.com/583603 is an example of such a class.
+Create a @post_cake_admin.php@ file in your @app/libs/admin@ folder. This will contain your @PostCakeAdmin@ class. "This gist":http://gist.github.com/583603 is an example of such a class.
 
-Once your @post_admin.php@ file has been created, run @cake admin@ from the shell. This will create the respective plugin if not already (in our case, an @admin@ plugin), as well as all the models, views, and controllers for ALL available @*_admin.php@ files. In our case, you can then access the admin section at @example.com/admin/posts@.
+Once your @post_cake_admin.php@ file has been created, run @cake admin@ from the shell. This will create the respective plugin if not already (in our case, an @admin@ plugin), as well as all the models, views, and controllers for ALL available @*cake_admin.php@ files. In our case, you can then access the admin section at @example.com/admin/posts@.
 
 h2. Parsing
 
