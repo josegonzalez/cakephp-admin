@@ -16,6 +16,8 @@ h2. Requirements
 
 h2. Installation
 
+*CakeAdmin must be in the app/plugins folder, not the global plugins folder. A future release will remove this limitation.*
+
 _[Manual]_
 
 # Download this: http://github.com/josegonzalez/cake_admin/zipball/master
@@ -219,15 +221,20 @@ The following is an example implementation of @mergeVars($configuration)@:
 
 h2. TODO
 
+The following is a list of things I am planning to implement, in order of most likely to be implemented first.
+
+* -Refactor template paths-
 * -Implement mergeVars-
 * -Deprecate Frontmatter-
-* View Templates, partials, and layouts
-* Behavior option parsing
+* -View Templates, partials, and layouts-
 * Support for CakeAdmin class files in plugins
 * Screencast
+* Behavior/Helper/Component option parsing
+* Authentication Implementations
+* Webservice Implementation
+* Automagic CakeAdmin file-generation based solely upon DB
 * Unit Tests!!!
 * Theme support
-* -Refactor template paths-
 
 h2. License
 
