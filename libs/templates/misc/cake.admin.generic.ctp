@@ -79,10 +79,11 @@ ul, li {
 	padding: 20px 20px 0 20px;
 }
 #header h1 {
-	line-height:20px;
 	background: #003d4c;
 	color: #fff;
-	padding: 0px 30px;
+	line-height: 20px;
+	text-shadow: 2px 2px 2px #000;
+	padding: 0;
 }
 #header h1 a {
 	color: #fff;
