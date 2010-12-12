@@ -554,3 +554,8 @@ div.code-coverage-results span.result-ok {
 div.code-coverage-results span.result-good {
 	color: #0a0;
 }
+
+/* Mobile */
+.desktop-hide {
+	display: none;
+}
