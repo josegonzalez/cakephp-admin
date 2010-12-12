@@ -18,22 +18,34 @@
  */
 ?>
 <div class="<?php echo $pluralVar;?> form">
-<h2><?php printf("<?php __('%s %s'); ?>", Inflector::humanize($action), $singularHumanName); ?></h2>
+<h2 class="mobile-hide"><?php printf("<?php __('%s %s'); ?>", Inflector::humanize($action), $singularHumanName); ?></h2>
 <?php echo "<?php echo \$this->Form->create('{$modelClass}', array('url' => array(
 	'plugin' => '{$admin->plugin}', 'controller' => '{$controllerRoute}', 'action' => '{$action}')));?>\n";?>
+	<h2 class="desktop-hide"><?php printf("<?php __('%s %s'); ?>", Inflector::humanize($action), $singularHumanName); ?></h2>
 <?php foreach ($configuration['config'] as $i => $config): ?>
 	<fieldset<?php if (!empty($config['classes'])) echo ' class="' . $config['classes'] . '"'; ?>>
 <?php if (!empty($config['title'])) : ?>
- 		<legend><?php printf("<?php __('%s'); ?>", $config['title']); ?></legend>
+ 		<legend><h4><?php printf("<?php __('%s'); ?>", $config['title']); ?></h4></legend>
 <?php endif; ?>
 <?php if (!empty($config['description'])) : ?>
-		<p><?php printf("<?php __('%s'); ?>", $config['description']); ?></p><br />
+		<h5><?php printf("<?php __('%s'); ?>", $config['description']); ?></h5><br />
 <?php endif; ?>
 <?php
-		echo "\t\t<?php\n";
 		foreach ($config['fields'] as $field => $fieldConfig) {
-			$options = array();
+			$options = array("'div' => array('data-role' =>'fieldcontain')");
+			$legend = Inflector::humanize($field);
+			$fieldType = false;
+			if (strstr($field, '.') === false) {
+				$fieldSchema = $modelObj->schema($field);
+				$fieldType = $fieldSchema['type'];
+			}
+			if ($fieldType == 'boolean') {$options[] = "'label' => false";}
+
 			if (!empty($fieldConfig)) {
+				if (isset($fieldConfig['legend'])) {
+					$legend = $fieldConfig['legend'];
+					unset($fieldConfig['legend']);
+				}
 				foreach ($fieldConfig as $key => $value) {
 					$options[] = "'{$key}' => '$value'";
 				}
@@ -42,9 +54,17 @@
 				}
 			}
 			$options = (empty($options)) ? '' : ", array(" . implode(', ', $options). ")";
-			echo "\t\t\techo \$this->Form->input('{$field}'{$options});\n";
+
+			if ($fieldType == 'boolean') {
+				echo "\t\t<fieldset data-role=\"controlgroup\">\n";
+				echo "\t\t\t<legend>{$legend}</legend>\n";
+				echo "\t\t\t<?php echo \$this->Form->input('{$field}'{$options}); ?>\n";
+				echo "\t\t\t<?php echo \$this->Form->label('{$field}', __('Yes', true)); ?>\n";
+				echo "\t\t</fieldset>\n";
+			} else {
+				echo "\t\t<?php echo \$this->Form->input('{$field}'{$options}); ?>\n";
+			}
 		}
-		echo "\t\t?>\n";
 ?>
 	</fieldset>
 <?php endforeach; ?>
@@ -52,23 +72,27 @@
 if ($config['habtm'] === true && !empty($associations['hasAndBelongsToMany'])) {
 	echo "\t<fieldset>";
 	foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) {
-		echo "\t\t<?php echo \$this->Form->input('{$assocName}'); ?>\n";
+		echo "\t\t<?php echo \$this->Form->input('{$assocName}', array('data-role' => 'fieldcontain')); ?>\n";
 	}
 	echo "\t</fieldset";
 }
 ?>
-<?php
-	echo "<?php echo \$this->Form->end(__('Submit', true));?>\n";
-?>
+
+	<?php echo "<?php echo \$this->Form->submit(__('Submit', true), array('data-theme' => 'a', 'data-inline' => 'true'));?>\n"; ?>
+<?php echo "<?php echo \$this->Form->end();?>\n"; ?>
 </div>
-<div class="actions">
-	<h3><?php echo "<?php __('Actions'); ?>"; ?></h3>
+<div class="actions ui-bar-a" id="actions" data-role="navbar">
+	<h4 class="mobile-hide"><?php echo "<?php __('Actions'); ?>"; ?></h4>
 	<ul>
 <?php
 foreach ($admin->links as $alias => $config) {
 	if ($alias == $action) continue;
 	if ($config !== false && is_string($config)) { ?>
-		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
+		<li class="footer-navbar-li">
+			<?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true),\n"; ?>
+				<?php echo "array('action' => '{$alias}'),\n"; ?>
+				<?php echo "array('class' => 'actions-dialog-a', 'data-role' => 'button', 'data-theme' => 'b', 'rel' => 'external')); ?>\n";?>
+		</li>
 <?php
 	}
 }

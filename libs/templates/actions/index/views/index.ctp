@@ -39,7 +39,7 @@
 				foreach ($associations['belongsTo'] as $alias => $details) {
 					if ($field === $details['foreignKey']) {
 						$isKey = true;
-						echo "\t\t<td>\n\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'], array('controller' => '{$details['controller']}', 'action' => 'view', \${$singularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t</td>\n";
+						echo "\t\t<td>\n\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'], array('controller' => '{$details['controller']}', 'action' => 'view', \${$singularVar}['{$alias}']['{$details['primaryKey']}']), array('rel' => 'external')); ?>\n\t\t</td>\n";
 						break;
 					}
 				}
@@ -47,7 +47,7 @@
 			if ($isKey !== true) {
 				if ($field == $primaryKey) {
 					echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$modelClass}']['{$field}'], array(";
-					echo "'action' => '{$admin->linkTo}', \${$singularVar}['{$modelClass}']['{$field}'])); ?></td>\n";
+					echo "'action' => '{$admin->linkTo}', \${$singularVar}['{$modelClass}']['{$field}']), array('rel' => 'external')); ?></td>\n";
 				} else {
 					echo "\t\t<td><?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>&nbsp;</td>\n";
 				}
@@ -74,17 +74,19 @@
 				} else {
 					$url = "'{$config['url']}'";
 				}
-				if (is_array($config['options'])) {
+				if ($config['options'] === null) {
+					$options = "array('rel' => 'external')";
+				} else {
 					foreach ($config['options'] as $key => $value) {
 						if (!empty($value)) {
-							$url[] = "'{$key}' => '{$value}'";
+							$options[] = "'{$key}' => '{$value}'";
 						} else {
-							$url[] = "'{$key}'";
+							$options[] = "'{$key}'";
 						}
 					}
+
+					$options[] = "'rel' => 'external'";
 					$options = 'array(' . implode(', ', $options) . ')';
-				} else {
-					$options = $config['options'];
 				}
 				$end = '';
 				if (empty($options)) {
@@ -92,7 +94,7 @@
 						$end = ", null, {$confirmMessage}";
 					}
 				} else {
-					$end .= ", '{$options}'";
+					$end .= ", {$options}";
 					if (!empty($confirmMessage)) {
 						$end .= ", {$confirmMessage}";
 					}
@@ -120,13 +122,17 @@
 	<?php echo "\t<?php echo \$this->Paginator->next(__('next', true) . ' >>', array(), null, array('class' => 'disabled'));?>\n";?>
 	</div>
 </div>
-<div class="actions">
-	<h3><?php echo "<?php __('Actions'); ?>"; ?></h3>
+<div class="actions ui-bar-a" id="actions" data-role="navbar">
+	<h4 class="mobile-hide"><?php echo "<?php __('Actions'); ?>"; ?></h4>
 	<ul>
 <?php
 foreach ($admin->links as $alias => $config) :
 	if ($config !== false && is_string($config)) : ?>
-		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
+		<li class="footer-navbar-li">
+			<?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true),\n"; ?>
+				<?php echo "array('action' => '{$alias}'),\n"; ?>
+				<?php echo "array('class' => 'actions-dialog-a', 'data-role' => 'button', 'data-theme' => 'b', 'rel' => 'external')); ?>\n";?>
+		</li>
 <?php
 	endif;
 endforeach;

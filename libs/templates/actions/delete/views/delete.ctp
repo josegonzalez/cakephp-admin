@@ -33,17 +33,22 @@ echo "<?php echo \$this->Form->create('{$modelClass}', array('url' => array(
 		echo "\t<?php echo __('Are you sure you want to delete this record?', true); ?>\n";
 	}
 	echo "\t<?php echo \$this->Form->input('{$modelClass}.{$admin->primaryKey}', array('type' => 'hidden')); ?>\n";
-	echo "<?php echo \$this->Form->end(__('Confirm Deletion', true));?>\n";
+	echo "<?php echo \$this->Form->submit(__('Confirm Deletion', true), array('data-theme' => 'a', 'data-inline' => 'true'));?>\n";
+	echo "<?php echo \$this->Form->end();?>\n";
 ?>
 </div>
-<div class="actions">
-	<h3><?php echo "<?php __('Actions'); ?>"; ?></h3>
+<div class="actions ui-bar-a" id="actions" data-role="navbar">
+	<h4 class="mobile-hide"><?php echo "<?php __('Actions'); ?>"; ?></h4>
 	<ul>
 <?php
 foreach ($admin->links as $alias => $config) {
 	if ($alias == $action) continue;
 	if ($config !== false && is_string($config)) { ?>
-		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
+		<li class="footer-navbar-li">
+			<?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true),\n"; ?>
+				<?php echo "array('action' => '{$alias}'),\n"; ?>
+				<?php echo "array('class' => 'actions-dialog-a', 'data-role' => 'button', 'data-theme' => 'b', 'rel' => 'external')); ?>\n";?>
+		</li>
 <?php
 	} elseif (is_array($config)) {
 		$url     = array();
@@ -65,9 +70,9 @@ foreach ($admin->links as $alias => $config) {
 		if (is_array($config['options'])) {
 			foreach ($config['options'] as $key => $value) {
 				if (!empty($value)) {
-					$url[] = "'{$key}' => '{$value}'";
+					$options[] = "'{$key}' => '{$value}'";
 				} else {
-					$url[] = "'{$key}'";
+					$options[] = "'{$key}'";
 				}
 			}
 			$options = 'array(' . implode(', ', $options) . ')';
@@ -85,8 +90,13 @@ foreach ($admin->links as $alias => $config) {
 				$end .= ", {$confirmMessage}";
 			}
 		}
-		echo "\t\t<li><?php echo \$this->Html->link(__('{$config['title']}', true), {$url}{$end}); ?></li>\n";
-	}
+		?>
+		<li class="footer-navbar-li">
+			<?php echo "<?php echo \$this->Html->link(__('{$config['title']}', true),\n"; ?>
+				<?php echo "{$url}{$end},\n"; ?>
+				<?php echo "array('class' => 'actions-dialog-a', 'data-role' => 'button', 'data-theme' => 'b', 'rel' => 'external')); ?>\n";?>
+		</li>
+<?php	}
 }
 ?>
 	</ul>
