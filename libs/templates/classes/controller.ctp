@@ -58,7 +58,7 @@ echo "\n{$actions}";
 		$query = array();
 		foreach ($mapping as $field) {
 			if (!empty($this->data['<?php echo "{$admin->modelName}Admin"; ?>'][$field])) {
-				$query["{$admin->modelName}.{$field}"] = $this->data['<?php echo "{$admin->modelName}Admin"; ?>'][$field];
+				$query["<?php echo $admin->modelName; ?>.{$field}"] = $this->data['<?php echo "{$admin->modelName}Admin"; ?>'][$field];
 			}
 		}
 		if (!empty($query)) $this->redirect($query);
