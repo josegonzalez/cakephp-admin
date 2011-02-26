@@ -348,6 +348,11 @@ class AdminShell extends Shell {
                 $this->createFile("{$path}{$file}.ctp", $contents);
             }
 
+            // Generate JS
+            $contents = $this->AdminTemplate->generate(implode($templatePath), 'common.js');
+            $path = APP . 'plugins' . DS . $plugin . DS . 'webroot' . DS . 'js' . DS;
+            $this->createFile("{$path}common.js", $contents);
+
             // Generate CSS
             $contents = $this->AdminTemplate->generate(implode($templatePath), 'cake.admin.generic');
             $path = APP . 'plugins' . DS . $plugin . DS . 'webroot' . DS . 'css' . DS;
