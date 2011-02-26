@@ -52,6 +52,16 @@ class AdminShell extends Shell {
  *
  */
     function main() {
+        if (!isset($this->params['interactive'])) {
+            $this->params['interactive'] = false;
+        } else {
+            $this->params['interactive'] = true;
+        }
+        $this->interactive = $this->params['interactive'];
+        foreach ($this->tasks as $task) {
+            $this->{$task}->interactive = $this->params['interactive'];
+        }
+
         // Create the admin object
         $files = $this->find();
         if (!$files) {
