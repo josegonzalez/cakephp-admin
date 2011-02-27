@@ -64,6 +64,7 @@ echo "\n{$actions}";
 		if (!empty($query)) $this->redirect($query);
 
 		$this->paginate = array($findMethod) + array(
+			'data'  => $this->data,
 			'named' => $this->params['named'],
 		);
 		$results = $this->paginate();
