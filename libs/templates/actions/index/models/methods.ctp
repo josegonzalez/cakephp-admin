@@ -76,6 +76,7 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 <?php else : ?>
 			$query['contain'] = false;
 <?php endif; ?>
+			unset($query['data'], $query['named']);
 
 			if (!empty($query['operation'])) {
 				return $this->_findCount($state, $query, $results);
