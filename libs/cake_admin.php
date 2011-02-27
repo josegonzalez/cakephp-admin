@@ -504,6 +504,199 @@ class CakeAdmin {
         return in_array(strtolower($needle), array_map('strtolower', $haystack));
     }
 
+/**
+ * Returns an attribute as a formatted string
+ *
+ * @param $attribute Name of class attribute to format
+ * @param $num Number of tabs to prepend to each line
+ * @param $first Prepend the first line with tabs?
+ * @return string containing formatted array
+ **/
+    function formatted($attribute, $num = 2, $first = true) {
+        if ($attribute === 'validations') {
+            return $this->_formattedValidations($num, $first);
+        } else if (is_string($attribute)) {
+            return $this->_format($this->$attribute, $num, $first);
+        } else {
+            return $this->_format($attribute, $num, $first);
+        }
+    }
+
+/**
+ * Returns the contents of a formatted array
+ *
+ * @param $attribute Variable holding attribute contents
+ * @param $num Number of tabs to prepend to each line
+ * @param $first Prepend the first line with tabs?
+ * @return string containing formatted array
+ **/
+    function _format($attribute, $num = 2, $first = true) {
+        $result = array();
+        foreach (Set::normalize($attribute) as $attribute => $config) {
+            $currentLine = "'" . $attribute . "'";
+            if (empty($config)) {
+                $result[] = $currentLine . ',';
+            } else {
+                $currentLine = $currentLine . ' => ';
+
+                $lines = preg_split("/(\r?\n)/", str_replace('array (', 'array(', var_export($config, true)));
+                $lastLine = count($lines) - 1;
+                foreach ($lines as $i => $line) {
+                    if ($i == 0) {
+                        $result[] = $currentLine . str_replace('  ', "\t", $line);
+                    } else if ($i == $lastLine) {
+                        $result[] = str_replace('  ', "\t", "{$line},");
+                    } else {
+                        $result[] = str_replace('  ', "\t", $line);
+                    }
+                }
+            }
+        }
+
+        $tabs = '';
+        while ($num > 0) {
+            $tabs .= "\t";
+            $num--;
+        }
+
+        foreach ($result as $i => $line) {
+            if (trim($line) == 'array(') {
+                $result[$i-1] .= ' array(';
+                unset($result[$i]);
+            } else if ($i == 0) {
+                if ($first) {
+                    $result[$i] = $tabs . $line;
+                } else {
+                    $result[$i] = $line;
+                }
+            } else {
+                $result[$i] = $tabs . $line;
+            }
+        }
+        return implode("\n", $result) . "\n";
+    }
+
+/**
+ * Returns a formatted validation array
+ *
+ * @param $num Number of tabs to prepend to each line
+ * @param $first Prepend the first line with tabs?
+ * @return string containing formatted array
+ **/
+    function _formattedValidations($num = 2, $first = true) {
+        $results = array();
+        foreach ($this->validations as $field => $validations) {
+            $results[] = "'" . $field . "' => array(";
+            foreach ($validations as $key => $options) {
+                $results[] = "\t'" . $key . "' => array(";
+                foreach ($options as $option => $value) {
+                    if ($option === 'rule') { 
+                        $line = "\t\t'rule' => array(";
+                        if (is_array($options['rule'])) {
+                            $ruleOptionsCount = count($options['rule']) - 1;
+                            $i = 0;
+                            foreach ($value as $k => $v) {
+                                if (!is_array($v)) {
+                                    if (is_numeric($v)) {
+                                        $line = $line . $v;
+                                    } else if ($v === false) {
+                                        $line = $line . 'false';
+                                    } else if ($v === true) {
+                                        $line = $line . 'true';
+                                    } else if ($v === null) {
+                                        $line = $line . 'null';
+                                    } else {
+                                        $line = $line . "'{$v}'";
+                                    }
+                                } else {
+                                    $paramCount = count($v) - 1;
+                                    $j = 0;
+                                    $line = $line . 'array(';
+                                    foreach ($v as $param => $paramValue) {
+                                        if (is_numeric($paramValue)) {
+                                            $line = $line . $paramValue;
+                                        } else if ($paramValue === false) {
+                                            $line = $line . 'false';
+                                        } else if ($paramValue === true) {
+                                            $line = $line . 'true';
+                                        } else if ($paramValue === null) {
+                                            $line = $line . 'null';
+                                        } else {
+                                            $line = $line . "'{$paramValue}'";
+                                        }
+                                        if ($j < $paramCount) {
+                                            $line = $line . ", ";
+                                        }
+                                        $j++;
+                                    }
+                                    $line = $line . ")";
+                                }
+                                if ($i < $ruleOptionsCount) {
+                                    $line = $line . ", ";
+                                }
+                                $i++;
+                            }
+                            $results[] = $line .  '),';
+                        } else {
+                            if (is_numeric($value)) {
+                                $results[] = $line . $value . '),';
+                            } else if ($value === false) {
+                                $results[] = $line . 'false' . '),';
+                            } else if ($value === true) {
+                                $results[] = $line . 'true' . '),';
+                            } else if ($value === null) {
+                                $results[] = $line . 'null' . '),';
+                            } else {
+                                $results[] = $line . "'{$value}'" . '),';
+                            }
+                        }
+                        continue;
+                    }
+                    if ($option === 'message') {
+                        $results[] = "\t\t'message' => __d('{$this->plugin}', '{$value}', true),";
+                        continue;
+                    }
+                    $line = "\t\t'{$option}' => ";
+                    if (is_numeric($value)) {
+                        $line = $line . $value;
+                    } else if ($value === false) {
+                        $line = $line . "false";
+                    } else if ($value === true) {
+                        $line = $line . "true";
+                    } else if ($value === null) {
+                        $line = $line . "null";
+                    } else {
+                        $line = $line . "'{$value}'";
+                    }
+                    $results[] = $line . ",";
+                }
+                $results[] = "\t),";
+            }
+            $results[] = '),';
+        }
+
+        $tabs = '';
+        while ($num > 0) {
+            $tabs .= "\t";
+            $num--;
+        }
+
+        foreach ($results as $i => $line) {
+            if (trim($line) == 'array(') {
+                $results[$i-1] .= ' array(';
+                unset($results[$i]);
+            } else if ($i == 0) {
+                if ($first) {
+                    $results[$i] = $tabs . $line;
+                } else {
+                    $results[$i] = $line;
+                }
+            } else {
+                $results[$i] = $tabs . $line;
+            }
+        }
+        return implode("\n", $results) . "\n";
+    }
 
 /**
  * Default Validation Messages
