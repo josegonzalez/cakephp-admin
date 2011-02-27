@@ -27,32 +27,19 @@ class <?php echo $controllerName; ?>Controller extends <?php echo Inflector::hum
 	var $name = '<?php echo $controllerName; ?>';
 	var $uses = array('<?php echo Inflector::humanize($admin->plugin); ?>.<?php echo $modelClass; ?>');
 <?php
-if (count($admin->components)):
-    echo "\tvar \$components = array(";
-    for ($i = 0, $len = count($admin->components); $i < $len; $i++):
-        if ($i != $len - 1):
-            echo "'" . Inflector::camelize($admin->components[$i]) . "', ";
-        else:
-            echo "'" . Inflector::camelize($admin->components[$i]) . "'";
-        endif;
-    endfor;
-    echo ");\n";
-endif;
 
-if (count($admin->helpers)):
-    echo "\tvar \$helpers = array(";
-    for ($i = 0, $len = count($admin->helpers); $i < $len; $i++):
-        if ($i != $len - 1):
-            echo "'" . Inflector::camelize($admin->helpers[$i]) . "', ";
-        else:
-            echo "'" . Inflector::camelize($admin->helpers[$i]) . "'";
-        endif;
-    endfor;
-    echo ");\n";
-endif;
+if (!empty($admin->components)) {
+    echo "\tvar \$components    = array(";
+    echo $admin->formatted('components', 2);
+    echo ');';
+}
+if (!empty($admin->helpers)) {
+    echo "\tvar \$helpers    = array(";
+    echo $admin->formatted('helpers', 2);
+    echo ');';
+}
 
-echo "\n{$actions}";
-?>
+echo "\n{$actions}"; ?>
 
 	function _customPaginate($findMethod, $mapping = array()) {
 		$query = array();
