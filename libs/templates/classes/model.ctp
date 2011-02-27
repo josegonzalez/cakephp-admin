@@ -150,10 +150,7 @@ foreach (array('hasOne', 'belongsTo') as $assocType):
 			$out .= "\t\t\t'conditions' => '',\n";
 			$out .= "\t\t\t'fields' => '',\n";
 			$out .= "\t\t\t'order' => ''\n";
-			$out .= "\t\t)";
-			if ($i + 1 < $typeCount) {
-				$out .= ",";
-			}
+			$out .= "\t\t),";
 			echo $out;
 		endforeach;
 		echo "\n\t);\n";
@@ -176,10 +173,7 @@ if (!empty($associations['hasMany'])):
 		$out .= "\t\t\t'exclusive' => '',\n";
 		$out .= "\t\t\t'finderQuery' => '',\n";
 		$out .= "\t\t\t'counterQuery' => ''\n";
-		$out .= "\t\t)";
-		if ($i + 1 < $belongsToCount) {
-			$out .= ",";
-		}
+		$out .= "\t\t),";
 		echo $out;
 	endforeach;
 	echo "\n\t);\n\n";
