@@ -38,18 +38,18 @@ class AdminViewTask extends Shell {
  *
  * @return void
  **/
-    function generate($admin) {
+    function generate($admin, $vars) {
         foreach ($admin->actions as $alias => $configuration) {
             if ($configuration['enabled'] !== true) continue;
 
-            $content = $this->getContent($admin, $alias, $configuration);
+            $content = $this->getContent($admin, $alias, $configuration, $vars);
             if (empty($content)) continue;
             if (!$this->createFile($admin->paths['views'][$alias], $content)) return false;
         }
         return true;
     }
 
-    function getContent($admin, $action, $configuration) {
+    function getContent($admin, $action, $configuration, $vars) {
         $endPath = 'libs' . DS . 'templates' . DS . 'actions' . DS;
         if (empty($configuration['plugin'])) {
             $path = APP . $endPath;
@@ -58,7 +58,6 @@ class AdminViewTask extends Shell {
         }
         $path .= $configuration['type'] . DS . 'views';
 
-        $vars               = $this->AdminVariables->load($admin);
         $this->AdminTemplate->set($vars);
         $this->AdminTemplate->set(compact(
             'action',

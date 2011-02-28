@@ -57,22 +57,13 @@ class AdminModelTask extends Shell {
  *
  * @return void
  **/
-    function generate($admin) {
+    function generate($admin, $vars) {
         $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
 
-        $modelObj = ClassRegistry::init(array(
-            'class' => $admin->modelName,
-            'table' => $admin->useTable,
-            'ds'    => $admin->useDbConfig
-        ));
+        list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin, $vars);
 
-
-        list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin, $modelObj);
-
-        $associations = $this->AdminVariables->loadAssociations($modelObj, $admin);
         $this->AdminTemplate->set(compact(
             'methods',
-            'associations',
             'hasFinders',
             'hasRelated',
             'admin'
@@ -92,7 +83,7 @@ class AdminModelTask extends Shell {
  * @param object $modelObj
  * @return void
  */
-    function generateContents($admin, $modelObj) {
+    function generateContents($admin, $vars) {
         $methods = '';
         $finders = false;
         $related = false;
@@ -104,7 +95,7 @@ class AdminModelTask extends Shell {
                 'action'        => $configuration['type'],
                 'plugin'        => $configuration['plugin'],
                 'alias'         => $alias,
-                'modelObj'      => $modelObj,
+                'vars'          => $vars,
             ));
 
             if (!empty($contents)) {
@@ -131,12 +122,12 @@ class AdminModelTask extends Shell {
         } else {
             $path = $this->pluginDir . $options['plugin'] . DS . $endPath;
         }
-        $path .= $options['action'] . DS . 'models';
+        $path  .= $options['action'] . DS . 'models';
 
-        $find               = $options['alias'];
-        $alias              = $options['alias'];
+        $find   = $options['alias'];
+        $alias  = $options['alias'];
+        $vars   = $options['vars'];
 
-        $vars               = $this->AdminVariables->load($admin, true);
         $this->AdminTemplate->set($vars);
         $this->AdminTemplate->set(compact(
             'find',

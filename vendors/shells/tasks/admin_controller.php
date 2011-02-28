@@ -70,21 +70,16 @@ class AdminControllerTask extends Shell {
  *
  * @return void
  **/
-    function generate($admin) {;
-        $controllerName = $this->_controllerName($admin->modelName);
-        $controllerPath = $this->_controllerPath($controllerName);
-        $actions        = $this->generateContents($admin);
+    function generate($admin, $vars) {;
+        $actions    = $this->generateContents($admin, $vars);
         if (!$actions) return false;
 
-        $path           = $this->templateDir . 'classes';
-        $modelClass = "{$admin->modelName}Admin";
         $this->AdminTemplate->set(compact(
-            'controllerName',
-            'modelClass',
             'actions',
             'admin'
         ));
 
+        $path       = $this->templateDir . 'classes';
         $contents   = $this->AdminTemplate->generate($path, 'controller');
         if ($this->createFile($admin->paths['controller'], $contents)) {
             return $contents;
@@ -97,9 +92,8 @@ class AdminControllerTask extends Shell {
  *
  * @return void
  **/
-    function generateContents($admin) {
-        $actions        = '';
-
+    function generateContents($admin, $vars) {
+        $actions    = '';
         foreach ($admin->actions as $alias => $configuration) {
             if ($configuration['enabled'] !== true) continue;
 
@@ -109,6 +103,7 @@ class AdminControllerTask extends Shell {
                 'alias'  => $alias,
                 'config' => $configuration,
                 'modelObj'=>$admin->modelObj,
+                'vars'   => $vars,
             ));
             if (!$actionContents) return false;
             $actions .= "{$actionContents}\n\n";
@@ -133,36 +128,14 @@ class AdminControllerTask extends Shell {
 
         $alias              = $options['alias'];
         $configuration      = $options['config'];
+        $vars               = $options['vars'];
 
-        $vars               = $this->AdminVariables->load($admin);
         $this->AdminTemplate->set($vars);
         $this->AdminTemplate->set(compact(
             'alias',
             'configuration'
         ));
         return $this->AdminTemplate->generate($path, 'actions');
-    }
-
-/**
- * Returns associations for controllers models.
- *
- * @return  array $associations
- * @access private
- */
-    function __associations(&$model) {
-        $keys = array('belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany');
-        $associations = array();
-
-        foreach ($keys as $key => $type) {
-            foreach ($model->{$type} as $assocKey => $assocData) {
-                $associations[$type][$assocKey]['primaryKey'] = $model->{$assocKey}->primaryKey;
-                $associations[$type][$assocKey]['displayField'] = $model->{$assocKey}->displayField;
-                $associations[$type][$assocKey]['foreignKey'] = $assocData['foreignKey'];
-                $associations[$type][$assocKey]['controller'] = Inflector::pluralize(Inflector::underscore($assocData['className']));
-                $associations[$type][$assocKey]['fields'] =  array_keys($model->{$assocKey}->schema(true));
-            }
-        }
-        return $associations;
     }
 
 }
