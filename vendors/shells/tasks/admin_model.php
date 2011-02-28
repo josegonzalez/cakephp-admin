@@ -16,13 +16,6 @@ class AdminModelTask extends Shell {
     var $pluginDir = null;
 
 /**
- * Constructed base templateDir
- *
- * @var string
- **/
-    var $templateDir = null;
-
-/**
  *  Constructs this Shell instance.
  *
  */
@@ -38,12 +31,6 @@ class AdminModelTask extends Shell {
  */
     function directories() {
         $this->pluginDir        = APP . 'plugins' . DS;
-        $this->templateDir      = array();
-        $this->templateDir[]    = $this->pluginDir;
-        $this->templateDir[]    = 'cake_admin' . DS;
-        $this->templateDir[]    = 'libs' . DS;
-        $this->templateDir[]    = 'templates' . DS;
-        $this->templateDir      = implode($this->templateDir);
     }
 
 /**
@@ -92,9 +79,7 @@ class AdminModelTask extends Shell {
         ));
         $contents = $this->AdminTemplate->generate($path, 'model');
 
-        $path = APP . 'plugins' . DS . $admin->plugin . DS . 'models' . DS;
-        $filename = $path . Inflector::underscore($admin->modelName) . '_admin.php';
-        if ($this->createFile($filename, $contents)) {
+        if ($this->createFile($admin->paths['model'], $contents)) {
             return $contents;
         }
         return false;

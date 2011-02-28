@@ -84,15 +84,9 @@ class AdminControllerTask extends Shell {
             'actions',
             'admin'
         ));
-        $contents   = $this->AdminTemplate->generate($path, 'controller');
-        $filename   = array();
-        $filename[] = $this->pluginDir;
-        $filename[] = $admin->plugin . DS;
-        $filename[] = 'controllers' . DS;
-        $filename[] = $controllerPath . '_controller.php';
-        $filename   = implode($filename);
 
-        if ($this->createFile($filename, $contents)) {
+        $contents   = $this->AdminTemplate->generate($path, 'controller');
+        if ($this->createFile($admin->paths['controller'], $contents)) {
             return $contents;
         }
         return false;
@@ -106,13 +100,6 @@ class AdminControllerTask extends Shell {
     function generateContents($admin) {
         $actions        = '';
 
-        $plugin = Inflector::camelize($admin->plugin);
-        $modelObj = ClassRegistry::init(array(
-            'class' => "{$plugin}.{$admin->modelName}Admin",
-            'table' => $admin->useTable,
-            'ds'    => $admin->useDbConfig
-        ));
-
         foreach ($admin->actions as $alias => $configuration) {
             if ($configuration['enabled'] !== true) continue;
 
@@ -121,7 +108,7 @@ class AdminControllerTask extends Shell {
                 'plugin' => $configuration['plugin'],
                 'alias'  => $alias,
                 'config' => $configuration,
-                'modelObj'=>$modelObj,
+                'modelObj'=>$admin->modelObj,
             ));
             if (!$actionContents) return false;
             $actions .= "{$actionContents}\n\n";

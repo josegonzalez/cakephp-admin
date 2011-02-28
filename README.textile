@@ -229,7 +229,7 @@ The following is a list of things I am planning to implement, in order of most l
 * -View Templates, partials, and layouts-
 * Support for CakeAdmin class files in plugins
 * Screencast
-* Behavior/Helper/Component option parsing
+* -Behavior/Helper/Component option parsing-
 * Authentication Implementations
 * Webservice Implementation
 * Automagic CakeAdmin file-generation based solely upon DB

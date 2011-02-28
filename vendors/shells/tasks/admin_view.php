@@ -16,13 +16,6 @@ class AdminViewTask extends Shell {
     var $pluginDir = null;
 
 /**
- * Constructed base templateDir
- *
- * @var string
- **/
-    var $templateDir = null;
-
-/**
  *  Constructs this Shell instance.
  *
  */
@@ -38,12 +31,6 @@ class AdminViewTask extends Shell {
  */
     function directories() {
         $this->pluginDir        = APP . 'plugins' . DS;
-        $this->templateDir      = array();
-        $this->templateDir[]    = $this->pluginDir;
-        $this->templateDir[]    = 'cake_admin' . DS;
-        $this->templateDir[]    = 'libs' . DS;
-        $this->templateDir[]    = 'templates' . DS;
-        $this->templateDir      = implode($this->templateDir);
     }
 
 /**
@@ -57,13 +44,7 @@ class AdminViewTask extends Shell {
 
             $content = $this->getContent($admin, $alias, $configuration);
             if (empty($content)) continue;
-
-            $path = array();
-            $path[] = APP . 'plugins' . DS . $admin->plugin . DS . 'views' . DS;
-            $path[] = $this->_controllerPath($this->_controllerName($admin->modelName)) . DS;
-            $path[] = $alias . '.ctp';
-
-            if (!$this->createFile(implode($path), $content)) return false;
+            if (!$this->createFile($admin->paths['views'][$alias], $content)) return false;
         }
         return true;
     }
