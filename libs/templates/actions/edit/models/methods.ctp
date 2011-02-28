@@ -11,12 +11,6 @@
 		}
 		return $results[0];
 	}<?php
-// Create a model object
-$modelObj = ClassRegistry::init(array(
-	'class' => $admin->modelName,
-	'table' => $admin->useTable,
-	'ds'    => $admin->useDbConfig
-));
 
 if (!empty($associations['belongsTo']) || !empty($assocations['hasAndBelongsToMany'])) :
 

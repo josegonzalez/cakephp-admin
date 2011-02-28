@@ -1,11 +1,5 @@
 <?php
 
-$modelObj = ClassRegistry::init(array(
-	'class' => $admin->modelName,
-	'table' => $admin->useTable,
-	'ds'    => $admin->useDbConfig
-));
-
 $fields = $admin->actions[$find]['config']['fields'];
 $searches = $admin->actions[$find]['config']['search'];
 $list_filter = $admin->actions[$find]['config']['list_filter'];
@@ -59,7 +53,7 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 <?php endif; ?>
 <?php $contains = array(); ?>
 <?php if (!empty($fields)) : ?>
-<?php	foreach (array_keys($modelObj->schema()) as $field) : ?>
+<?php	foreach (array_keys($admin->modelObj->schema()) as $field) : ?>
 <?php		if (!in_array($field, $fields)) continue; ?>
 <?php		if (!empty($associations['belongsTo'])) : ?>
 <?php			foreach ($associations['belongsTo'] as $alias => $details) : ?>

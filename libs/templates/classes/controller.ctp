@@ -22,10 +22,10 @@
 
 echo "<?php\n";
 ?>
-class <?php echo $controllerName; ?>Controller extends <?php echo Inflector::humanize($admin->plugin); ?>AppController {
+class <?php echo $admin->controllerName; ?>Controller extends <?php echo Inflector::humanize($admin->plugin); ?>AppController {
 
-	var $name = '<?php echo $controllerName; ?>';
-	var $uses = array('<?php echo Inflector::humanize($admin->plugin); ?>.<?php echo $modelClass; ?>');
+	var $name = '<?php echo $admin->controllerName; ?>';
+	var $uses = array('<?php echo Inflector::humanize($admin->plugin); ?>.<?php echo $admin->adminModelName; ?>');
 <?php
 
 if (!empty($admin->components)) {
