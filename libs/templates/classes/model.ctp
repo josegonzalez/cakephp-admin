@@ -30,7 +30,7 @@ class <?php echo $admin->modelName ?><?php echo Inflector::humanize($admin->plug
 	var $primaryKey   = '<?php echo $admin->primaryKey; ?>';
 <?php
 if (!empty($admin->behaviors)) : ?>
-	var $behaviors    = array(
+	var $actsAs       = array(
 		<?php echo $admin->formatted('behaviors', 2, false); ?>
 	);
 <?php endif; ?>
