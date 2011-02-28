@@ -317,6 +317,8 @@ class CakeAdmin {
         if (empty($this->modelName)) {
             $this->modelName = substr(get_class($this), 0 , -9);
         }
+        $this->adminModelName = $this->modelName . 'Admin';
+        $this->controllerName = $this->_controllerName($this->modelName);
 
         // Set a table if not already set
         if (empty($this->useTable)) {
@@ -447,7 +449,7 @@ class CakeAdmin {
         ));
 
         $this->paths            = array();
-        $controllerPath = $this->_controllerPath($this->_controllerName($this->modelName));
+        $controllerPath = $this->_controllerPath($this->controllerName);
 
         $outputModelPath = array();
         $outputModelPath[] = $this->baseDir . 'models' . DS;
@@ -466,7 +468,7 @@ class CakeAdmin {
 
             $outputViewPath = array();
             $outputViewPath[] = $this->baseDir . 'views' . DS;
-            $outputViewPath[] = $this->_controllerPath($this->_controllerName($this->modelName)) . DS;
+            $outputViewPath[] = $this->_controllerPath($this->controllerName) . DS;
             $outputViewPath[] = $alias . '.ctp';
 
             $this->paths['views'][$alias] = implode(DS, array(
@@ -481,7 +483,7 @@ class CakeAdmin {
         // Lets get a bare model
         App::import('Core', 'Model');
         $this->modelObj = new Model(array(
-            'name'  => $this->modelName . 'Admin',
+            'name'  => $this->adminModelName,
             'table' => $this->useTable,
             'ds'    => $this->useDbConfig
         ));
