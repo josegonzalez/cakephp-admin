@@ -48,7 +48,7 @@ class CakeAdminViewConfig extends CakeAdminActionConfig {
  *
  * @var mixed
  **/
-    var $linkable = true;
+    var $linkable = array('title' => 'View');
 
 /**
  * Model methods this action contains
@@ -56,5 +56,41 @@ class CakeAdminViewConfig extends CakeAdminActionConfig {
  * @var array
  **/
     var $methods = array('find');
+
+/**
+ * Merges instantiated configuration with the class defaults
+ *
+ * @param array $configuration action configuration
+ * @return array
+ * @author Jose Diaz-Gonzalez
+ */
+    function mergeVars($admin, $configuration = array()) {
+        if (empty($configuration)) $configuration = $this->defaults;
+
+        $modelObj = ClassRegistry::init(array(
+            'class' => $admin->modelName,
+            'table' => $admin->useTable,
+            'ds'    => $admin->useDbConfig
+        ));
+
+        $fields = array();
+        $schema = $modelObj->schema();
+
+        if (empty($configuration['fields']) || (in_array('*', (array) $configuration['fields']))) {
+            // $fields is all fields
+            foreach (array_keys($schema) as $field) {
+                $fields[] = $field;
+            }
+        } else {
+            foreach ((array) $configuration['fields'] as $field) {
+                if ($field !== '*') $fields[] = $field;
+            }
+        }
+
+        $configuration = array_merge($this->defaults, $configuration);
+        $configuration['fields'] = $fields;
+
+        return $configuration;
+    }
 
 }
