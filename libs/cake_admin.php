@@ -22,6 +22,13 @@ class CakeAdmin {
     var $modelName      = null;
 
 /**
+ * Contains a model object
+ *
+ * @var Object
+ **/
+    var $modelObj       = null;
+
+/**
  * Name of database connection to use
  *
  * @var string
@@ -146,6 +153,27 @@ class CakeAdmin {
     var $linkTo = 'edit';
 
 /**
+ * Base directory for writing filesystem output
+ *
+ * @var string
+ **/
+    var $baseDir;
+
+/**
+ * Directory holding cake_admin core template files
+ *
+ * @var string
+ **/
+    var $templateDir;
+
+/**
+ * Array of paths for writing filesystem output for MVC files
+ *
+ * @var array
+ **/
+    var $paths;
+
+/**
  * Customize the admin
  *
  * @var array
@@ -236,6 +264,50 @@ class CakeAdmin {
         ),
     );
 
+
+/**
+ * Default Validation Messages
+ *
+ * Messages may contain the string `{{field}}` in order to support
+ * inclusion of fieldnames via str_replace
+ *
+ * Rules that have parameters may include those parameters as {{parameter}}
+ *
+ * When overriding these in sub-classes, remember to either override
+ * in the __construct() method to array_merge with the defaults, or
+ * specify all the messages that may be used
+ *
+ * @var array
+ */
+    var $_validationMessages = array(
+        'alphanumeric'  => '{{field}} must only contain letters and numbers',
+        'between'       => '{{field}} must be between {{min}} and {{max}} characters long',
+        'blank'         => '{{field}} must be blank or contain only whitespace characters',
+        'boolean'       => 'Incorrect value for {{field}}',
+        'cc'            => 'The credit card number you supplied was invalid',
+        'comparison'    => '{{field}} must be {{comparison}} to {{value}}',
+        'date'          => 'Enter a valid date in {{format}} format',
+        'decimal'       => '{{field}} must be a valid decimal number with at least {{length}} decimal points',
+        'email'         => '{{field}} must be a valid email address',
+        'equalTo'       => '{{field}} must be equal to {{number}}',
+        'extension'     => '{{field}} must have a valid extension',
+        'file'          => '{{field}} must be a valid file name',
+        'ip'            => '{{field}} must be a valid IP address',
+        'inlist'        => 'Your selection for {{field}} must be in the given list',
+        'isunique'      => 'This {{field}} has already been taken',
+        'maxlength'     => '{{field}} must have less than {{length}} characters',
+        'minlength'     => '{{field}} must have at least {{length}} characters',
+        'money'         => '{{field}} must be a valid monetary amount',
+        'multiple'      => 'You must select at least {{min}} and no more than {{max}} options for {{field}}',
+        'numeric'       => '{{field}} must be numeric',
+        'notempty'      => '{{field}} cannot be empty',
+        'phone'         => '{{field}} must be a valid phone number',
+        'postal'        => '{{field}} must be a valid postal code',
+        'range'         => '{{field}} must be between {{min}} and {{max}}',
+        'ssn'           => '{{field}} must be a valid social security number',
+        'url'           => '{{field}} must be a valid url',
+    );
+
 /**
  * CakeAdmin constructor. Correctly merges descendent classes with
  * itself for further use
@@ -259,7 +331,14 @@ class CakeAdmin {
         // Update the actions configuration
         $this->_mergeVars();
 
+        // Set the required model methods
         $this->_setModelMethods();
+
+        // Setup template paths
+        $this->_setTemplates();
+
+        // Setup the admin model class
+        $this->_setModel();
     }
 
     function _mergeVars() {
@@ -355,6 +434,92 @@ class CakeAdmin {
 
         $this->finders = array_unique($this->finders);
         $this->relatedFinders = array_unique($this->relatedFinders);
+    }
+
+    function _setTemplates() {
+        $this->baseDir = APP .'plugins' . DS . $this->plugin . DS;
+
+        $this->templateDir      = implode(DS, array(
+            APP .'plugins',
+            'cake_admin',
+            'libs',
+            'templates',
+        ));
+
+        $this->paths            = array();
+        $controllerPath = $this->_controllerPath($this->_controllerName($this->modelName));
+
+        $outputModelPath = array();
+        $outputModelPath[] = $this->baseDir . 'models' . DS;
+        $outputModelPath[] = Inflector::underscore($this->modelName) . '_admin.php';
+
+        $outputControllerPath   = array();
+        $outputControllerPath[] = $this->baseDir;
+        $outputControllerPath[] = 'controllers' . DS;
+        $outputControllerPath[] = $controllerPath . '_controller.php';
+
+        $this->paths['model'] = implode($outputModelPath);
+        $this->paths['controller'] = implode($outputControllerPath);
+
+        foreach ($this->actions as $alias => $configuration) {
+            if ($configuration['enabled'] !== true) continue;
+
+            $outputViewPath = array();
+            $outputViewPath[] = $this->baseDir . 'views' . DS;
+            $outputViewPath[] = $this->_controllerPath($this->_controllerName($this->modelName)) . DS;
+            $outputViewPath[] = $alias . '.ctp';
+
+            $this->paths['views'][$alias] = implode(DS, array(
+                $this->baseDir . 'views',
+                $controllerPath,
+                $alias . '.ctp'
+            ));
+        }
+    }
+
+    function _setModel() {
+        // Lets get a bare model
+        App::import('Core', 'Model');
+        $this->modelObj = new Model(array(
+            'name'  => $this->modelName . 'Admin',
+            'table' => $this->useTable,
+            'ds'    => $this->useDbConfig
+        ));
+
+        // Construct all relations, attach validation rules
+        $this->modelObj->displayField = $this->displayField;
+        $this->modelObj->primaryKey   = $this->primaryKey;
+        $this->modelObj->validate     = $this->validations;
+
+        // Attach related models. Must be non-cake_admin models, tables must exist
+        $this->modelObj->bindModel($this->relations, false);
+
+        // Attach behaviors
+        foreach (Set::normalize($this->behaviors) as $behavior => $config) {
+            $this->modelObj->Behaviors->attach($behavior, $config);
+        }
+    }
+
+/**
+ * Creates the proper controller path for the specified controller class name
+ *
+ * @param string $name Controller class name
+ * @return string Path to controller
+ * @access protected
+ */
+    function _controllerPath($name) {
+        return strtolower(Inflector::underscore($name));
+    }
+
+/**
+ * Creates the proper controller plural name for the specified controller class name
+ *
+ * @param string $name Controller class name
+ * @return string Controller plural name
+ * @access protected
+ */
+    function _controllerName($name) {
+        return Inflector::pluralize(Inflector::camelize($name));
     }
 
 /**
@@ -698,46 +863,4 @@ class CakeAdmin {
         return implode("\n", $results) . "\n";
     }
 
-/**
- * Default Validation Messages
- *
- * Messages may contain the string `{{field}}` in order to support
- * inclusion of fieldnames via str_replace
- *
- * Rules that have parameters may include those parameters as {{parameter}}
- *
- * When overriding these in sub-classes, remember to either override
- * in the __construct() method to array_merge with the defaults, or
- * specify all the messages that may be used
- *
- * @var array
- */
-    var $_validationMessages = array(
-        'alphanumeric'  => '{{field}} must only contain letters and numbers',
-        'between'       => '{{field}} must be between {{min}} and {{max}} characters long',
-        'blank'         => '{{field}} must be blank or contain only whitespace characters',
-        'boolean'       => 'Incorrect value for {{field}}',
-        'cc'            => 'The credit card number you supplied was invalid',
-        'comparison'    => '{{field}} must be {{comparison}} to {{value}}',
-        'date'          => 'Enter a valid date in {{format}} format',
-        'decimal'       => '{{field}} must be a valid decimal number with at least {{length}} decimal points',
-        'email'         => '{{field}} must be a valid email address',
-        'equalTo'       => '{{field}} must be equal to {{number}}',
-        'extension'     => '{{field}} must have a valid extension',
-        'file'          => '{{field}} must be a valid file name',
-        'ip'            => '{{field}} must be a valid IP address',
-        'inlist'        => 'Your selection for {{field}} must be in the given list',
-        'isunique'      => 'This {{field}} has already been taken',
-        'maxlength'     => '{{field}} must have less than {{length}} characters',
-        'minlength'     => '{{field}} must have at least {{length}} characters',
-        'money'         => '{{field}} must be a valid monetary amount',
-        'multiple'      => 'You must select at least {{min}} and no more than {{max}} options for {{field}}',
-        'numeric'       => '{{field}} must be numeric',
-        'notempty'      => '{{field}} cannot be empty',
-        'phone'         => '{{field}} must be a valid phone number',
-        'postal'        => '{{field}} must be a valid postal code',
-        'range'         => '{{field}} must be between {{min}} and {{max}}',
-        'ssn'           => '{{field}} must be a valid social security number',
-        'url'           => '{{field}} must be a valid url',
-    );
 }
