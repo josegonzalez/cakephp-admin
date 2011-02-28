@@ -70,7 +70,7 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
  * @author Jose Diaz-Gonzalez
  */
     function mergeVars($admin, $configuration = array()) {
-        if (empty($configuration)) return $this->defaults;
+        if (empty($configuration)) $configuration = $this->defaults;
 
         $modelObj = ClassRegistry::init(array(
             'class' => $admin->modelName,

@@ -65,7 +65,7 @@ class CakeAdminEditConfig extends CakeAdminActionConfig {
     var $methods = array('find', 'related');
 
     function mergeVars($admin, $configuration) {
-        if (empty($configuration)) return array($this->defaults);
+        if (empty($configuration)) $configuration = array($this->defaults);
 
         $modelObj = ClassRegistry::init(array(
             'class' => $admin->modelName,
