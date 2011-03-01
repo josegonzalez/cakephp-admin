@@ -519,7 +519,16 @@ class CakeAdmin {
         ));
 
         // Construct all relations, attach validation rules
-        $this->modelObj->displayField = $this->displayField;
+        if ($this->modelObj->hasField($this->displayField)) {
+            $this->modelObj->displayField = $this->displayField;
+        } else {
+            foreach (array('name', 'title', 'id', 'uuid') as $field) {
+                if ($this->modelObj->hasField($field)) {
+                    $this->modelObj->displayField = $field;
+                }
+            }
+        }
+
         $this->modelObj->primaryKey   = $this->primaryKey;
         $this->modelObj->validate     = $this->validations;
 
