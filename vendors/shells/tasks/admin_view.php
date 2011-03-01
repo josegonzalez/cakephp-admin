@@ -21,15 +21,7 @@ class AdminViewTask extends Shell {
  */
     function __construct(&$dispatch) {
         parent::__construct($dispatch);
-        $this->directories();
-    }
 
-/**
- * Populates the plugin and template directory properties
- *
- * @return void
- */
-    function directories() {
         $this->pluginDir        = APP . 'plugins' . DS;
         $this->templateDir      = array();
         $this->templateDir[]    = dirname(__FILE__);

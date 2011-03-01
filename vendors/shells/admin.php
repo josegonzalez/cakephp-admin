@@ -48,12 +48,12 @@ class AdminShell extends Shell {
     var $handler;
 
 /**
- * Setup directory paths
+ *  Constructs this Shell instance.
  *
- * @return void
- * @author Jose Diaz-Gonzalez
- **/
-    function directories() {
+ */
+    function __construct(&$dispatch) {
+        parent::__construct($dispatch);
+
         $this->templateDir      = array();
         $this->templateDir[]    = dirname(__FILE__);
         $this->templateDir[]    = '..';
@@ -68,8 +68,6 @@ class AdminShell extends Shell {
  *
  */
     function main() {
-        $this->directories();
-
         if (!isset($this->params['interactive'])) {
             $this->params['interactive'] = false;
         } else {
