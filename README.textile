@@ -16,8 +16,6 @@ h2. Requirements
 
 h2. Installation
 
-*CakeAdmin must be in the app/plugins folder, not the global plugins folder. A future release will remove this limitation.*
-
 _[Manual]_
 
 # Download this: http://github.com/josegonzalez/cake_admin/zipball/master
@@ -227,6 +225,7 @@ The following is a list of things I am planning to implement, in order of most l
 * -Implement mergeVars-
 * -Deprecate Frontmatter-
 * -View Templates, partials, and layouts-
+* -Allow installation of cake_admin generator in base plugins dir-
 * Support for CakeAdmin class files in plugins
 * Screencast
 * -Behavior/Helper/Component option parsing-

@@ -48,10 +48,28 @@ class AdminShell extends Shell {
     var $handler;
 
 /**
+ * Setup directory paths
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+    function directories() {
+        $this->templateDir      = array();
+        $this->templateDir[]    = dirname(__FILE__);
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = 'libs';
+        $this->templateDir[]    = 'templates';
+        $this->templateDir      = implode(DS, $this->templateDir);
+    }
+
+/**
  * Override main
  *
  */
     function main() {
+        $this->directories();
+
         if (!isset($this->params['interactive'])) {
             $this->params['interactive'] = false;
         } else {
@@ -351,33 +369,39 @@ class AdminShell extends Shell {
  **/
     function generateMisc($plugins) {
         foreach ($plugins as $plugin => $cakeAdmins) {
+            $pluginPath = APP . 'plugins' . DS . $plugin;
+
             // Generate flash elements
+            $elementPath = $pluginPath . DS . 'views' . DS . 'elements' . DS . 'flash';
             $files = array('error', 'info', 'notice', 'success');
-
-            $templatePath = array();
-            $templatePath[] = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS;
-            $templatePath[] = 'templates' . DS . 'misc' . DS;
-
             foreach ($files as $file) {
-                $contents = $this->AdminTemplate->generate(implode($templatePath) . 'flash' . DS, $file);
+                $contents = $this->AdminTemplate->generate(
+                    $this->templateDir . DS . 'misc' . DS . 'flash' . DS,
+                    $file
+                );
 
-                $path = APP . 'plugins' . DS . $plugin . DS . 'views' . DS . 'elements' . DS . 'flash' . DS;
-                $this->createFile("{$path}{$file}.ctp", $contents);
+                $this->createFile($elementPath . DS . $file . '.ctp', $contents);
             }
 
             // Generate CSS
-            $contents = $this->AdminTemplate->generate(implode($templatePath), 'cake.admin.generic');
-            $path = APP . 'plugins' . DS . $plugin . DS . 'webroot' . DS . 'css' . DS;
-            $this->createFile("{$path}cake.admin.generic.css", $contents);
+            $contents = $this->AdminTemplate->generate(
+                $this->templateDir . DS . 'misc' . DS,
+                'cake.admin.generic'
+            );
+            $path = $pluginPath . DS . 'webroot' . DS . 'css';
+            $this->createFile($path . DS . 'cake.admin.generic.css', $contents);
 
             // Generate Layout
             $this->AdminTemplate->set(compact(
                 'plugin',
                 'plugins'
             ));
-            $contents = $this->AdminTemplate->generate(implode($templatePath), 'layout.default');
-            $path = APP . 'plugins' . DS . $plugin . DS . 'views' . DS . 'layouts' . DS;
-            $this->createFile("{$path}default.ctp", $contents);
+            $contents = $this->AdminTemplate->generate(
+                $this->templateDir . DS . 'misc' . DS,
+                'layout.default'
+            );
+            $path = $pluginPath . DS . 'views' . DS . 'layouts';
+            $this->createFile($path . DS . 'default.ctp', $contents);
         }
     }
 

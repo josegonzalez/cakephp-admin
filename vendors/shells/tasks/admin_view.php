@@ -31,6 +31,14 @@ class AdminViewTask extends Shell {
  */
     function directories() {
         $this->pluginDir        = APP . 'plugins' . DS;
+        $this->templateDir      = array();
+        $this->templateDir[]    = dirname(__FILE__);
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = 'libs';
+        $this->templateDir[]    = 'templates';
+        $this->templateDir      = implode(DS, $this->templateDir);
     }
 
 /**

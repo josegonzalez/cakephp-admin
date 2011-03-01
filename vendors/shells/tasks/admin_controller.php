@@ -39,11 +39,13 @@ class AdminControllerTask extends Shell {
     function directories() {
         $this->pluginDir        = APP . 'plugins' . DS;
         $this->templateDir      = array();
-        $this->templateDir[]    = $this->pluginDir;
-        $this->templateDir[]    = 'cake_admin' . DS;
-        $this->templateDir[]    = 'libs' . DS;
-        $this->templateDir[]    = 'templates' . DS;
-        $this->templateDir      = implode($this->templateDir);
+        $this->templateDir[]    = dirname(__FILE__);
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = 'libs';
+        $this->templateDir[]    = 'templates';
+        $this->templateDir      = implode(DS, $this->templateDir);
     }
 
 /**
@@ -52,7 +54,7 @@ class AdminControllerTask extends Shell {
  * @return void
  **/
     function generateAppController($admin) {
-        $path = $this->templateDir . 'classes';
+        $path = $this->templateDir . DS . 'classes';
 
         $this->AdminTemplate->set(compact('admin'));
         $contents = $this->AdminTemplate->generate($path, 'app_controller');
@@ -79,7 +81,7 @@ class AdminControllerTask extends Shell {
             'admin'
         ));
 
-        $path       = $this->templateDir . 'classes';
+        $path       = $this->templateDir . DS . 'classes';
         $contents   = $this->AdminTemplate->generate($path, 'controller');
         if ($this->createFile($admin->paths['controller'], $contents)) {
             return $contents;

@@ -469,14 +469,8 @@ class CakeAdmin {
     }
 
     function _setTemplates() {
-        $this->baseDir = APP .'plugins' . DS . $this->plugin . DS;
-
-        $this->templateDir      = implode(DS, array(
-            APP .'plugins',
-            'cake_admin',
-            'libs',
-            'templates',
-        ));
+        $this->baseDir          = APP .'plugins' . DS . $this->plugin . DS;
+        $this->templateDir      = dirname(__FILE__) . DS . 'templates';
 
         $this->paths            = array();
         $controllerPath = $this->_controllerPath($this->controllerName);

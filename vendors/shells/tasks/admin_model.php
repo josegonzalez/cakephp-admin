@@ -31,6 +31,14 @@ class AdminModelTask extends Shell {
  */
     function directories() {
         $this->pluginDir        = APP . 'plugins' . DS;
+        $this->templateDir      = array();
+        $this->templateDir[]    = dirname(__FILE__);
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = '..';
+        $this->templateDir[]    = 'libs';
+        $this->templateDir[]    = 'templates';
+        $this->templateDir      = implode(DS, $this->templateDir);
     }
 
 /**
@@ -39,7 +47,7 @@ class AdminModelTask extends Shell {
  * @return void
  **/
     function generateAppModel($admin) {
-        $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
+        $path = $this->templateDir . DS . 'classes';
 
         $this->AdminTemplate->set(compact('admin'));
         $contents = $this->AdminTemplate->generate($path, 'app_model');
@@ -58,7 +66,7 @@ class AdminModelTask extends Shell {
  * @return void
  **/
     function generate($admin) {
-        $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
+        $path = $this->templateDir . DS . 'classes';
 
         list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin);
 
