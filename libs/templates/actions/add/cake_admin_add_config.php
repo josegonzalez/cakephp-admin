@@ -68,13 +68,7 @@ class CakeAdminAddConfig extends CakeAdminActionConfig {
     function mergeVars($admin, $configuration) {
         if (empty($configuration)) $configuration = array($this->defaults);
 
-        $modelObj = ClassRegistry::init(array(
-            'class' => $admin->modelName,
-            'table' => $admin->useTable,
-            'ds'    => $admin->useDbConfig
-        ));
-
-        $schema = $modelObj->schema();
+        $schema = $admin->modelObj->schema();
 
         foreach ($configuration as $i => $config) {
 
@@ -86,19 +80,22 @@ class CakeAdminAddConfig extends CakeAdminActionConfig {
             if (empty($configuration[$i]['fields']) || (in_array('*', (array) $configuration[$i]['fields']))) {
                 // $fields is all fields
                 foreach (array_keys($schema) as $field) {
-                    if ($field == $modelObj->primaryKey) continue;
+                    if ($field == $admin->modelObj->primaryKey) continue;
                     $fields[$field] = array();
                 }
-            } else {
+            }
+            if (empty($configuration[$i]['fields'])) {
                 $configuration[$i]['fields'] = Set::normalize($configuration[$i]['fields']);
                 foreach ((array) $configuration[$i]['fields'] as $field => $config) {
-                    if ($field == $modelObj->primaryKey) continue;
+                    if ($field == $admin->modelObj->primaryKey) continue;
 
                     if (empty($configuration[$i])) {
                         $config = array();
                     } else if (is_string($config)) {
                         $config = array('label' => $config);
                     }
+
+                    if (empty($config['label'])) $config['label'] = Inflector::humanize($field);
                     if ($field !== '*') $fields[$field] = $config;
                 }
             }

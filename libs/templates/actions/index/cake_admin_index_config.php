@@ -72,16 +72,10 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
     function mergeVars($admin, $configuration = array()) {
         if (empty($configuration)) $configuration = $this->defaults;
 
-        $modelObj = ClassRegistry::init(array(
-            'class' => $admin->modelName,
-            'table' => $admin->useTable,
-            'ds'    => $admin->useDbConfig
-        ));
-
         $filters = array();
         $search = array();
         $fields = array();
-        $schema = $modelObj->schema();
+        $schema = $admin->modelObj->schema();
 
         if (empty($configuration['fields']) || (in_array('*', (array) $configuration['fields']))) {
             // $fields is all fields
