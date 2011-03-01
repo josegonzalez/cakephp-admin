@@ -81,13 +81,13 @@ class CakeAdminAddConfig extends CakeAdminActionConfig {
                 // $fields is all fields
                 foreach (array_keys($schema) as $field) {
                     if ($field == $admin->modelObj->primaryKey) continue;
-                    $fields[$field] = array();
+                    $fields[$field] = array('label' => Inflector::humanize($field));
                 }
             }
-            if (empty($configuration[$i]['fields'])) {
+            if (!empty($configuration[$i]['fields'])) {
                 $configuration[$i]['fields'] = Set::normalize($configuration[$i]['fields']);
                 foreach ((array) $configuration[$i]['fields'] as $field => $config) {
-                    if ($field == $admin->modelObj->primaryKey) continue;
+                    if ($field == $admin->modelObj->primaryKey || $field === '*') continue;
 
                     if (empty($configuration[$i])) {
                         $config = array();
@@ -96,7 +96,7 @@ class CakeAdminAddConfig extends CakeAdminActionConfig {
                     }
 
                     if (empty($config['label'])) $config['label'] = Inflector::humanize($field);
-                    if ($field !== '*') $fields[$field] = $config;
+                    $fields[$field] = $config;
                 }
             }
 
