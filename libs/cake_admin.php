@@ -355,7 +355,7 @@ class CakeAdmin {
 
     function _setVariables() {
         // Load an instance of the admin model object
-        $schema             = $this->modelObj->schema(true);
+        $schema                 = $this->modelObj->schema(true);
         $this->fields           = array_keys($schema);
 
         $this->controllerRoute  = $this->_pluralName($this->modelName);
@@ -367,6 +367,10 @@ class CakeAdmin {
         $this->adminPluralName  = $this->_pluralName($this->adminModelName);
 
         $this->associations     = $this->__associations($this->modelObj);
+
+        if ($this->sessions && !in_array('Session', $this->components)) {
+            $this->components[] = 'Session';
+        }
     }
 
     function _mergeVars() {
