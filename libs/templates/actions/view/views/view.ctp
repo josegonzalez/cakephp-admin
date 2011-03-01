@@ -1,22 +1,22 @@
-<div class="<?php echo $pluralVar;?> <?php echo $action; ?>">
-<h2><?php printf("<?php __('%s %s'); ?>", Inflector::humanize($action), $singularHumanName); ?></h2>
+<div class="<?php echo $admin->adminPluralVar;?> <?php echo $action; ?>">
+<h2><?php printf("<?php __('%s %s'); ?>", Inflector::humanize($action), $admin->singularHumanName); ?></h2>
 	<dl><?php echo "<?php \$i = 0; \$class = ' class=\"altrow\"';?>\n";?>
 <?php
-foreach ($fields as $field) {
+foreach ($admin->fields as $field) {
 	$isKey = false;
-	if (!empty($associations['belongsTo'])) {
-		foreach ($associations['belongsTo'] as $alias => $details) {
+	if (!empty($admin->associations['belongsTo'])) {
+		foreach ($admin->associations['belongsTo'] as $alias => $details) {
 			if ($field === $details['foreignKey']) {
 				$isKey = true;
 				echo "\t\t<dt<?php if (\$i % 2 == 0) echo \$class;?>><?php __('" . Inflector::humanize(Inflector::underscore($alias)) . "'); ?></dt>\n";
-				echo "\t\t<dd<?php if (\$i++ % 2 == 0) echo \$class;?>>\n\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'], array('controller' => '{$details['controller']}', 'action' => 'view', \${$singularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t\t&nbsp;\n\t\t</dd>\n";
+				echo "\t\t<dd<?php if (\$i++ % 2 == 0) echo \$class;?>>\n\t\t\t<?php echo \$this->Html->link(\${$admin->adminSingularVar}['{$alias}']['{$details['displayField']}'], array('controller' => '{$details['controller']}', 'action' => 'view', \${$admin->adminSingularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t\t&nbsp;\n\t\t</dd>\n";
 				break;
 			}
 		}
 	}
 	if ($isKey !== true) {
 		echo "\t\t<dt<?php if (\$i % 2 == 0) echo \$class;?>><?php __('" . Inflector::humanize($field) . "'); ?></dt>\n";
-		echo "\t\t<dd<?php if (\$i++ % 2 == 0) echo \$class;?>>\n\t\t\t<?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>\n\t\t\t&nbsp;\n\t\t</dd>\n";
+		echo "\t\t<dd<?php if (\$i++ % 2 == 0) echo \$class;?>>\n\t\t\t<?php echo \${$admin->adminSingularVar}['{$admin->adminModelName}']['{$field}']; ?>\n\t\t\t&nbsp;\n\t\t</dd>\n";
 	}
 }
 ?>
@@ -29,7 +29,7 @@ foreach ($fields as $field) {
 foreach ($admin->links as $alias => $config) {
 	if ($alias == $action) continue;
 	if ($config !== false && is_string($config)) { ?>
-		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
+		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$admin->singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
 <?php
 	} elseif (is_array($config)) {
 		$url     = array();
@@ -43,7 +43,7 @@ foreach ($admin->links as $alias => $config) {
 					$url[] = "'{$key}'";
 				}
 			}
-			$url[] = "\$this->Form->value('{$modelClass}.{$primaryKey}')";
+			$url[] = "\$this->Form->value('{$admin->adminModelName}.{$admin->primaryKey}')";
 			$url = 'array(' . implode(', ', $url) . ')';
 		} else {
 			$url = "'{$config['url']}'";
@@ -78,36 +78,36 @@ foreach ($admin->links as $alias => $config) {
 	</ul>
 </div>
 <?php
-if (!empty($associations['hasOne'])) :
-	foreach ($associations['hasOne'] as $alias => $details): ?>
+if (!empty($admin->associations['hasOne'])) :
+	foreach ($admin->associations['hasOne'] as $alias => $details): ?>
 	<div class="related">
 		<h3><?php echo "<?php __('Related " . Inflector::humanize($details['controller']) . "');?>";?></h3>
-	<?php echo "<?php if (!empty(\${$singularVar}['{$alias}'])):?>\n";?>
+	<?php echo "<?php if (!empty(\${$admin->adminSingularVar}['{$alias}'])):?>\n";?>
 		<dl><?php echo "\t<?php \$i = 0; \$class = ' class=\"altrow\"';?>\n";?>
 	<?php
 			foreach ($details['fields'] as $field) {
 				echo "\t\t<dt<?php if (\$i % 2 == 0) echo \$class;?>><?php __('" . Inflector::humanize($field) . "');?></dt>\n";
-				echo "\t\t<dd<?php if (\$i++ % 2 == 0) echo \$class;?>>\n\t<?php echo \${$singularVar}['{$alias}']['{$field}'];?>\n&nbsp;</dd>\n";
+				echo "\t\t<dd<?php if (\$i++ % 2 == 0) echo \$class;?>>\n\t<?php echo \${$admin->adminSingularVar}['{$alias}']['{$field}'];?>\n&nbsp;</dd>\n";
 			}
 	?>
 		</dl>
 	<?php echo "<?php endif; ?>\n";?>
 		<div class="actions">
 			<ul>
-				<li><?php echo "<?php echo \$this->Html->link(__('Edit " . Inflector::humanize(Inflector::underscore($alias)) . "', true), array('controller' => '{$details['controller']}', 'action' => 'edit', \${$singularVar}['{$alias}']['{$details['primaryKey']}'])); ?></li>\n";?>
+				<li><?php echo "<?php echo \$this->Html->link(__('Edit " . Inflector::humanize(Inflector::underscore($alias)) . "', true), array('controller' => '{$details['controller']}', 'action' => 'edit', \${$admin->adminSingularVar}['{$alias}']['{$details['primaryKey']}'])); ?></li>\n";?>
 			</ul>
 		</div>
 	</div>
 	<?php
 	endforeach;
 endif;
-if (empty($associations['hasMany'])) {
-	$associations['hasMany'] = array();
+if (empty($admin->associations['hasMany'])) {
+	$admin->associations['hasMany'] = array();
 }
-if (empty($associations['hasAndBelongsToMany'])) {
-	$associations['hasAndBelongsToMany'] = array();
+if (empty($admin->associations['hasAndBelongsToMany'])) {
+	$admin->associations['hasAndBelongsToMany'] = array();
 }
-$relations = array_merge($associations['hasMany'], $associations['hasAndBelongsToMany']);
+$relations = array_merge($admin->associations['hasMany'], $admin->associations['hasAndBelongsToMany']);
 $i = 0;
 foreach ($relations as $alias => $details):
 	$otherSingularVar = Inflector::variable($alias);
@@ -115,7 +115,7 @@ foreach ($relations as $alias => $details):
 	?>
 <div class="related">
 	<h3><?php echo "<?php __('Related " . $otherPluralHumanName . "');?>";?></h3>
-	<?php echo "<?php if (!empty(\${$singularVar}['{$alias}'])):?>\n";?>
+	<?php echo "<?php if (!empty(\${$admin->adminSingularVar}['{$alias}'])):?>\n";?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
 <?php
@@ -128,7 +128,7 @@ foreach ($relations as $alias => $details):
 <?php
 echo "\t<?php
 		\$i = 0;
-		foreach (\${$singularVar}['{$alias}'] as \${$otherSingularVar}):
+		foreach (\${$admin->adminSingularVar}['{$alias}'] as \${$otherSingularVar}):
 			\$class = null;
 			if (\$i++ % 2 == 0) {
 				\$class = ' class=\"altrow\"';

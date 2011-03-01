@@ -1,4 +1,4 @@
-<div class="<?php echo $pluralVar;?> <?php echo $action; ?>">
+<div class="<?php echo $admin->adminPluralVar; ?> <?php echo $action; ?>">
 	<h2><?php echo "<?php __('" . Inflector::pluralize(Inflector::humanize($admin->modelName)) . "');?>";?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
@@ -12,25 +12,25 @@
 		<th class="actions"><?php echo "<?php __('Actions');?>";?></th>
 	</tr>
 	<?php
-	echo "<?php \$i = 0; foreach (\${$pluralVar} as \${$singularVar}) : ?>\n";
+	echo "<?php \$i = 0; foreach (\${$admin->adminPluralVar} as \${$admin->adminSingularVar}) : ?>\n";
 	echo "\t<tr<?php if (\$i++ %2 == 0) echo ' class=\"altrow\"';?>>\n";
 		foreach ($configuration['config']['fields'] as $field) {
 			$isKey = false;
-			if (!empty($associations['belongsTo'])) {
-				foreach ($associations['belongsTo'] as $alias => $details) {
+			if (!empty($admin->associations['belongsTo'])) {
+				foreach ($admin->associations['belongsTo'] as $alias => $details) {
 					if ($field === $details['foreignKey']) {
 						$isKey = true;
-						echo "\t\t<td>\n\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'], array('controller' => '{$details['controller']}', 'action' => 'view', \${$singularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t</td>\n";
+						echo "\t\t<td>\n\t\t\t<?php echo \$this->Html->link(\${$admin->adminSingularVar}['{$alias}']['{$details['displayField']}'], array('controller' => '{$details['controller']}', 'action' => 'view', \${$admin->adminSingularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t</td>\n";
 						break;
 					}
 				}
 			}
 			if ($isKey !== true) {
-				if ($field == $primaryKey) {
-					echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$modelClass}']['{$field}'], array(";
-					echo "'action' => '{$admin->linkTo}', \${$singularVar}['{$modelClass}']['{$field}'])); ?></td>\n";
+				if ($field == $admin->primaryKey) {
+					echo "\t\t<td><?php echo \$this->Html->link(\${$admin->adminSingularVar}['{$admin->adminModelName}']['{$field}'], array(";
+					echo "'action' => '{$admin->linkTo}', \${$admin->adminSingularVar}['{$admin->adminModelName}']['{$field}'])); ?></td>\n";
 				} else {
-					echo "\t\t<td><?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>&nbsp;</td>\n";
+					echo "\t\t<td><?php echo \${$admin->adminSingularVar}['{$admin->adminModelName}']['{$field}']; ?>&nbsp;</td>\n";
 				}
 			}
 		}
@@ -50,7 +50,7 @@
 							$url[] = "'{$key}'";
 						}
 					}
-					$url[] = "\${$singularVar}['{$modelClass}']['{$primaryKey}']";
+					$url[] = "\${$admin->adminSingularVar}['{$admin->adminModelName}']['{$admin->primaryKey}']";
 					$url = 'array(' . implode(', ', $url) . ')';
 				} else {
 					$url = "'{$config['url']}'";
@@ -107,7 +107,7 @@
 <?php
 foreach ($admin->links as $alias => $config) :
 	if ($config !== false && is_string($config)) : ?>
-		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
+		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$admin->singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
 <?php
 	endif;
 endforeach;
@@ -130,11 +130,11 @@ endforeach;
 
 <?php if (!empty($configuration['config']['search'])) : ?>
 	<h3><?php echo "<?php __('Search'); ?>"; ?></h3>
-	<?php echo "<?php echo \$this->Form->create('{$modelClass}', array('url' => array(
-		'plugin' => '{$admin->plugin}', 'controller' => '{$controllerRoute}', 'action' => '{$action}'))); ?>\n"; ?>
+	<?php echo "<?php echo \$this->Form->create('{$admin->adminModelName}', array('url' => array(
+		'plugin' => '{$admin->plugin}', 'controller' => '{$admin->controllerRoute}', 'action' => '{$action}'))); ?>\n"; ?>
 	<ul>
 <?php	foreach ($configuration['config']['search'] as $field => $config) : ?>
-		<li><?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => '{$config['type']}')); ?>"; ?></li>
+		<li><?php echo "<?php echo \$this->Form->input('{$admin->adminModelName}.{$field}', array('type' => '{$config['type']}')); ?>"; ?></li>
 <?php	endforeach; ?>
 	</ul>
 	<?php echo "<?php echo \$this->Form->submit(); ?>\n"; ?>

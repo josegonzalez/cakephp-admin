@@ -1,6 +1,6 @@
 <?php
 // Create a model object
-if (!empty($associations['belongsTo']) || !empty($assocations['hasAndBelongsToMany'])) :
+if (!empty($admin->associations['belongsTo']) || !empty($admin->associations['hasAndBelongsToMany'])) :
 
 ?>
 	function _related<?php echo Inflector::camelize($find); ?>() {
@@ -8,8 +8,8 @@ if (!empty($associations['belongsTo']) || !empty($assocations['hasAndBelongsToMa
 $compacts = array();
 
 foreach (array('belongsTo', 'hasAndBelongsToMany') as $assocType):
-	if (!empty($associations[$assocType])):
-		foreach ($associations[$assocType] as $i => $relation):
+	if (!empty($admin->associations[$assocType])):
+		foreach ($admin->associations[$assocType] as $i => $relation):
 			$otherModelName = Inflector::camelize(Inflector::singularize($relation['alias']));
 			$otherPluralName = Inflector::variable(Inflector::pluralize($relation['alias']));
 			echo "\t\t\${$otherPluralName} = \$this->{$otherModelName}->find('list');\n";

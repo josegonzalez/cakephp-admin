@@ -55,8 +55,8 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 <?php if (!empty($fields)) : ?>
 <?php	foreach (array_keys($admin->modelObj->schema()) as $field) : ?>
 <?php		if (!in_array($field, $fields)) continue; ?>
-<?php		if (!empty($associations['belongsTo'])) : ?>
-<?php			foreach ($associations['belongsTo'] as $alias => $details) : ?>
+<?php		if (!empty($admin->associations['belongsTo'])) : ?>
+<?php			foreach ($admin->associations['belongsTo'] as $alias => $details) : ?>
 <?php				if ($field === $details['foreignKey']) : ?>
 <?php					$contains[] = "{$details['alias']}.{$details['primaryKey']}"; ?>
 <?php					$contains[] = "{$details['alias']}.{$details['displayField']}"; ?>

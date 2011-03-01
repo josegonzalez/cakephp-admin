@@ -1,19 +1,19 @@
 <?php $id = false; ?>
-<div class="<?php echo $pluralVar;?> <?php echo $action; ?> form">
-<h2><?php printf("<?php __('%s %s'); ?>", Inflector::humanize($action), $singularHumanName); ?></h2>
+<div class="<?php echo $admin->adminPluralVar; ?> <?php echo $action; ?> form">
+<h2><?php printf("<?php __('%s %s'); ?>", Inflector::humanize($action), $admin->singularHumanName); ?></h2>
 <?php
-echo "<?php echo \$this->Form->create('{$modelClass}', array('url' => array(
-	'plugin' => '{$admin->plugin}', 'controller' => '{$controllerRoute}', 'action' => '{$action}')));?>\n";
+echo "<?php echo \$this->Form->create('{$admin->adminModelName}', array('url' => array(
+	'plugin' => '{$admin->plugin}', 'controller' => '{$admin->controllerRoute}', 'action' => '{$action}')));?>\n";
 	if ($configuration['config']['displayPrimaryKey']) {
 		if ($configuration['config']['displayName']) {
-			echo "\t<?php echo sprintf(__('Are you sure you want to delete record %s, %s?', true),\n\t\t\$this->Form->value('{$modelClass}.{$admin->primaryKey}'), \$this->Form->value('{$modelClass}.{$admin->displayField}')); ?>\n";
+			echo "\t<?php echo sprintf(__('Are you sure you want to delete record %s, %s?', true),\n\t\t\$this->Form->value('{$admin->adminModelName}.{$admin->primaryKey}'), \$this->Form->value('{$admin->adminModelName}.{$admin->displayField}')); ?>\n";
 		} else {
-			echo "\t<?php echo sprintf(__('Are you sure you want to delete record %s?', true),\n\t\t\$this->Form->value('{$modelClass}.{$admin->primaryKey}')); ?>\n";
+			echo "\t<?php echo sprintf(__('Are you sure you want to delete record %s?', true),\n\t\t\$this->Form->value('{$admin->adminModelName}.{$admin->primaryKey}')); ?>\n";
 		}
 	} else {
 		echo "\t<?php echo __('Are you sure you want to delete this record?', true); ?>\n";
 	}
-	echo "\t<?php echo \$this->Form->input('{$modelClass}.{$admin->primaryKey}', array('type' => 'hidden')); ?>\n";
+	echo "\t<?php echo \$this->Form->input('{$admin->adminModelName}.{$admin->primaryKey}', array('type' => 'hidden')); ?>\n";
 	echo "<?php echo \$this->Form->end(__('Confirm Deletion', true));?>\n";
 ?>
 </div>
@@ -24,7 +24,7 @@ echo "<?php echo \$this->Form->create('{$modelClass}', array('url' => array(
 foreach ($admin->links as $alias => $config) {
 	if ($alias == $action) continue;
 	if ($config !== false && is_string($config)) { ?>
-		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
+		<li><?php echo "<?php echo \$this->Html->link(__('{$config} {$admin->singularHumanName}', true), array('action' => '{$alias}')); ?>";?></li>
 <?php
 	} elseif (is_array($config)) {
 		$url     = array();
@@ -38,7 +38,7 @@ foreach ($admin->links as $alias => $config) {
 					$url[] = "'{$key}'";
 				}
 			}
-			$url[] = "\$this->Form->value('{$modelClass}.{$primaryKey}')";
+			$url[] = "\$this->Form->value('{$admin->adminModelName}.{$admin->primaryKey}')";
 			$url = 'array(' . implode(', ', $url) . ')';
 		} else {
 			$url = "'{$config['url']}'";
