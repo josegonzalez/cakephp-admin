@@ -153,6 +153,13 @@ class CakeAdmin {
     var $linkTo = 'edit';
 
 /**
+ * Enable building of this cake_admin set
+ *
+ * @var string
+ **/
+    var $enabled = true;
+
+/**
  * Base directory for writing filesystem output
  *
  * @var string
@@ -313,6 +320,8 @@ class CakeAdmin {
  * itself for further use
  */
     function __construct() {
+        if (!$this->enabled) return;
+
         if (empty($this->modelName)) {
             $this->modelName = substr(get_class($this), 0 , -9);
         }

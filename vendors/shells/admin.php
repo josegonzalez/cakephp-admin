@@ -67,14 +67,21 @@ class AdminShell extends Shell {
         if (!$files) {
             $this->error(__('Admin files not found', true));
         }
+
         $build = 0;
+        $skipped = 0;
         $plugins = array();
         $adminClasses = array();
         foreach ($files as $file) {
             // Create an instance of the particular admin class
             $className = Inflector::camelize(str_replace('.php', '', $file));
             App::import('Lib', $className, array('file' => "admin/{$file}"));
-            $admin = new $className;
+            $admin = new $className();
+
+            if (!$admin->enabled) {
+                $skipped++;
+                continue;
+            }
 
             // Validate the admin class
             if (!$this->validate($admin)) {
@@ -116,7 +123,7 @@ class AdminShell extends Shell {
 
         $this->generateMisc($plugins);
 
-        $fails = count($files) - $build;
+        $fails = count($files) - $skipped - $build;
         if ($build == 0) {
             $this->out(__('Failed to build admin', true));
         }
