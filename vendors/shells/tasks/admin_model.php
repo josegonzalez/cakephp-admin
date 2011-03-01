@@ -6,7 +6,7 @@ class AdminModelTask extends Shell {
  *
  * @var array
  */
-    var $tasks = array('AdminTemplate', 'AdminVariables');
+    var $tasks = array('AdminTemplate');
 
 /**
  * Constructed plugin directory
@@ -57,10 +57,10 @@ class AdminModelTask extends Shell {
  *
  * @return void
  **/
-    function generate($admin, $vars) {
+    function generate($admin) {
         $path = APP . 'plugins' . DS . 'cake_admin' . DS . 'libs' . DS . 'templates' . DS . 'classes';
 
-        list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin, $vars);
+        list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin);
 
         $this->AdminTemplate->set(compact(
             'methods',
@@ -83,11 +83,10 @@ class AdminModelTask extends Shell {
  * @param object $modelObj
  * @return void
  */
-    function generateContents($admin, $vars) {
+    function generateContents($admin) {
         $methods = '';
         $finders = false;
         $related = false;
-
         foreach ($admin->actions as $alias => $configuration) {
             if ($configuration['enabled'] !== true) continue;
 
@@ -95,7 +94,6 @@ class AdminModelTask extends Shell {
                 'action'        => $configuration['type'],
                 'plugin'        => $configuration['plugin'],
                 'alias'         => $alias,
-                'vars'          => $vars,
             ));
 
             if (!empty($contents)) {
@@ -126,10 +124,9 @@ class AdminModelTask extends Shell {
 
         $find   = $options['alias'];
         $alias  = $options['alias'];
-        $vars   = $options['vars'];
 
-        $this->AdminTemplate->set($vars);
         $this->AdminTemplate->set(compact(
+            'admin',
             'find',
             'alias'
         ));

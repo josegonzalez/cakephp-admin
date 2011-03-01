@@ -6,7 +6,7 @@ class AdminControllerTask extends Shell {
  *
  * @var array
  */
-    var $tasks = array('AdminTemplate', 'AdminVariables');
+    var $tasks = array('AdminTemplate');
 
 /**
  * Constructed plugin directory
@@ -70,8 +70,8 @@ class AdminControllerTask extends Shell {
  *
  * @return void
  **/
-    function generate($admin, $vars) {;
-        $actions    = $this->generateContents($admin, $vars);
+    function generate($admin) {;
+        $actions    = $this->generateContents($admin);
         if (!$actions) return false;
 
         $this->AdminTemplate->set(compact(
@@ -92,7 +92,7 @@ class AdminControllerTask extends Shell {
  *
  * @return void
  **/
-    function generateContents($admin, $vars) {
+    function generateContents($admin) {
         $actions    = '';
         foreach ($admin->actions as $alias => $configuration) {
             if ($configuration['enabled'] !== true) continue;
@@ -103,7 +103,6 @@ class AdminControllerTask extends Shell {
                 'alias'  => $alias,
                 'config' => $configuration,
                 'modelObj'=>$admin->modelObj,
-                'vars'   => $vars,
             ));
             if (!$actionContents) return false;
             $actions .= "{$actionContents}\n\n";
@@ -128,9 +127,7 @@ class AdminControllerTask extends Shell {
 
         $alias              = $options['alias'];
         $configuration      = $options['config'];
-        $vars               = $options['vars'];
 
-        $this->AdminTemplate->set($vars);
         $this->AdminTemplate->set(compact(
             'alias',
             'configuration'

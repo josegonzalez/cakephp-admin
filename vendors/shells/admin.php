@@ -25,7 +25,6 @@ class AdminShell extends Shell {
         'AdminModel',
         'AdminController',
         'AdminView',
-        'AdminVariables'
     );
 
 /**
@@ -273,9 +272,7 @@ class AdminShell extends Shell {
  * @todo test me
  **/
     function generate($admin) {
-        $vars = $this->AdminVariables->load($admin);
-
-        if (!$this->AdminModel->generate($admin, $vars))  {
+        if (!$this->AdminModel->generate($admin))  {
             $this->out();
             $this->out(sprintf('Failed to generate %s Model',
                 $admin->modelName
@@ -283,7 +280,7 @@ class AdminShell extends Shell {
             $this->out();
             return false;
         }
-        if (!$this->AdminController->generate($admin, $vars)) {
+        if (!$this->AdminController->generate($admin)) {
             $this->out();
             $this->out(sprintf('Failed to generate %s Controller',
                 $this->_controllerName($admin->modelName)
@@ -291,7 +288,7 @@ class AdminShell extends Shell {
             $this->out();
             return false;
         }
-        if (!$this->AdminView->generate($admin, $vars)) {
+        if (!$this->AdminView->generate($admin)) {
             $this->out();
             $this->out(sprintf('Failed to generate %s Views',
                 $this->_controllerName($admin->modelName)

@@ -6,7 +6,7 @@ class AdminViewTask extends Shell {
  *
  * @var array
  */
-    var $tasks = array('AdminTemplate',  'AdminVariables');
+    var $tasks = array('AdminTemplate');
 
 /**
  * Constructed plugin directory
@@ -38,18 +38,18 @@ class AdminViewTask extends Shell {
  *
  * @return void
  **/
-    function generate($admin, $vars) {
+    function generate($admin) {
         foreach ($admin->actions as $alias => $configuration) {
             if ($configuration['enabled'] !== true) continue;
 
-            $content = $this->getContent($admin, $alias, $configuration, $vars);
+            $content = $this->getContent($admin, $alias, $configuration);
             if (empty($content)) continue;
             if (!$this->createFile($admin->paths['views'][$alias], $content)) return false;
         }
         return true;
     }
 
-    function getContent($admin, $action, $configuration, $vars) {
+    function getContent($admin, $action, $configuration) {
         $endPath = 'libs' . DS . 'templates' . DS . 'actions' . DS;
         if (empty($configuration['plugin'])) {
             $path = APP . $endPath;
@@ -58,7 +58,6 @@ class AdminViewTask extends Shell {
         }
         $path .= $configuration['type'] . DS . 'views';
 
-        $this->AdminTemplate->set($vars);
         $this->AdminTemplate->set(compact(
             'action',
             'configuration'
