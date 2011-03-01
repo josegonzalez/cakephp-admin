@@ -29,14 +29,14 @@ class <?php echo $admin->controllerName; ?>Controller extends <?php echo Inflect
 <?php
 
 if (!empty($admin->components)) {
-    echo "\tvar \$components    = array(";
+    echo "\tvar \$components    = array(\n";
     echo $admin->formatted('components', 2);
-    echo ');';
+    echo "\t);\n";
 }
 if (!empty($admin->helpers)) {
-    echo "\tvar \$helpers    = array(";
+    echo "\tvar \$helpers    = array(\n";
     echo $admin->formatted('helpers', 2);
-    echo ');';
+    echo "\t);\n";
 }
 
 echo "\n{$actions}"; ?>

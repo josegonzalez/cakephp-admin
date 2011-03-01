@@ -81,7 +81,8 @@ class CakeAdminEditConfig extends CakeAdminActionConfig {
                 foreach (array_keys($schema) as $field) {
                     $fields[$field] = array();
                 }
-            } else {
+            }
+            if (!empty($configuration[$i]['fields'])) {
                 $configuration[$i]['fields'] = Set::normalize($configuration[$i]['fields']);
                 foreach ((array) $configuration[$i]['fields'] as $field => $config) {
                     if (empty($configuration[$i])) {
@@ -89,6 +90,8 @@ class CakeAdminEditConfig extends CakeAdminActionConfig {
                     } else if (is_string($config)) {
                         $config = array('label' => $config);
                     }
+
+                    if (empty($config['label'])) $config['label'] = Inflector::humanize($field);
                     if ($field !== '*') $fields[$field] = $config;
                 }
             }
