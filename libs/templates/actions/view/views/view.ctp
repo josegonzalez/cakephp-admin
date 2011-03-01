@@ -2,20 +2,20 @@
 <h2><?php printf("<?php __('%s %s'); ?>", Inflector::humanize($action), $admin->singularHumanName); ?></h2>
 	<dl><?php echo "<?php \$i = 0; \$class = ' class=\"altrow\"';?>\n";?>
 <?php
-foreach ($admin->fields as $field) {
+foreach ($configuration['config']['fields'] as $field => $fieldConfig) {
 	$isKey = false;
-	if (!empty($admin->associations['belongsTo'])) {
+	if ($fieldConfig['link'] && !empty($admin->associations['belongsTo'])) {
 		foreach ($admin->associations['belongsTo'] as $alias => $details) {
 			if ($field === $details['foreignKey']) {
 				$isKey = true;
-				echo "\t\t<dt<?php if (\$i % 2 == 0) echo \$class;?>><?php __('" . Inflector::humanize(Inflector::underscore($alias)) . "'); ?></dt>\n";
+				echo "\t\t<dt<?php if (\$i % 2 == 0) echo \$class;?>><?php __('" . $fieldConfig['label'] . "'); ?></dt>\n";
 				echo "\t\t<dd<?php if (\$i++ % 2 == 0) echo \$class;?>>\n\t\t\t<?php echo \$this->Html->link(\${$admin->adminSingularVar}['{$alias}']['{$details['displayField']}'], array('controller' => '{$details['controller']}', 'action' => 'view', \${$admin->adminSingularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t\t&nbsp;\n\t\t</dd>\n";
 				break;
 			}
 		}
 	}
 	if ($isKey !== true) {
-		echo "\t\t<dt<?php if (\$i % 2 == 0) echo \$class;?>><?php __('" . Inflector::humanize($field) . "'); ?></dt>\n";
+		echo "\t\t<dt<?php if (\$i % 2 == 0) echo \$class;?>><?php __('" . $fieldConfig['label'] . "'); ?></dt>\n";
 		echo "\t\t<dd<?php if (\$i++ % 2 == 0) echo \$class;?>>\n\t\t\t<?php echo \${$admin->adminSingularVar}['{$admin->adminModelName}']['{$field}']; ?>\n\t\t\t&nbsp;\n\t\t</dd>\n";
 	}
 }
@@ -43,7 +43,7 @@ foreach ($admin->links as $alias => $config) {
 					$url[] = "'{$key}'";
 				}
 			}
-			$url[] = "\$this->Form->value('{$admin->adminModelName}.{$admin->primaryKey}')";
+			$url[] = "\${$admin->adminSingularVar}['{$admin->adminModelName}']['{$admin->primaryKey}']";
 			$url = 'array(' . implode(', ', $url) . ')';
 		} else {
 			$url = "'{$config['url']}'";

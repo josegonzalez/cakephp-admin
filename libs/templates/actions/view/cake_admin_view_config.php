@@ -7,7 +7,10 @@ class CakeAdminViewConfig extends CakeAdminActionConfig {
  * @var array
  **/
     var $defaults = array(
-        'fields'        => array('*'),      // Array or string of fields to enable
+        'fields'        => array('*'),      // These fields are editable. if associative, field => label
+                                            // May also indicate whether to link to the belongsTo model,
+                                            // 'contain' => true
+        'contain'       => array('*'),      // Array or string of models to contain
     );
 
 /**
@@ -66,30 +69,74 @@ class CakeAdminViewConfig extends CakeAdminActionConfig {
  */
     function mergeVars($admin, $configuration = array()) {
         if (empty($configuration)) $configuration = $this->defaults;
-
-        $modelObj = ClassRegistry::init(array(
-            'class' => $admin->modelName,
-            'table' => $admin->useTable,
-            'ds'    => $admin->useDbConfig
-        ));
+        if (empty($configuration['link'])) $configuration['link'] = array();
+        if (empty($configuration['contain'])) $configuration['contain'] = array();
 
         $fields = array();
-        $schema = $modelObj->schema();
+        $contains = array();
+        $schema = $admin->modelObj->schema();
 
         if (empty($configuration['fields']) || (in_array('*', (array) $configuration['fields']))) {
             // $fields is all fields
             foreach (array_keys($schema) as $field) {
-                $fields[] = $field;
+                $fields[$field] = array('label' => $field, 'link' => false);
             }
-        } else {
-            foreach ((array) $configuration['fields'] as $field) {
-                if ($field !== '*') $fields[] = $field;
+        }
+        if (!empty($configuration['fields'])) {
+            $configuration['fields'] = Set::normalize($configuration['fields']);
+            foreach ((array) $configuration['fields'] as $field => $config) {
+                if (is_string($config)) {
+                    $config = array('label' => $config);
+                }
+
+                if (empty($config['label'])) $config['label'] = Inflector::humanize($field);
+                if (empty($config['link'])) $config['link'] = false;
+                if (in_array($field, $configuration['link'])) $config['link'] = true;
+                if ($field !== '*') $fields[$field] = $config;
+            }
+        }
+
+        $linkAssociations = array();
+        // $fields is all fields
+        foreach ($admin->associations as $type => $associations) {
+            foreach ($associations as $assoc => $assocData) {
+                if (in_array('*', (array) $configuration['contain'])) {
+                    $contains[$assoc] = array('fields' => $assocData['fields']);
+                }
+                $linkAssociations[$assocData['foreignKey']] = array(
+                    'model'         => $assoc,
+                    'fields'        => array($assocData['primaryKey'], $assocData['displayField']),
+                );
+            }
+        }
+        if (!empty($configuration['contain'])) {
+            foreach (Set::normalize((array) $configuration['contain']) as $assoc => $assocData) {
+                if ($assoc !== '*') $contains[$assoc] = $assocData;
+            }
+        }
+
+        foreach ($configuration['link'] as $field) {
+            $fields[$field]['link'] = true;
+        }
+
+        foreach ($fields as $field => $config) {
+            if ($config['link']) {
+                if (!isset($linkAssociations[$field])) continue;
+                $link = $linkAssociations[$field];
+                if (!isset($contains[$link['model']]) || !isset($contains[$link['model']]['fields'])) {
+                    $contains[$link['model']]['fields'] = array();
+                }
+                foreach ($link['fields'] as $field) {
+                    if (!in_array($field, $contains[$link['model']]['fields'])) {
+                        $contains[$link['model']]['fields'][] = $field;
+                    }
+                }
             }
         }
 
         $configuration = array_merge($this->defaults, $configuration);
         $configuration['fields'] = $fields;
-
+        $configuration['contain'] = $contains;
         return $configuration;
     }
 
