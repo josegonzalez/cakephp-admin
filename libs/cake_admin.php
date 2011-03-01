@@ -313,7 +313,6 @@ class CakeAdmin {
  * itself for further use
  */
     function __construct() {
-        // Update the modelName if not set
         if (empty($this->modelName)) {
             $this->modelName = substr(get_class($this), 0 , -9);
         }
@@ -325,6 +324,11 @@ class CakeAdmin {
             $this->useTable = Inflector::tableize($this->modelName);
         }
 
+        // Setup the admin model class
+        $this->_setModel();
+
+        // Update the modelName if not set
+        $this->_setVariables();
         // Iterate over validation rules to set proper defaults
         if (!empty($this->validations)) {
             $this->_updateValidationRules();
@@ -338,9 +342,22 @@ class CakeAdmin {
 
         // Setup template paths
         $this->_setTemplates();
+    }
 
-        // Setup the admin model class
-        $this->_setModel();
+    function _setVariables() {
+        // Load an instance of the admin model object
+        $schema             = $this->modelObj->schema(true);
+        $this->fields           = array_keys($schema);
+
+        $this->controllerRoute  = $this->_pluralName($this->modelName);
+
+        $this->adminSingularVar = Inflector::variable($this->adminModelName);
+        $this->adminSingularName= $this->_singularName($this->adminModelName);
+        $this->singularHumanName= $this->_singularHumanName($this->_controllerName($this->modelName));
+        $this->adminPluralVar   = Inflector::variable($this->_controllerName($this->adminModelName));
+        $this->adminPluralName  = $this->_pluralName($this->adminModelName);
+
+        $this->associations     = $this->__associations($this->modelObj);
     }
 
     function _mergeVars() {
@@ -503,6 +520,39 @@ class CakeAdmin {
     }
 
 /**
+ * creates the singular name for use in views.
+ *
+ * @param string $name
+ * @return string $name
+ * @access protected
+ */
+    function _singularName($name) {
+        return Inflector::variable(Inflector::singularize($name));
+    }
+
+/**
+ * Creates the plural name for views
+ *
+ * @param string $name Name to use
+ * @return string Plural name for views
+ * @access protected
+ */
+    function _pluralName($name) {
+        return Inflector::variable(Inflector::pluralize($name));
+    }
+
+/**
+ * Creates the singular human name used in views
+ *
+ * @param string $name Controller name
+ * @return string Singular human name
+ * @access protected
+ */
+    function _singularHumanName($name) {
+        return Inflector::humanize(Inflector::underscore(Inflector::singularize($name)));
+    }
+
+/**
  * Creates the proper controller path for the specified controller class name
  *
  * @param string $name Controller class name
@@ -522,6 +572,35 @@ class CakeAdmin {
  */
     function _controllerName($name) {
         return Inflector::pluralize(Inflector::camelize($name));
+    }
+
+/**
+ * Returns associations for controllers models.
+ *
+ * @return  array $associations
+ * @access private
+ */
+    function __associations(&$model) {
+        $keys = array('belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany');
+        $associations = array();
+
+        foreach ($keys as $key => $type) {
+            foreach ($model->{$type} as $assocKey => $assocData) {
+                $associations[$type][$assocKey]['alias'] = $assocKey;
+                $associations[$type][$assocKey]['className'] = $assocData['className'];
+                $associations[$type][$assocKey]['foreignKey'] = $assocData['foreignKey'];
+                $associations[$type][$assocKey]['primaryKey'] = $model->{$assocKey}->primaryKey;
+                $associations[$type][$assocKey]['displayField'] = $model->{$assocKey}->displayField;
+                $associations[$type][$assocKey]['controller'] = Inflector::pluralize(Inflector::underscore($assocData['className']));
+                $associations[$type][$assocKey]['fields'] =  array_keys($model->{$assocKey}->schema(true));
+
+                if ($type == 'hasAndBelongsToMany') {
+                    $associations[$type][$assocKey]['associationForeignKey'] = $assocData['associationForeignKey'];
+                    $associations[$type][$assocKey]['joinTable'] = $assocData['joinTable'];
+                }
+            }
+        }
+        return $associations;
     }
 
 /**
