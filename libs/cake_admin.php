@@ -325,7 +325,7 @@ class CakeAdmin {
         if (empty($this->modelName)) {
             $this->modelName = substr(get_class($this), 0 , -9);
         }
-        $this->adminModelName = $this->modelName . 'Admin';
+        $this->adminModelName = $this->modelName . Inflector::camelize($this->plugin);
         $this->controllerName = $this->_controllerName($this->modelName);
 
         // Set a table if not already set
@@ -477,7 +477,7 @@ class CakeAdmin {
 
         $outputModelPath = array();
         $outputModelPath[] = $this->baseDir . 'models' . DS;
-        $outputModelPath[] = Inflector::underscore($this->modelName) . '_admin.php';
+        $outputModelPath[] = Inflector::underscore($this->modelName) . '_' . $this->plugin . '.php';
 
         $outputControllerPath   = array();
         $outputControllerPath[] = $this->baseDir;
