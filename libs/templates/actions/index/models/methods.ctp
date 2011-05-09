@@ -11,8 +11,8 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 		if ($state === 'before') {
 <?php if (!empty($list_filter)) : ?>
 <?php foreach ($list_filter as $field => $config) : ?>
-			if (!empty($query['named']['<?php echo $field; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}"; ?>'] = $query['named']['<?php echo $field; ?>'];
+			if (isset($query['named']['<?php echo $field; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->adminModelName}.{$field}"; ?>'] = $query['named']['<?php echo $field; ?>'];
 			}
 <?php endforeach; ?>
 <?php endif; ?>
@@ -26,8 +26,8 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 	$query = "\$query['named']['{$admin->modelName}.{$field}'];\n";
 }
 ?>
-			if (!empty($query['named']['<?php echo "{$admin->modelName}.{$field}"; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}{$modifier}"; ?>'] = <?php echo $query; ?>
+			if (isset($query['named']['<?php echo "{$admin->modelName}.{$field}"; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->adminModelName}.{$field}{$modifier}"; ?>'] = <?php echo $query; ?>
 			}
 <?php endforeach; ?>
 
@@ -36,14 +36,14 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 <?php foreach ($searches as $field => $config) : ?>
 <?php if ($field !== 'id' && ($config['type'] == 'text' || $config['type'] == 'string')) {
 	$modifier = ' LIKE';
-	$query = "'%' . \$query['data']['{$admin->modelName}Admin']['{$field}'] . '%';\n";
+	$query = "'%' . \$query['data']['{$admin->adminModelName}']['{$field}'] . '%';\n";
 } else {
 	$modifier = '';
-	$query = "\$query['data']['{$admin->modelName}Admin']['{$field}'];\n";
+	$query = "\$query['data']['{$admin->adminModelName}']['{$field}'];\n";
 }
 ?>
-			if (!empty($query['data']['<?php echo "{$admin->modelName}Admin"; ?>']['<?php echo $field; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->modelName}Admin.{$field}{$modifier}"; ?>'] = <?php echo $query; ?>
+			if (!empty($query['data']['<?php echo "{$admin->adminModelName}"; ?>']['<?php echo $field; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->adminModelName}.{$field}{$modifier}"; ?>'] = <?php echo $query; ?>
 			}
 <?php endforeach; ?>
 
