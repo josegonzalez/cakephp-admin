@@ -139,6 +139,10 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
             $sort = $configuration['sort'];
         }
 
+        if (empty($configuration['link'])) {
+            $configuration['link'] = array($admin->primaryKey);
+        }
+
         $configuration = array_merge($this->defaults, $configuration);
         $configuration['list_filter'] = $filters;
         $configuration['search'] = $search;

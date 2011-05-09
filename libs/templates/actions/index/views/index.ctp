@@ -26,9 +26,9 @@
 				}
 			}
 			if ($isKey !== true) {
-				if ($field == $admin->primaryKey) {
+				if ($field == $admin->primaryKey || in_array($field, $configuration['config']['link'])) {
 					echo sprintf("\t\t\t<td><?php echo \$this->Html->link(\$%s['%s']['%s'], array(", $admin->adminSingularVar, $admin->adminModelName, $field);
-					echo sprintf("'action' => '%s', \$%s['%s']['%s'])); ?></td>\n", $admin->linkTo, $admin->adminSingularVar, $admin->adminModelName, $field);
+					echo sprintf("'action' => '%s', \$%s['%s']['%s'])); ?></td>\n", $admin->linkTo, $admin->adminSingularVar, $admin->adminModelName, $admin->primaryKey);
 				} else {
 					echo sprintf("\t\t\t<td><?php echo \$%s['%s']['%s']; ?>&nbsp;</td>\n", $admin->adminSingularVar, $admin->adminModelName, $field);
 				}
