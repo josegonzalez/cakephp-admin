@@ -23,7 +23,7 @@
 					$options[] = $option;
 				}
 				if (in_array($field, $config['readonly'])) {
-					$options[] = "disabled";
+					$options[] = "'disabled'";
 				}
 			}
 			$options = (empty($options)) ? '' : sprintf(", array(\n\t\t\t\t\t%s\n\t\t\t\t)", implode(",\n\t\t\t\t\t ", $options));
