@@ -99,6 +99,7 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
             foreach ($configuration['search'] as $field => $alias) {
                 if (!in_array($field, array_keys($filters))) {
                     $type = ($schema[$field]['type'] == 'text') ? 'text' : $schema[$field]['type'];
+                    if ($type == 'string') $type = 'text';
 
                     if (is_array($alias)) {
                         if (isset($alias['type'])) {
