@@ -79,6 +79,9 @@ class CakeAdminEditConfig extends CakeAdminActionConfig {
             if (empty($configuration[$i]['fields']) || (in_array('*', (array) $configuration[$i]['fields']))) {
                 // $fields is all fields
                 foreach (array_keys($schema) as $field) {
+                    if (in_array($field, array('created', 'modified', 'updated'))) continue;
+                    if (in_array($field, array('created_by', 'modified_by', 'updated_by'))) continue;
+
                     $fields[$field] = array('label' => Inflector::humanize($field));
                 }
             }

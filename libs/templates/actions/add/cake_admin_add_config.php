@@ -81,6 +81,9 @@ class CakeAdminAddConfig extends CakeAdminActionConfig {
                 // $fields is all fields
                 foreach (array_keys($schema) as $field) {
                     if ($field == $admin->modelObj->primaryKey) continue;
+                    if (in_array($field, array('created', 'modified', 'updated'))) continue;
+                    if (in_array($field, array('created_by', 'modified_by', 'updated_by'))) continue;
+
                     $fields[$field] = array('label' => Inflector::humanize($field));
                 }
             }
