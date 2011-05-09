@@ -26,6 +26,7 @@ class <?php echo $admin->controllerName; ?>Controller extends <?php echo Inflect
 
 	var $name = '<?php echo $admin->controllerName; ?>';
 	var $uses = array('<?php echo Inflector::humanize($admin->plugin); ?>.<?php echo $admin->adminModelName; ?>');
+	var $layout = 'default';
 <?php
 
 if (!empty($admin->components)) {
