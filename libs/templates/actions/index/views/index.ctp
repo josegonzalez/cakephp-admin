@@ -133,7 +133,7 @@ endforeach;
 		'plugin' => '%s', 'controller' => '%s', 'action' => '%s'))); ?>\n", $admin->adminModelName, $admin->plugin, $admin->controllerRoute, $action); ?>
 	<ul>
 <?php	foreach ($configuration['config']['search'] as $field => $config) : ?>
-		<li><?php echo sprintf("<?php echo \$this->Form->input('%s.%s', array('type' => '%s')); ?>", $admin->adminModelName, $field, $config['type']); ?></li>
+		<li><?php echo sprintf("<?php echo \$this->Form->input('%s.%s', array('label' => '%s', 'type' => '%s')); ?>", $admin->adminModelName, $field, $config['label'], $config['type']); ?></li>
 <?php	endforeach; ?>
 	</ul>
 	<?php echo "<?php echo \$this->Form->submit(); ?>\n"; ?>

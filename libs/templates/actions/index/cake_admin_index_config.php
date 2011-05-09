@@ -99,9 +99,34 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
             foreach ($configuration['search'] as $field => $alias) {
                 if (!in_array($field, array_keys($filters))) {
                     $type = ($schema[$field]['type'] == 'text') ? 'text' : $schema[$field]['type'];
+
+                    if (is_array($alias)) {
+                        if (isset($alias['type'])) {
+                            $type = $alias['type'];
+                        }
+
+                        if (isset($alias['label'])) {
+                            $label = $alias['label'];
+                        } else {
+                            $label = Inflector::humanize((preg_replace('/_id$/', '', $field)));
+                        }
+
+                        if (isset($alias['alias'])) {
+                            $alias = $alias['alias'];
+                        } else {
+                            $alias = $field;
+                        }
+                    } else {
+                        $alias = empty($alias) ? $field : $alias;
+                        $label = Inflector::humanize((preg_replace('/_id$/', '', $field)));
+                    }
+
+                    $type = ($field === 'id') ? 'text' : $type;
+
                     $search[$field] = array(
-                        'type' => ($field === 'id') ? 'text' : $type,
-                        'alias' => empty($alias) ? $field : $alias,
+                        'type' => $type,
+                        'alias' => $alias,
+                        'label' => $label,
                     );
                 }
             }
