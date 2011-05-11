@@ -1,8 +1,15 @@
-<?php $id = false; ?>
+<?php
+$id = false;
+$formType = '';
+if ($configuration['config']['formType']) {
+  $formType = ", 'type' => '" . $configuration['config']['formType'] . "'";
+}
+unset($configuration['config']['formType']);
+?>
 <div class="<?php echo $admin->adminPluralVar; ?> <?php echo $action; ?> form">
 	<h2><?php printf("<?php __d('%s', '%s %s'); ?>", $admin->plugin, Inflector::humanize($action), $admin->singularHumanName); ?></h2>
 	<?php echo "<?php echo \$this->Form->create('{$admin->adminModelName}', array('url' => array(
-		'plugin' => '{$admin->plugin}', 'controller' => '{$admin->controllerRoute}', 'action' => '{$action}')));?>\n";?>
+		'plugin' => '{$admin->plugin}', 'controller' => '{$admin->controllerRoute}', 'action' => '{$action}'){$formType}));?>\n";?>
 <?php foreach ($configuration['config'] as $i => $config): ?>
 		<fieldset<?php if (!empty($config['classes'])) echo ' class="' . $config['classes'] . '"'; ?>>
 <?php if (!empty($config['title'])) : ?>

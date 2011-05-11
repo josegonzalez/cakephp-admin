@@ -68,6 +68,11 @@ class CakeAdminAddConfig extends CakeAdminActionConfig {
     function mergeVars($admin, $configuration) {
         if (empty($configuration)) $configuration = array($this->defaults);
 
+        $formType = false;
+        if (isset($configuration[0]['formType'])) {
+            $formType = $configuration[0]['formType'];
+        }
+
         $schema = $admin->modelObj->schema();
 
         foreach ($configuration as $i => $config) {
@@ -131,6 +136,8 @@ class CakeAdminAddConfig extends CakeAdminActionConfig {
             $configuration[$i]['classes'] = (string) $configuration[$i]['classes'];
             $configuration[$i]['description'] = (string) $configuration[$i]['description'];
         }
+
+        $configuration['formType'] = $formType;
 
         return $configuration;
     }
