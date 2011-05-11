@@ -1,6 +1,6 @@
 	function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
 		if ($state === 'before') {
-			$query['conditions']['<?php echo $admin->modelName; ?>Admin.<?php echo $admin->primaryKey?>'] = $query['<?php echo $admin->primaryKey; ?>'];
+			$query['conditions']['<?php echo $admin->adminModelName; ?>.<?php echo $admin->primaryKey?>'] = $query['<?php echo $admin->primaryKey; ?>'];
 <?php if (!empty($admin->actions[$find]['config']['contain'])) : ?>
 			$query['contain'] = array(
 <?php echo $admin->formatted($admin->actions[$find]['config']['contain'], 4); ?>
