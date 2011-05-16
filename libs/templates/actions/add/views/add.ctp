@@ -58,7 +58,7 @@ if ($config['habtm'] === true && !empty($admin->associations['hasAndBelongsToMan
 foreach ($admin->links as $alias => $config) {
 	if ($alias == $action) continue;
 	if ($config !== false && is_string($config)) { ?>
-		<li><?php printf("<?php echo \$this->Html->link(__d('%s', '%s %s', true), array('action' => '%s')); ?>", $admin->plugin, $config, $admin->singularHumanName, $alias); ?></li>
+		<li><?php printf("<?php echo \$this->Html->link(__d('%s', '%s', true), array('action' => '%s')); ?>", $admin->plugin, $config, $alias); ?></li>
 <?php
 	}
 }

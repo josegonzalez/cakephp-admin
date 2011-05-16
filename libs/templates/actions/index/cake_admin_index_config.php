@@ -53,7 +53,7 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
  *
  * @var mixed
  **/
-    var $linkable = 'List';
+    var $linkable = 'List {{modelname}}';
 
 /**
  * Model methods this action contains

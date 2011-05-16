@@ -107,7 +107,7 @@
 <?php
 foreach ($admin->links as $alias => $config) :
 	if ($config !== false && is_string($config)) : ?>
-		<li><?php echo sprintf("<?php echo \$this->Html->link(__d('%s', '%s %s', true), array('action' => '%s')); ?>", $admin->plugin, $config, $admin->singularHumanName, $alias); ?></li>
+		<li><?php echo sprintf("<?php echo \$this->Html->link(__d('%s', '%s', true), array('action' => '%s')); ?>", $admin->plugin, $config, $alias); ?></li>
 <?php
 	endif;
 endforeach;

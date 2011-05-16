@@ -439,8 +439,10 @@ class CakeAdmin {
             if ($configuration['enabled'] === true) {
                 $actions[$alias] = $configuration;
 
-                if ($configuration['linkable'] === true || $configuration['linkable'] === false) {
-                    $this->links[$alias] = Inflector::humanize($alias);
+                if (is_bool($configuration['linkable'])) {
+                    $this->links[$alias] = Inflector::humanize($alias) . ' ' . $this->singularHumanName;
+                } elseif (is_string($configuration['linkable'])) {
+                    $this->links[$alias] = str_replace('{{modelname}}', $this->singularHumanName, $configuration['linkable']);
                 } else {
                     $this->links[$alias] = $configuration['linkable'];
                 }
