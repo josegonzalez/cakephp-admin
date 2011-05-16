@@ -69,8 +69,8 @@ class AdminControllerTask extends Shell {
         if (!$actions) return false;
 
         $this->AdminTemplate->set(compact(
-            'actions',
-            'admin'
+            'admin',
+            'actions'
         ));
 
         $path       = $this->templateDir . DS . 'classes';
@@ -123,6 +123,7 @@ class AdminControllerTask extends Shell {
         $configuration      = $options['config'];
 
         $this->AdminTemplate->set(compact(
+            'admin',
             'alias',
             'configuration'
         ));

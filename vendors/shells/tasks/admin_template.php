@@ -76,8 +76,10 @@ class AdminTemplateTask extends Shell {
 			ob_implicit_flush(0);
 			include($templateFile);
 			$content = ob_get_clean();
+			$this->templateVars = array();
 			return $content;
 		}
+		$this->templateVars = array();
 		return '';
 	}
 

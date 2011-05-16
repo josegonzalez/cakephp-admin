@@ -59,6 +59,7 @@ class AdminViewTask extends Shell {
         $path .= $configuration['type'] . DS . 'views';
 
         $this->AdminTemplate->set(compact(
+            'admin',
             'action',
             'configuration'
         ));

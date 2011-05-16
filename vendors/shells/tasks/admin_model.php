@@ -63,10 +63,10 @@ class AdminModelTask extends Shell {
         list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin);
 
         $this->AdminTemplate->set(compact(
+            'admin',
             'methods',
             'hasFinders',
-            'hasRelated',
-            'admin'
+            'hasRelated'
         ));
         $contents = $this->AdminTemplate->generate($path, 'model');
 
@@ -127,8 +127,8 @@ class AdminModelTask extends Shell {
 
         $this->AdminTemplate->set(compact(
             'admin',
-            'find',
-            'alias'
+            'alias',
+            'find'
         ));
         return $this->AdminTemplate->generate($path, "methods");
     }
