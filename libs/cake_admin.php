@@ -430,7 +430,8 @@ class CakeAdmin {
                 }
             }
 
-            $this->actions[$alias]['config'] = $configClass->mergeVars($this, $this->actions[$alias]['config']);
+            $config = (isset($this->actions[$alias]['config'])) ? $this->actions[$alias]['config'] : array();
+            $this->actions[$alias]['config'] = $configClass->mergeVars($this, $config);
         }
 
         $actions = array();
