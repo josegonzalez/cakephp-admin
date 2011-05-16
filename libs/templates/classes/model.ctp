@@ -29,9 +29,9 @@ class <?php echo $admin->modelName ?><?php echo Inflector::humanize($admin->plug
 	var $useTable     = '<?php echo $admin->useTable; ?>';
 	var $primaryKey   = '<?php echo $admin->primaryKey; ?>';
 <?php
-if (!empty($admin->behaviors)) : ?>
+if (!empty($admin->actsAs)) : ?>
 	var $actsAs       = array(
-		<?php echo $admin->formatted('behaviors', 2, false); ?>
+		<?php echo $admin->formatted('actsAs', 2, false); ?>
 	);
 <?php endif; ?>
 <?php if (!empty($admin->finders)) : ?>

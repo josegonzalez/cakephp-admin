@@ -68,7 +68,7 @@ class CakeAdmin {
  *
  * @var array
  */
-    var $behaviors      = array();
+    var $actsAs      = array();
 
 /**
  * Apply all these Components to the Controller
@@ -530,7 +530,7 @@ class CakeAdmin {
         $this->modelObj->bindModel($this->relations, false);
 
         // Attach behaviors
-        foreach (Set::normalize($this->behaviors) as $behavior => $config) {
+        foreach (Set::normalize($this->actsAs) as $behavior => $config) {
             $this->modelObj->Behaviors->attach($behavior, $config);
         }
     }
