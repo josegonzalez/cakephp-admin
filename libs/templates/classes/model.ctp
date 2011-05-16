@@ -48,12 +48,12 @@ if (!empty($admin->behaviors)) : ?>
 <?php 	endforeach; ?>
 	);
 <?php endif; ?>
-<?php if (!empty($admin->validations)): ?>
+<?php if (!empty($admin->validate)): ?>
 
 	function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
 		$this->validate = array(
-			<?php echo $admin->formatted('validations', 3, false) ?>
+			<?php echo $admin->formatted('validate', 3, false) ?>
 		);
 	}
 <?php endif; ?>

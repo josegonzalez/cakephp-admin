@@ -109,7 +109,7 @@ If you would like to override them within your own admin classes, either include
 
 All the default validation rules work as normal, with option parsing and everything. For example, given:
 
-<pre><code>    var $validations    = array(
+<pre><code>    var $validate    = array(
         'content'   => array(
             'required'  => 'notempty',
             'maxLength' => array('maxLength', 255),

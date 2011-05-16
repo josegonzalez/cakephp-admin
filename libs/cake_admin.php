@@ -111,7 +111,7 @@ class CakeAdmin {
  *
  * @var array
  */
-    var $validations    = array();
+    var $validate    = array();
 
 /**
  * Relations to use on this model. Defaults to belongsTo.
@@ -339,7 +339,7 @@ class CakeAdmin {
         // Update the modelName if not set
         $this->_setVariables();
         // Iterate over validation rules to set proper defaults
-        if (!empty($this->validations)) {
+        if (!empty($this->validate)) {
             $this->_updateValidationRules();
         }
 
@@ -524,7 +524,7 @@ class CakeAdmin {
         }
 
         $this->modelObj->primaryKey   = $this->primaryKey;
-        $this->modelObj->validate     = $this->validations;
+        $this->modelObj->validate     = $this->validate;
 
         // Attach related models. Must be non-cake_admin models, tables must exist
         $this->modelObj->bindModel($this->relations, false);
@@ -629,7 +629,7 @@ class CakeAdmin {
  */
     function _updateValidationRules() {
         $validationRules = array();
-        foreach ($this->validations as $fieldName => $rules) {
+        foreach ($this->validate as $fieldName => $rules) {
             if (is_string($rules)) {
                 $options = array('rule' => $rules);
                 $rule = $options['rule'];
@@ -660,7 +660,7 @@ class CakeAdmin {
                 $validationRules[$fieldName][$alias] = $options;
             }
         }
-        $this->validations = $validationRules;
+        $this->validate = $validationRules;
     }
 
 /**
@@ -775,7 +775,7 @@ class CakeAdmin {
  * @return string containing formatted array
  **/
     function formatted($attribute, $num = 2, $first = true) {
-        if ($attribute === 'validations') {
+        if ($attribute === 'validate') {
             return $this->_formattedValidations($num, $first);
         } else if (is_string($attribute)) {
             return $this->_format($this->$attribute, $num, $first);
@@ -847,7 +847,7 @@ class CakeAdmin {
  **/
     function _formattedValidations($num = 2, $first = true) {
         $results = array();
-        foreach ($this->validations as $field => $validations) {
+        foreach ($this->validate as $field => $validations) {
             $results[] = "'" . $field . "' => array(";
             foreach ($validations as $key => $options) {
                 $results[] = "\t'" . $key . "' => array(";
