@@ -6,7 +6,9 @@ class CakeAdminHistoryConfig extends CakeAdminActionConfig {
  *
  * @var array
  **/
-    var $defaults = array();
+    var $defaults = array(
+        'title' => false,
+    );
 
 /**
  * Is this action enabled by default
@@ -46,7 +48,7 @@ class CakeAdminHistoryConfig extends CakeAdminActionConfig {
  *
  * @var mixed
  **/
-    var $linkable = true;
+    var $linkable = 'History';
 
 /**
  * Model methods this action contains
@@ -54,5 +56,22 @@ class CakeAdminHistoryConfig extends CakeAdminActionConfig {
  * @var array
  **/
     var $methods = array();
+
+/**
+ * Merges instantiated configuration with the class defaults
+ *
+ * @param array $configuration action configuration
+ * @return array
+ * @author Jose Diaz-Gonzalez
+ */
+    function mergeVars($admin, $configuration = array()) {
+        if (empty($configuration)) $configuration = $this->defaults;
+
+        if (!$configuration['title']) {
+            $configuration['title'] = $admin->singularHumanName . ' History';
+        }
+
+        return $configuration;
+    }
 
 }

@@ -1,4 +1,7 @@
 	function <?php echo $alias; ?>() {
-		$<?php echo $admin->singularName . Inflector::pluralize(Inflector::humanize($alias)); ?> = $this-><?php echo $admin->modelName; ?>->findLog();
-		$this->set(compact('<?php echo $admin->singularName . Inflector::pluralize(Inflector::humanize($alias)); ?>'));
+		$logs = $this-><?php echo $admin->modelName; ?>->Log->find('dashboard', array(
+			'conditions' => array('Log.model' => '<?php echo $admin->modelName; ?>')
+		));
+		$this->helpers[] = 'Log.Log';
+		$this->set(compact('logs'));
 	}
