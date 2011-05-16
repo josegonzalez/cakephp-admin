@@ -35,11 +35,6 @@ class AdminShell extends Shell {
  */
     var $_tables = array();
 
-    var $booleans = array();
-    var $strings = array();
-    var $arrays = array();
-    var $array_required = array();
-
 /**
  * Folder handler
  *
@@ -96,15 +91,6 @@ class AdminShell extends Shell {
 
             if (!$admin->enabled) {
                 $skipped++;
-                continue;
-            }
-
-            // Validate the admin class
-            if (!$this->validate($admin)) {
-                $this->err(sprintf(
-                    __('Validation failed for %s', true),
-                    $className
-                ));
                 continue;
             }
 
@@ -180,47 +166,6 @@ class AdminShell extends Shell {
         $content = $this->handler->find('([a-z_]+)(.php)');
 
         return (empty($content)) ? false : $content;
-    }
-
-/**
- * Validates an Admin class
- *
- * Checks to ensure the types of each variable are set
- * and are valid in the context of the generation
- *
- * If a variable is private or protected access, returns
- * false
- *
- * @param CakeAdmin $admin
- * @return boolean
- * @todo test me
- **/
-    function validate($admin) {
-        foreach ($this->booleans as $var) {
-            if (!is_bool($admin->$$var)) {
-                return false;
-            }
-        }
-
-        foreach ($this->strings as $var) {
-            if (!is_string($admin->$$var) || empty($admin->$$var)) {
-                return false;
-            }
-        }
-
-        foreach ($this->arrays as $var) {
-            if (!is_array($admin->$$var)) {
-                return false;
-            }
-        }
-
-        foreach ($this->array_required as $var) {
-            if (empty($admin->$$var)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
 /**
