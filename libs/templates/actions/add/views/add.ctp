@@ -5,10 +5,10 @@ if ($configuration['config']['formType']) {
 }
 unset($configuration['config']['formType']);
 ?>
-<div class="<?php echo $admin->adminPluralVar; ?> <?php echo $action; ?> form">
+<div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?> form">
 	<h2><?php echo sprintf("<?php __d('%s', '%s %s'); ?>", $admin->plugin, Inflector::humanize($action), $admin->singularHumanName); ?></h2>
 	<?php echo sprintf("<?php echo \$this->Form->create('%s', array('url' => array(
-		'plugin' => '%s', 'controller' => '%s', 'action' => '%s')%s));?>\n", $admin->adminModelName, $admin->plugin, $admin->controllerRoute, $action, $formType); ?>
+		'plugin' => '%s', 'controller' => '%s', 'action' => '%s')%s));?>\n", $admin->modelName, $admin->plugin, $admin->controllerRoute, $action, $formType); ?>
 <?php foreach ($configuration['config'] as $i => $config): ?>
 		<fieldset<?php if (!empty($config['classes'])) echo sprintf(' class="%s"', $config['classes']); ?>>
 <?php if (!empty($config['title'])) : ?>

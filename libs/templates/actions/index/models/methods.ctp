@@ -12,7 +12,7 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 <?php if (!empty($list_filter)) : ?>
 <?php foreach ($list_filter as $field => $config) : ?>
 			if (isset($query['named']['<?php echo $field; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->adminModelName}.{$field}"; ?>'] = $query['named']['<?php echo $field; ?>'];
+				$query['conditions']['<?php echo "{$admin->modelName}.{$field}"; ?>'] = $query['named']['<?php echo $field; ?>'];
 			}
 <?php endforeach; ?>
 <?php endif; ?>
@@ -27,7 +27,7 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 }
 ?>
 			if (isset($query['named']['<?php echo "{$admin->modelName}.{$field}"; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->adminModelName}.{$field}{$modifier}"; ?>'] = <?php echo $query; ?>
+				$query['conditions']['<?php echo "{$admin->modelName}.{$field}{$modifier}"; ?>'] = <?php echo $query; ?>
 			}
 <?php endforeach; ?>
 
@@ -36,14 +36,14 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 <?php foreach ($searches as $field => $config) : ?>
 <?php if ($field !== 'id' && ($config['type'] == 'text' || $config['type'] == 'string')) {
 	$modifier = ' LIKE';
-	$query = "'%' . \$query['data']['{$admin->adminModelName}']['{$field}'] . '%';\n";
+	$query = "'%' . \$query['data']['{$admin->modelName}']['{$field}'] . '%';\n";
 } else {
 	$modifier = '';
-	$query = "\$query['data']['{$admin->adminModelName}']['{$field}'];\n";
+	$query = "\$query['data']['{$admin->modelName}']['{$field}'];\n";
 }
 ?>
-			if (!empty($query['data']['<?php echo "{$admin->adminModelName}"; ?>']['<?php echo $field; ?>'])) {
-				$query['conditions']['<?php echo "{$admin->adminModelName}.{$field}{$modifier}"; ?>'] = <?php echo $query; ?>
+			if (!empty($query['data']['<?php echo "{$admin->modelName}"; ?>']['<?php echo $field; ?>'])) {
+				$query['conditions']['<?php echo "{$admin->modelName}.{$field}{$modifier}"; ?>'] = <?php echo $query; ?>
 			}
 <?php endforeach; ?>
 

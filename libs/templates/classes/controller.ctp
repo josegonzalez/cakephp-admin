@@ -25,7 +25,7 @@ echo "<?php\n";
 class <?php echo $admin->controllerName; ?>Controller extends <?php echo Inflector::humanize($admin->plugin); ?>AppController {
 
 	var $name = '<?php echo $admin->controllerName; ?>';
-	var $uses = array('<?php echo Inflector::humanize($admin->plugin); ?>.<?php echo $admin->adminModelName; ?>');
+	var $uses = array('<?php echo Inflector::humanize($admin->plugin); ?>.<?php echo $admin->modelName; ?>');
 	var $layout = 'default';
 <?php
 
@@ -45,8 +45,8 @@ echo "\n{$actions}"; ?>
 	function _customPaginate($findMethod, $mapping = array()) {
 		$query = array();
 		foreach ($mapping as $field) {
-			if (!empty($this->data['<?php echo "{$admin->adminModelName}"; ?>'][$field])) {
-				$query["<?php echo $admin->modelName; ?>.{$field}"] = $this->data['<?php echo "{$admin->adminModelName}"; ?>'][$field];
+			if (!empty($this->data['<?php echo "{$admin->modelName}"; ?>'][$field])) {
+				$query["<?php echo $admin->modelName; ?>.{$field}"] = $this->data['<?php echo "{$admin->modelName}"; ?>'][$field];
 			}
 		}
 		if (!empty($query)) $this->redirect($query);
@@ -62,9 +62,9 @@ echo "\n{$actions}"; ?>
 				continue;
 			}
 			if (is_string($this->params['named']["<?php echo "{$admin->modelName}"; ?>.{$field}"]) && strlen($this->params['named']["<?php echo "{$admin->modelName}"; ?>.{$field}"])) {
-				$this->data['<?php echo "{$admin->adminModelName}"; ?>'][$field] = $this->params['named']["<?php echo "{$admin->modelName}"; ?>.{$field}"];
+				$this->data['<?php echo "{$admin->modelName}"; ?>'][$field] = $this->params['named']["<?php echo "{$admin->modelName}"; ?>.{$field}"];
 			} elseif (!empty($this->params['named']["<?php echo "{$admin->modelName}"; ?>.{$field}"])) {
-				$this->data['<?php echo "{$admin->adminModelName}"; ?>'][$field] = $this->params['named']["<?php echo "{$admin->modelName}"; ?>.{$field}"];
+				$this->data['<?php echo "{$admin->modelName}"; ?>'][$field] = $this->params['named']["<?php echo "{$admin->modelName}"; ?>.{$field}"];
 			}
 		}
 		return $results;

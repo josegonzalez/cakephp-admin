@@ -9,6 +9,6 @@
 
 	$mappings = (!empty($mappings)) ? "'" . implode("', '", $mappings) . "'" : '';
 ?>
-		$<?php echo $admin->adminPluralName; ?> = $this->_customPaginate('<?php echo $alias; ?>', <?php echo "array({$mappings})"; ?>);
-		$this->set(compact('<?php echo $admin->adminPluralName; ?>'));
+		$<?php echo $admin->pluralName; ?> = $this->_customPaginate('<?php echo $alias; ?>', <?php echo "array({$mappings})"; ?>);
+		$this->set(compact('<?php echo $admin->pluralName; ?>'));
 	}

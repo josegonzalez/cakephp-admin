@@ -1,19 +1,19 @@
 <?php $id = false; ?>
-<div class="<?php echo $admin->adminPluralVar; ?> <?php echo $action; ?> form">
+<div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?> form">
 	<h2><?php printf("<?php __d('%s', '%s %s'); ?>", $admin->plugin, Inflector::humanize($action), $admin->singularHumanName); ?></h2>
 <?php
-echo "\t<?php echo \$this->Form->create('{$admin->adminModelName}', array('url' => array(
+echo "\t<?php echo \$this->Form->create('{$admin->modelName}', array('url' => array(
 	'plugin' => '{$admin->plugin}', 'controller' => '{$admin->controllerRoute}', 'action' => '{$action}')));?>\n";
 	if ($configuration['config']['displayPrimaryKey']) {
 		if ($configuration['config']['displayName']) {
-			echo sprintf("\t\t<?php echo sprintf(__d('%s', 'Are you sure you want to delete record %%s, %%s?', true),\n\t\t\t\$this->Form->value('%s.%s'), \$this->Form->value('%s.%s')); ?>\n", $admin->plugin, $admin->adminModelName, $admin->primaryKey, $admin->adminModelName, $admin->displayField);
+			echo sprintf("\t\t<?php echo sprintf(__d('%s', 'Are you sure you want to delete record %%s, %%s?', true),\n\t\t\t\$this->Form->value('%s.%s'), \$this->Form->value('%s.%s')); ?>\n", $admin->plugin, $admin->modelName, $admin->primaryKey, $admin->modelName, $admin->displayField);
 		} else {
-			echo sprintf("\t\t<?php echo sprintf(__d('%s', 'Are you sure you want to delete record %s?', true),\n\t\t\t\$this->Form->value('%s.%s')); ?>\n", $admin->plugin, $admin->adminModelName, $admin->primaryKey);
+			echo sprintf("\t\t<?php echo sprintf(__d('%s', 'Are you sure you want to delete record %s?', true),\n\t\t\t\$this->Form->value('%s.%s')); ?>\n", $admin->plugin, $admin->modelName, $admin->primaryKey);
 		}
 	} else {
 		echo sprintf("\t\t<?php echo __d('%s', 'Are you sure you want to delete this record?', true); ?>\n", $admin->plugin);
 	}
-	echo sprintf("\t\t<?php echo \$this->Form->input('%s.%s', array('type' => 'hidden')); ?>\n", $admin->adminModelName, $admin->primaryKey);
+	echo sprintf("\t\t<?php echo \$this->Form->input('%s.%s', array('type' => 'hidden')); ?>\n", $admin->modelName, $admin->primaryKey);
 	echo sprintf("\t<?php echo \$this->Form->end(__d('%s', 'Confirm Deletion', true));?>\n", $admin->plugin);
 ?>
 </div>
@@ -38,7 +38,7 @@ foreach ($admin->links as $alias => $config) {
 					$url[] = sprintf("'%s'", $key);
 				}
 			}
-			$url[] = sprintf("\$this->Form->value('%s.%s')", $admin->adminModelName, $admin->primaryKey);
+			$url[] = sprintf("\$this->Form->value('%s.%s')", $admin->modelName, $admin->primaryKey);
 			$url = sprintf('array(%s)', implode(', ', $url));
 		} else {
 			$url = sprintf("'%s'", $config['url']);

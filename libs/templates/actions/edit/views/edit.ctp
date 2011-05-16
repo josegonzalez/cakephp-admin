@@ -6,9 +6,9 @@ if ($configuration['config']['formType']) {
 }
 unset($configuration['config']['formType']);
 ?>
-<div class="<?php echo $admin->adminPluralVar; ?> <?php echo $action; ?> form">
+<div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?> form">
 	<h2><?php printf("<?php __d('%s', '%s %s'); ?>", $admin->plugin, Inflector::humanize($action), $admin->singularHumanName); ?></h2>
-	<?php echo "<?php echo \$this->Form->create('{$admin->adminModelName}', array('url' => array(
+	<?php echo "<?php echo \$this->Form->create('{$admin->modelName}', array('url' => array(
 		'plugin' => '{$admin->plugin}', 'controller' => '{$admin->controllerRoute}', 'action' => '{$action}'){$formType}));?>\n";?>
 <?php foreach ($configuration['config'] as $i => $config): ?>
 		<fieldset<?php if (!empty($config['classes'])) echo ' class="' . $config['classes'] . '"'; ?>>
@@ -21,7 +21,7 @@ unset($configuration['config']['formType']);
 <?php
 		echo "\t\t\t<?php\n";
 		foreach ($config['fields'] as $field => $fieldConfig) {
-			if (in_array($field, array("{$admin->primaryKey}", "{$admin->adminModelName}.{$admin->primaryKey}"))) $id = true;
+			if (in_array($field, array("{$admin->primaryKey}", "{$admin->modelName}.{$admin->primaryKey}"))) $id = true;
 			$options = array();
 			if (!empty($fieldConfig)) {
 				foreach ($fieldConfig as $key => $value) {
@@ -77,7 +77,7 @@ foreach ($admin->links as $alias => $config) {
 					$url[] = sprintf("'%s'", $key);
 				}
 			}
-			$url[] = sprintf("\$this->Form->value('%s.%s')", $admin->adminModelName, $admin->primaryKey);
+			$url[] = sprintf("\$this->Form->value('%s.%s')", $admin->modelName, $admin->primaryKey);
 			$url = sprintf('array(%s)', implode(', ', $url));
 		} else {
 			$url = sprintf("'%s'", $config['url']);

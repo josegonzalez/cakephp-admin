@@ -1,4 +1,4 @@
-<div class="<?php echo $admin->adminPluralVar;?> <?php echo $action; ?>">
+<div class="<?php echo $admin->pluralVar;?> <?php echo $action; ?>">
 <h2><?php printf("<?php __d('%s', '%s %s'); ?>", $admin->plugin, Inflector::humanize($action), $admin->singularHumanName); ?></h2>
 	<dl><?php echo "<?php \$i = 0; \$class = ' class=\"altrow\"';?>\n";?>
 <?php
@@ -9,14 +9,14 @@ foreach ($configuration['config']['fields'] as $field => $fieldConfig) {
 			if ($field === $details['foreignKey']) {
 				$isKey = true;
 				echo sprintf("\t\t<dt<?php if (\$i %% 2 == 0) echo \$class;?>><?php __d('%s', '%s'); ?></dt>\n", $admin->plugin, $fieldConfig['label']);
-				echo sprintf("\t\t<dd<?php if (\$i++ %% 2 == 0) echo \$class;?>>\n\t\t\t<?php echo \$this->Html->link(\$%s['%s']['%s'], array('controller' => '%s', 'action' => 'view', \$%s['%s']['%s'])); ?>\n\t\t\t&nbsp;\n\t\t</dd>\n", $admin->adminSingularVar, $alias, $details['displayField'], $details['controller'], $admin->adminSingularVar, $alias, $details['primaryKey']);
+				echo sprintf("\t\t<dd<?php if (\$i++ %% 2 == 0) echo \$class;?>>\n\t\t\t<?php echo \$this->Html->link(\$%s['%s']['%s'], array('controller' => '%s', 'action' => 'view', \$%s['%s']['%s'])); ?>\n\t\t\t&nbsp;\n\t\t</dd>\n", $admin->singularVar, $alias, $details['displayField'], $details['controller'], $admin->singularVar, $alias, $details['primaryKey']);
 				break;
 			}
 		}
 	}
 	if ($isKey !== true) {
 		echo sprintf("\t\t<dt<?php if (\$i %% 2 == 0) echo \$class;?>><?php __d('%s', '%s'); ?></dt>\n", $admin->plugin, $fieldConfig['label']);
-		echo sprintf("\t\t<dd<?php if (\$i++ %% 2 == 0) echo \$class;?>>\n\t\t\t<?php echo \$%s['%s']['%s']; ?>\n\t\t\t&nbsp;\n\t\t</dd>\n", $admin->adminSingularVar, $admin->adminModelName, $field);
+		echo sprintf("\t\t<dd<?php if (\$i++ %% 2 == 0) echo \$class;?>>\n\t\t\t<?php echo \$%s['%s']['%s']; ?>\n\t\t\t&nbsp;\n\t\t</dd>\n", $admin->singularVar, $admin->modelName, $field);
 	}
 }
 ?>
@@ -43,7 +43,7 @@ foreach ($admin->links as $alias => $config) {
 					$url[] = sprintf("'%s'", $key);
 				}
 			}
-			$url[] = sprintf("\$%s['%s']['%s']", $admin->adminSingularVar, $admin->adminModelName, $admin->primaryKey);
+			$url[] = sprintf("\$%s['%s']['%s']", $admin->singularVar, $admin->modelName, $admin->primaryKey);
 			$url = sprintf('array(%s)', implode(', ', $url));
 		} else {
 			$url = sprintf("'%s'", $config['url']);
@@ -82,19 +82,19 @@ if (!empty($admin->associations['hasOne'])) :
 	foreach ($admin->associations['hasOne'] as $alias => $details): ?>
 	<div class="related">
 		<h3><?php echo sprintf("<?php __d('%s', 'Related %s'); ?>", $admin->plugin, Inflector::humanize($details['controller'])); ?></h3>
-	<?php echo sprintf("<?php if (!empty(\$%s['%s'])) : ?>\n"), $admin->adminSingularVar, $alias;?>
+	<?php echo sprintf("<?php if (!empty(\$%s['%s'])) : ?>\n"), $admin->singularVar, $alias;?>
 		<dl><?php echo "\t<?php \$i = 0; \$class = ' class=\"altrow\"';?>\n";?>
 	<?php
 			foreach ($details['fields'] as $field) {
 				echo sprintf("\t\t<dt<?php if (\$i %% 2 == 0) echo \$class;?>><?php __d('%s','%s'); ?></dt>\n", $admin->plugin, Inflector::humanize($field));
-				echo sprintf("\t\t<dd<?php if (\$i++ %% 2 == 0) echo \$class;?>>\n\t<?php echo \$%s['%s']['%s']; ?>\n&nbsp;</dd>\n", $admin->adminSingularVar, $alias, $field);
+				echo sprintf("\t\t<dd<?php if (\$i++ %% 2 == 0) echo \$class;?>>\n\t<?php echo \$%s['%s']['%s']; ?>\n&nbsp;</dd>\n", $admin->singularVar, $alias, $field);
 			}
 	?>
 		</dl>
 	<?php echo "<?php endif; ?>\n"; ?>
 		<div class="actions">
 			<ul>
-				<li><?php echo sprintf("<?php echo \$this->Html->link(__d('%s', 'Edit %s', true), array('controller' => '%s', 'action' => 'edit', \$%s['%s']['%s'])); ?></li>\n", $admin->plugin, Inflector::humanize(Inflector::underscore($alias)), $details['controller'], $admin->adminSingularVar, $alias, $details['primaryKey']); ?>
+				<li><?php echo sprintf("<?php echo \$this->Html->link(__d('%s', 'Edit %s', true), array('controller' => '%s', 'action' => 'edit', \$%s['%s']['%s'])); ?></li>\n", $admin->plugin, Inflector::humanize(Inflector::underscore($alias)), $details['controller'], $admin->singularVar, $alias, $details['primaryKey']); ?>
 			</ul>
 		</div>
 	</div>
@@ -115,7 +115,7 @@ foreach ($relations as $alias => $details):
 	?>
 <div class="related">
 	<h3><?php echo sprintf("<?php __d('%s', 'Related %s');?>", $admin->plugin, $otherPluralHumanName); ?></h3>
-	<?php echo sprintf("<?php if (!empty(\$%s['%s'])):?>\n", $admin->adminSingularVar, $alias); ?>
+	<?php echo sprintf("<?php if (!empty(\$%s['%s'])):?>\n", $admin->singularVar, $alias); ?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
 <?php
@@ -128,7 +128,7 @@ foreach ($relations as $alias => $details):
 <?php
 echo "\t<?php
 		\$i = 0;
-		foreach (\${$admin->adminSingularVar}['{$alias}'] as \${$otherSingularVar}):
+		foreach (\${$admin->singularVar}['{$alias}'] as \${$otherSingularVar}):
 			\$class = null;
 			if (\$i++ % 2 == 0) {
 				\$class = ' class=\"altrow\"';

@@ -325,7 +325,6 @@ class CakeAdmin {
         if (empty($this->modelName)) {
             $this->modelName = substr(get_class($this), 0 , -9);
         }
-        $this->adminModelName = $this->modelName . Inflector::camelize($this->plugin);
         $this->controllerName = $this->_controllerName($this->modelName);
 
         // Set a table if not already set
@@ -360,11 +359,11 @@ class CakeAdmin {
 
         $this->controllerRoute  = $this->_pluralName($this->modelName);
 
-        $this->adminSingularVar = Inflector::variable($this->adminModelName);
-        $this->adminSingularName= $this->_singularName($this->adminModelName);
+        $this->singularVar      = Inflector::variable($this->modelName);
+        $this->singularName     = $this->_singularName($this->modelName);
         $this->singularHumanName= $this->_singularHumanName($this->_controllerName($this->modelName));
-        $this->adminPluralVar   = Inflector::variable($this->_controllerName($this->adminModelName));
-        $this->adminPluralName  = $this->_pluralName($this->adminModelName);
+        $this->pluralVar        = Inflector::variable($this->_controllerName($this->modelName));
+        $this->pluralName       = $this->_pluralName($this->modelName);
 
         $this->associations     = $this->__associations($this->modelObj);
 
@@ -477,7 +476,7 @@ class CakeAdmin {
 
         $outputModelPath = array();
         $outputModelPath[] = $this->baseDir . 'models' . DS;
-        $outputModelPath[] = Inflector::underscore($this->modelName) . '_' . $this->plugin . '.php';
+        $outputModelPath[] = Inflector::underscore($this->modelName) . '.php';
 
         $outputControllerPath   = array();
         $outputControllerPath[] = $this->baseDir;
@@ -507,7 +506,7 @@ class CakeAdmin {
         // Lets get a bare model
         App::import('Core', 'Model');
         $this->modelObj = new Model(array(
-            'name'  => $this->adminModelName,
+            'name'  => $this->modelName,
             'table' => $this->useTable,
             'ds'    => $this->useDbConfig
         ));

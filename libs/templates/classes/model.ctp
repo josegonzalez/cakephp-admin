@@ -21,9 +21,8 @@
  */
 
 echo "<?php\n"; ?>
-class <?php echo $admin->modelName ?><?php echo Inflector::humanize($admin->plugin); ?> extends <?php echo Inflector::humanize($admin->plugin); ?>AppModel {
+class <?php echo $admin->modelName ?> extends <?php echo Inflector::humanize($admin->plugin); ?>AppModel {
 
-	var $name         = '<?php echo $admin->modelName; ?><?php echo Inflector::humanize($admin->plugin); ?>';
 	var $displayField = '<?php echo $admin->displayField; ?>';
 	var $useDbConfig  = '<?php echo $admin->useDbConfig; ?>';
 	var $useTable     = '<?php echo $admin->useTable; ?>';

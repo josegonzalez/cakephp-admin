@@ -1,4 +1,4 @@
-<div class="<?php echo $admin->adminPluralVar; ?> <?php echo $action; ?>">
+<div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?>">
 	<h2><?php printf("<?php __d('%s', '%s');?>", $admin->plugin, Inflector::pluralize(Inflector::humanize($admin->modelName))) ;?></h2>
 	<table cellpadding="0" cellspacing="0">
 		<tr>
@@ -12,7 +12,7 @@
 			<th class="actions"><?php echo sprintf("<?php __d('%s', 'Actions'); ?>", $admin->plugin); ?></th>
 		</tr>
 	<?php
-	echo "\t<?php \$i = 0; foreach (\${$admin->adminPluralVar} as \${$admin->adminSingularVar}) : ?>\n";
+	echo "\t<?php \$i = 0; foreach (\${$admin->pluralVar} as \${$admin->singularVar}) : ?>\n";
 	echo "\t\t<tr<?php if (\$i++ %2 == 0) echo ' class=\"altrow\"';?>>\n";
 		foreach ($configuration['config']['fields'] as $field) {
 			$isKey = false;
@@ -20,17 +20,17 @@
 				foreach ($admin->associations['belongsTo'] as $alias => $details) {
 					if ($field === $details['foreignKey']) {
 						$isKey = true;
-						echo sprintf("\t\t\t<td>\n\t\t\t\t<?php echo \$this->Html->link(\$%s['%s']['%s'], array('controller' => '%s', 'action' => 'view', \$%s['%s']['%s'])); ?>\n\t\t\t</td>\n", $admin->adminSingularVar, $alias, $details['displayField'], $details['controller'], $admin->adminSingularVar, $alias, $details['primaryKey']);
+						echo sprintf("\t\t\t<td>\n\t\t\t\t<?php echo \$this->Html->link(\$%s['%s']['%s'], array('controller' => '%s', 'action' => 'view', \$%s['%s']['%s'])); ?>\n\t\t\t</td>\n", $admin->singularVar, $alias, $details['displayField'], $details['controller'], $admin->singularVar, $alias, $details['primaryKey']);
 						break;
 					}
 				}
 			}
 			if ($isKey !== true) {
 				if ($field == $admin->primaryKey || in_array($field, $configuration['config']['link'])) {
-					echo sprintf("\t\t\t<td><?php echo \$this->Html->link(\$%s['%s']['%s'], array(", $admin->adminSingularVar, $admin->adminModelName, $field);
-					echo sprintf("'action' => '%s', \$%s['%s']['%s'])); ?></td>\n", $admin->linkTo, $admin->adminSingularVar, $admin->adminModelName, $admin->primaryKey);
+					echo sprintf("\t\t\t<td><?php echo \$this->Html->link(\$%s['%s']['%s'], array(", $admin->singularVar, $admin->modelName, $field);
+					echo sprintf("'action' => '%s', \$%s['%s']['%s'])); ?></td>\n", $admin->linkTo, $admin->singularVar, $admin->modelName, $admin->primaryKey);
 				} else {
-					echo sprintf("\t\t\t<td><?php echo \$%s['%s']['%s']; ?>&nbsp;</td>\n", $admin->adminSingularVar, $admin->adminModelName, $field);
+					echo sprintf("\t\t\t<td><?php echo \$%s['%s']['%s']; ?>&nbsp;</td>\n", $admin->singularVar, $admin->modelName, $field);
 				}
 			}
 		}
@@ -50,7 +50,7 @@
 							$url[] = sprintf("'%s'", $key);
 						}
 					}
-					$url[] = sprintf("\$%s['%s']['%s']", $admin->adminSingularVar, $admin->adminModelName, $admin->primaryKey);
+					$url[] = sprintf("\$%s['%s']['%s']", $admin->singularVar, $admin->modelName, $admin->primaryKey);
 					$url = sprintf('array(%s)', implode(', ', $url));
 				} else {
 					$url = sprintf("'%s'", $config['url']);
@@ -130,10 +130,10 @@ endforeach;
 <?php if (!empty($configuration['config']['search'])) : ?>
 	<h3><?php echo sprintf("<?php __d('%s', 'Search'); ?>", $admin->plugin); ?></h3>
 	<?php echo sprintf("<?php echo \$this->Form->create('%s', array('url' => array(
-		'plugin' => '%s', 'controller' => '%s', 'action' => '%s'))); ?>\n", $admin->adminModelName, $admin->plugin, $admin->controllerRoute, $action); ?>
+		'plugin' => '%s', 'controller' => '%s', 'action' => '%s'))); ?>\n", $admin->modelName, $admin->plugin, $admin->controllerRoute, $action); ?>
 	<ul>
 <?php	foreach ($configuration['config']['search'] as $field => $config) : ?>
-		<li><?php echo sprintf("<?php echo \$this->Form->input('%s.%s', array('label' => '%s', 'type' => '%s')); ?>", $admin->adminModelName, $field, $config['label'], $config['type']); ?></li>
+		<li><?php echo sprintf("<?php echo \$this->Form->input('%s.%s', array('label' => '%s', 'type' => '%s')); ?>", $admin->modelName, $field, $config['label'], $config['type']); ?></li>
 <?php	endforeach; ?>
 	</ul>
 	<?php echo "<?php echo \$this->Form->submit(); ?>\n"; ?>
