@@ -87,7 +87,10 @@ class CakeAdminEditConfig extends CakeAdminActionConfig {
                     if (in_array($field, array('created', 'modified', 'updated'))) continue;
                     if (in_array($field, array('created_by', 'modified_by', 'updated_by'))) continue;
 
-                    $fields[$field] = array('label' => Inflector::humanize($field));
+                    $fields[$field] = array(
+                        'label' => Inflector::humanize($field),
+                        'wrapper' => '%s',
+                    );
                 }
             }
             if (!empty($configuration[$i]['fields'])) {
@@ -101,6 +104,7 @@ class CakeAdminEditConfig extends CakeAdminActionConfig {
                     }
 
                     if (empty($config['label'])) $config['label'] = Inflector::humanize($field);
+                    if (empty($config['wrapper'])) $config['wrapper'] = '%s';
                     $fields[$field] = $config;
                 }
             }

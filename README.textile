@@ -226,7 +226,7 @@ The following is a list of things I am planning to implement, in order of most l
 * -Deprecate Frontmatter-
 * -View Templates, partials, and layouts-
 * -Allow installation of cake_admin generator in base plugins dir-
-* Formatting wrappers for fields in built-in actions
+* -Formatting wrappers for fields in built-in actions-
 * Little box for logged-in user in top-left corner of built-in dashboard
 * Tree Behavior Support
 * Support for CakeAdmin class files in plugins

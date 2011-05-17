@@ -23,6 +23,7 @@ unset($configuration['config']['formType']);
 			$options = array();
 			if (!empty($fieldConfig)) {
 				foreach ($fieldConfig as $key => $value) {
+					if (in_array($key, array('readonly', 'wrapper'))) continue;
 					$option = sprintf("'%s' => '%s'", $key, $value);
 					if ($key === 'label') {
 					    $option = sprintf("'%s' => __d('%s', '%s', true)", $key, $admin->plugin, $value);
@@ -34,7 +35,7 @@ unset($configuration['config']['formType']);
 				}
 			}
 			$options = (empty($options)) ? '' : sprintf(", array(\n\t\t\t\t\t%s\n\t\t\t\t)", implode(",\n\t\t\t\t\t ", $options));
-			echo sprintf("\t\t\t\techo \$this->Form->input('%s'%s);\n", $field, $options);
+			echo sprintf($fieldConfig['wrapper'], sprintf("\t\t\t\techo \$this->Form->input('%s'%s);\n", $field, $options));
 		}
 		echo "\t\t\t?>\n";
 ?>
