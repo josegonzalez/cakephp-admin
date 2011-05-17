@@ -226,18 +226,31 @@ The following is a list of things I am planning to implement, in order of most l
 * -Deprecate Frontmatter-
 * -View Templates, partials, and layouts-
 * -Allow installation of cake_admin generator in base plugins dir-
+* Formatting wrappers for fields in built-in actions
+* Little box for logged-in user in top-left corner of built-in dashboard
+* Tree Behavior Support
 * Support for CakeAdmin class files in plugins
+* Ajax Form-handling and Pagination
 * Screencast
+* Building into regular application as opposed to plugin
+* Security Component Integration
+* Controller/Model/View base class enhancements
 * -Behavior/Helper/Component option parsing-
 * Authentication Implementations
 * Webservice Implementation
+* Inline model editing on built-in index action
+* Cache integration
 * Automagic CakeAdmin file-generation based solely upon DB
 * Unit Tests!!!
 * Theme support
+* Translate Behavior support
+* RSS Feeds
+* Internationalization
+* Bake-like console and web tool
 
 h2. License
 
-Copyright (c) 2010 Jose Diaz-Gonzalez
+Copyright (c) 2010-2011 Jose Diaz-Gonzalez
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
