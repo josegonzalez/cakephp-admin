@@ -401,6 +401,15 @@ div.notice {
 div.success {
     background-color: green;
 }
+div#flashMessage.message {
+  clear: both;
+  color: white;
+  font-size: 120%;
+  line-height: 140%;
+  margin: 1em 0;
+  padding: 0.8em;
+  background-color: green;
+}
 
 /**  Actions  **/
 div.actions ul {
