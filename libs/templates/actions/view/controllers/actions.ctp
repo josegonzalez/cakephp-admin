@@ -1,6 +1,6 @@
 	function <?php echo $alias; ?>($<?php echo $admin->primaryKey; ?> = null) {
 		$<?php echo $admin->primaryKey; ?> = (!$<?php echo $admin->primaryKey; ?> && !empty($this->params['named']['<?php echo $admin->primaryKey; ?>'])) ? $this->params['named']['<?php echo $admin->primaryKey; ?>'] : $<?php echo $admin->primaryKey; ?>;
-		$<?php echo $admin->singularName; ?> = $this-><?php echo $admin->modelName; ?>->find('<?php echo $alias; ?>', array('<?php echo $admin->primaryKey; ?>' => $<?php echo $admin->primaryKey; ?>));
+		$<?php echo $admin->singularName; ?> = $this-><?php echo $admin->modelName; ?>->find('<?php echo $alias; ?>', compact('<?php echo $admin->primaryKey; ?>'));
 
 		if (!$<?php echo $admin->singularName; ?>) {
 <?php if ($admin->sessions): ?>

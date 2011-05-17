@@ -15,6 +15,7 @@
 			}
 		}
 <?php if (!empty($admin->associations['belongsTo']) || !empty($admin->associations['hasAndBelongsToMany'])) : ?>
+
 		$this->set($this-><?php echo $admin->modelName; ?>->related('<?php echo $alias; ?>'));
 <?php endif; ?>
 	}

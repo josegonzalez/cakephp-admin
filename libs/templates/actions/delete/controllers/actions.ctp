@@ -16,7 +16,7 @@
 			$<?php echo $admin->primaryKey; ?> = $this->data['<?php echo $admin->modelName; ?>']['<?php echo $admin->primaryKey; ?>'];
 		}
 
-		$this->data = $this-><?php echo $admin->modelName; ?>->find('<?php echo $alias; ?>', array('<?php echo $admin->primaryKey; ?>' => $<?php echo $admin->primaryKey; ?>));
+		$this->data = $this-><?php echo $admin->modelName; ?>->find('<?php echo $alias; ?>', compact('<?php echo $admin->primaryKey; ?>'));
 		if (!$this->data) {
 <?php if ($admin->sessions): ?>
 			$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', '<?php echo ucfirst(strtolower($admin->singularHumanName)); ?> unspecified', true), 'flash/error');

@@ -7,6 +7,7 @@
 			$this->flash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php endif; ?>
 		}
+
 		if (!empty($this->data)) {
 			if ($this-><?php echo $admin->modelName; ?>->save($this->data)) {
 <?php if ($admin->sessions): ?>
@@ -21,9 +22,11 @@
 <?php endif; ?>
 			}
 		}
+
 		if (empty($this->data)) {
-			$this->data = $this-><?php echo $admin->modelName; ?>->find('<?php echo $alias; ?>', array('<?php echo $admin->primaryKey; ?>' => $<?php echo $admin->primaryKey; ?>));
+			$this->data = $this-><?php echo $admin->modelName; ?>->find('<?php echo $alias; ?>', compact('<?php echo $admin->primaryKey; ?>'));
 		}
+
 		if (empty($this->data)) {
 <?php if ($admin->sessions): ?>
 			$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>', true), 'flash/error');
@@ -33,6 +36,7 @@
 <?php endif; ?>
 		}
 <?php if (!empty($admin->associations['belongsTo']) || !empty($admin->associations['hasAndBelongsToMany'])) : ?>
+
 		$this->set($this-><?php echo $admin->modelName; ?>->related('<?php echo $alias; ?>'));
 <?php endif; ?>
 	}
