@@ -370,6 +370,10 @@ class CakeAdmin {
         if ($this->sessions && !in_array('Session', $this->components)) {
             $this->components[] = 'Session';
         }
+
+        if (!in_array('RequestHandler', $this->components)) {
+            $this->components[] = 'RequestHandler';
+        }
     }
 
     function _mergeVars() {

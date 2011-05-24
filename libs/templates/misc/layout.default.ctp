@@ -41,6 +41,8 @@ echo"
 
 		echo \$this->Html->css('/{$plugin}/css/cake.admin.generic');
 
+		echo \$this->Html->script(array('/{$plugin}/js/jquery', '/{$plugin}/js/main'));
+
 		echo \$scripts_for_layout;
 	?>
 </head>

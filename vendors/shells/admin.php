@@ -334,6 +334,18 @@ class AdminShell extends Shell {
             $path = $pluginPath . DS . 'webroot' . DS . 'css';
             $this->createFile($path . DS . 'cake.admin.generic.css', $contents);
 
+            // Generate JS
+            $jsPath = $pluginPath . DS . 'webroot' . DS . 'js';
+            $files = array('jquery', 'main');
+            foreach ($files as $file) {
+                $contents = $this->AdminTemplate->generate(
+                    $this->templateDir . DS . 'misc' . DS . 'js' . DS,
+                    $file
+                );
+
+                $this->createFile($jsPath . DS . $file . '.js', $contents);
+            }
+
             // Generate Layout
             $this->AdminTemplate->set(compact(
                 'plugin',
