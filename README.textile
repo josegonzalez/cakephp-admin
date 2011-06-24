@@ -46,10 +46,6 @@ Once your @post_cake_admin.php@ file has been created, run @cake admin@ from the
 
 h2. Parsing
 
-h3. Built-In Actions
-
-Currently the CRUD actions - @index@, @view@, @add@, @edit@, @delete@ - are all supported, as are @history@ and @changelog@. Only the @index@, @add@, @edit@, and @delete@ actions are enabled by default, the others must be enabled manually. The @history@ and @changelog@ actions require the "Log Plugin":http://github.com/josegonzalez/log to be installed. The others have no external dependencies.
-
 h3. Model Validation Rules
 
 Validation rules are parsed in two steps. The @CakeAdmin@ @__construct()@ method parses each validation rule for a message and a rule. If the message is not found, then a generic message is attached. This avoids the need to edit the model file at a later date.
@@ -234,7 +230,7 @@ The following is a list of things I am planning to implement, in order of most l
 * Little box for logged-in user in top-left corner of built-in dashboard
 * Tree Behavior Support
 * Support for CakeAdmin class files in plugins
-* Ajax Form-handling and -Ajax Pagination-
+* Ajax Form-handling and Pagination
 * Screencast
 * Building into regular application as opposed to plugin
 * Security Component Integration

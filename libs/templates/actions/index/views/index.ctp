@@ -96,9 +96,9 @@
 	</p>
 
 	<div class="paging">
-		<?php echo sprintf("<?php echo \$this->Paginator->prev('<< ' . __d('%s', 'previous', true), array(), null, array('class'=>'disabled')); ?>\n", $admin->plugin); ?>
-		<?php echo "| <?php echo \$this->Paginator->numbers(); ?>"?> |
-		<?php echo sprintf("<?php echo \$this->Paginator->next(__d('%s', 'next', true) . ' >>', array(), null, array('class' => 'disabled')); ?>\n", $admin->plugin); ?>
+	<?php echo sprintf("\t<?php echo \$this->Paginator->prev('<< ' . __d('%s', 'previous', true), array(), null, array('class'=>'disabled')); ?>\n", $admin->plugin); ?>
+	 | <?php echo "\t<?php echo \$this->Paginator->numbers(); ?>\n"?> |
+	<?php echo sprintf("\t<?php echo \$this->Paginator->next(__d('%s', 'next', true) . ' >>', array(), null, array('class' => 'disabled')); ?>\n", $admin->plugin); ?>
 	</div>
 </div>
 <div class="actions">
@@ -114,6 +114,7 @@ foreach ($admin->links as $alias => $config) :
 endforeach;
 ?>
 	</ul>
+
 <?php if (!empty($configuration['config']['list_filter'])) : ?>
 	<h3><?php echo sprintf("<?php __d('%s', 'Filter'); ?>", $admin->plugin); ?></h3>
 	<?php echo "<?php \$current = array_diff_key(\$this->params['named'], Set::normalize(array('direction', 'sort', 'order', 'page'))); ?>\n"; ?>
@@ -126,6 +127,7 @@ endforeach;
 	</ul>
 <?php	endforeach; ?>
 <?php endif; ?>
+
 <?php if (!empty($configuration['config']['search'])) : ?>
 	<h3><?php echo sprintf("<?php __d('%s', 'Search'); ?>", $admin->plugin); ?></h3>
 	<?php echo sprintf("<?php echo \$this->Form->create('%s', array('url' => array(
