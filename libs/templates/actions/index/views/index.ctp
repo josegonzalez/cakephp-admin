@@ -1,16 +1,18 @@
 <div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?>">
 	<h2><?php printf("<?php __d('%s', '%s');?>", $admin->plugin, Inflector::pluralize(Inflector::humanize($admin->modelName))) ;?></h2>
 	<table cellpadding="0" cellspacing="0">
-		<tr>
+		<thead>
+			<tr>
 <?php foreach ($configuration['config']['fields'] as $field): ?>
 <?php	if (in_array($field, $configuration['config']['sort'])) : ?>
-			<th><?php echo sprintf("<?php echo \$this->Paginator->sort('%s');?>", $field); ?></th>
+			  <th><?php echo sprintf("<?php echo \$this->Paginator->sort('%s');?>", $field); ?></th>
 <?php	else : ?>
-			<th><?php echo Inflector::humanize(preg_replace('/_id$/', '', $field)); ?></th>
+  			<th><?php echo Inflector::humanize(preg_replace('/_id$/', '', $field)); ?></th>
 <?php	endif; ?>
 <?php endforeach;?>
-			<th class="actions"><?php echo sprintf("<?php __d('%s', 'Actions'); ?>", $admin->plugin); ?></th>
-		</tr>
+				<th class="actions"><?php echo sprintf("<?php __d('%s', 'Actions'); ?>", $admin->plugin); ?></th>
+			</tr>
+		</thead>
 	<?php
 	echo "\t<?php \$i = 0; foreach (\${$admin->pluralVar} as \${$admin->singularVar}) : ?>\n";
 	echo "\t\t<tr<?php if (\$i++ %2 == 0) echo ' class=\"altrow\"';?>>\n";
@@ -87,18 +89,17 @@
 	echo "\t\t<?php endforeach; ?>\n";
 	?>
 	</table>
-	<p>
+	<p class="paging-details">
 		<?php echo sprintf("<?php
 			echo \$this->Paginator->counter(array(
 				'format' => __d('%s', 'Page %%page%% of %%pages%%, showing %%current%% records out of %%count%% total, starting on record %%start%%, ending on %%end%%', true)
 			));
 		?>\n", $admin->plugin); ?>
 	</p>
-
 	<div class="paging">
-	<?php echo sprintf("\t<?php echo \$this->Paginator->prev('<< ' . __d('%s', 'previous', true), array(), null, array('class'=>'disabled')); ?>\n", $admin->plugin); ?>
-	 | <?php echo "\t<?php echo \$this->Paginator->numbers(); ?>\n"?> |
-	<?php echo sprintf("\t<?php echo \$this->Paginator->next(__d('%s', 'next', true) . ' >>', array(), null, array('class' => 'disabled')); ?>\n", $admin->plugin); ?>
+		<?php echo sprintf("<?php echo \$this->Paginator->prev(__d('%s', '« Previous', true), array(), null, array('class'=>'disabled')); ?>\n", $admin->plugin); ?>
+		<?php echo "\t<?php echo \$this->Paginator->numbers(array('separator' => false)); ?>\n"?>
+	<?php echo sprintf("\t<?php echo \$this->Paginator->next(__d('%s', 'Next »', true), array(), null, array('class' => 'disabled')); ?>\n", $admin->plugin); ?>
 	</div>
 </div>
 <div class="actions">

@@ -46,7 +46,7 @@ echo"
 </head>
 <body>
 	<div id=\"container\">
-		<div id=\"header\" class=\"clearfix\">
+		<div id=\"header\">
 			<h1><?php printf(__('%s Dashboard', true), Inflector::humanize(\$this->params['controller'])); ?></h1>
 			<ul class=\"navigation\">\n";
 				foreach ($links as $i => $link) {
@@ -57,6 +57,7 @@ echo"
 					}
 				}
 echo "			</ul>
+			<div class=\"clear:both\"></div>
 		</div>
 		<div id=\"content\">
 
