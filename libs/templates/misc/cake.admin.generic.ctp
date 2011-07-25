@@ -9,12 +9,12 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.app.webroot.css
- * @since         CakePHP(tm)
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @copyright	 Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link		  http://cakephp.org CakePHP(tm) Project
+ * @package	   cake
+ * @subpackage	cake.app.webroot.css
+ * @since		 CakePHP(tm)
+ * @license	   MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 * {
@@ -24,19 +24,19 @@
 
 /** General Style Info **/
 body {
-	background: #003d4c;
+	background: url('../img/background.png');
 	color: #fff;
 	font-family:'lucida grande',verdana,helvetica,arial,sans-serif;
 	font-size:90%;
 	margin: 0;
 }
 a {
-	color: #003d4c;
+	color: #0686C8;
 	text-decoration: underline;
 	font-weight: bold;
 }
 a:hover {
-	color: #367889;
+	color: #056596;
 	text-decoration:none;
 }
 a img {
@@ -47,9 +47,8 @@ h1, h2, h3, h4 {
 	margin-bottom:0.5em;
 }
 h1 {
-	background:#fff;
 	color: #003d4c;
-	font-size: 200%;
+	font-size: 140%;
 }
 h2 {
 	background:#fff;
@@ -79,7 +78,6 @@ ul, li {
 	padding: 20px 20px 0 20px;
 }
 #header h1 {
-	background: #003d4c;
 	color: #fff;
 	line-height: 20px;
 	text-shadow: 2px 2px 2px #000;
@@ -100,8 +98,14 @@ ul, li {
 	background: #fff;
 	clear: both;
 	color: #333;
-	padding: 10px 20px 40px 20px;
+	margin: 10px 20px 40px 20px;
 	overflow: auto;
+	-opera-border-radius: 5px;
+	-o-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 #footer {
 	clear: both;
@@ -130,37 +134,37 @@ div.actions h3 {
 
 /** Navigation **/
 .navigation {
-    clear: both;
-    height:36px;
-    margin: 0 12px 0 0;
-    padding: 1em 0 0 0;
+	clear: both;
+	height:36px;
+	margin: 0 12px 0 0;
+	padding: 1em 0 0 0;
 }
 .navigation li {
-    background-color: #367889;
-    color: #fff;
-    list-style: none;
-    float: left;
-    margin: 0 2px;
+	background-color: #367889;
+	color: #fff;
+	list-style: none;
+	float: left;
+	margin: 0 2px;
 }
 .navigation li a {
-    color: #fff;
-    padding: 10px 1em;
-    line-height: 16px;
-    font-size: 16px;
-    display: block;
-    text-decoration: none;
+	color: #fff;
+	padding: 10px 1em;
+	line-height: 16px;
+	font-size: 16px;
+	display: block;
+	text-decoration: none;
 }
 .navigation li a:hover {
-    text-decoration:underline;
+	text-decoration:underline;
 }
 .navigation li.first {
-    margin-left: 0;
+	margin-left: 0;
 }
 .navigation li.on {
-    background-color: #fff;
+	background-color: #fff;
 }
 .navigation li.on a {
-    color: #003d4c;
+	color: #003d4c;
 }
 
 /** Tables **/
@@ -173,13 +177,17 @@ table {
 	width: 100%;
 }
 th {
+	background-color: #F2F2F2;
 	border:0;
 	border-bottom:2px solid #555;
 	text-align: left;
 	padding:4px;
 }
 th a {
+	color: #1B252C;
 	display: block;
+	font-size: 10px;
+	font-weight: normal;
 	padding: 2px 4px;
 	text-decoration: none;
 }
@@ -374,32 +382,32 @@ form .submit input[type=submit]:hover {
 
 /** Notices and Errors **/
 div.flash {
-    clear: both;
-    color: #fff;
-    font-size: 120%;
-    line-height: 140%;
-    margin: 1em 0;
-    padding: 0.8em;
+	clear: both;
+	color: #fff;
+	font-size: 120%;
+	line-height: 140%;
+	margin: 1em 0;
+	padding: 0.8em;
 }
 div.flash em {
-    color: #000;
-    font-weight: normal;
-    line-height: 140%;
+	color: #000;
+	font-weight: normal;
+	line-height: 140%;
 }
 div.error {
-    background-color: #c73e14;
-    font-family: Courier, monospace;
+	background-color: #c73e14;
+	font-family: Courier, monospace;
 }
 div.information {
-    background-color:#50b0ec;
+	background-color:#50b0ec;
 }
 div.notice {
-    background-color: #ffcc00;
-    color: #000;
-    font-family: Courier, monospace;
+	background-color: #ffcc00;
+	color: #000;
+	font-family: Courier, monospace;
 }
 div.success {
-    background-color: green;
+	background-color: green;
 }
 div#flashMessage.message {
   clear: both;
