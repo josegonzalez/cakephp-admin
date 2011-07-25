@@ -419,8 +419,10 @@ form div.submit {
 	margin-top: 10px;
 }
 label {
+	color: #111;
 	display: block;
-	font-size: 110%;
+	font-size: 12px;
+	font-weight: bold;
 	margin-bottom:3px;
 }
 input, textarea {
@@ -736,10 +738,4 @@ td.actions a:active, td.actions a.active {
 input[type=submit]::-moz-focus-inner, div.actions ul li a::-moz-focus-inner, td.actions a::-moz-focus-inner {
 	padding: 0;
 	border: 0;
-}
-/** Sidebar Actions **/
-div.actions label {
-	color: #111;
-	font-size: 12px;
-	font-weight: bold;
 }
