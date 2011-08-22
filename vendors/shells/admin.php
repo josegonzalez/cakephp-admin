@@ -329,10 +329,10 @@ class AdminShell extends Shell {
             // Generate CSS
             $contents = $this->AdminTemplate->generate(
                 $this->templateDir . DS . 'misc' . DS,
-                'cake.admin.generic'
+                'cake.admin.generic.min'
             );
             $path = $pluginPath . DS . 'webroot' . DS . 'css';
-            $this->createFile($path . DS . 'cake.admin.generic.css', $contents);
+            $this->createFile($path . DS . 'cake.admin.generic.min.css', $contents);
 
             // Generate Layout
             $this->AdminTemplate->set(compact(
