@@ -1,33 +1,33 @@
 <div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?> index">
 	<h2><?php printf("<?php __('%s'); ?>", $configuration['config']['title']); ?></h2>
-	<table id="recent-activity" class="table" cellpadding="0" cellspacing="0">
+	<table id="recent-activity" cellpadding="0" cellspacing="0">
 		<thead class="hide">
 			<tr>
-				<td><?php __('Type'); ?></td>
-				<td><?php __('Title'); ?></td>
-				<td><?php __('Owner'); ?></td>
+				<th><?php __('Type'); ?></th>
+				<th><?php __('Title'); ?></th>
+				<th><?php __('Owner'); ?></th>
 			</tr>
 		</thead>
 		<tbody>
-			<?php printf("<?php foreach (\$logs as \$log) : ?>\n"); ?>
+			<?php printf("<?php foreach (\$logs as \${$admin->singularName}L) : ?>\n"); ?>
 				<tr>
-				<?php printf("<?php if (\$this->Log->checkIfChanged(date('Y-m-d', strtotime(\$log['Log']['created'])))) : ?>\n"); ?>
+				<?php printf("<?php if (\$this->Log->checkIfChanged(date('Y-m-d', strtotime(\${$admin->singularName}L['Log']['created'])))) : ?>\n"); ?>
 					<td colspan="3">
-						<?php printf("<?php echo \$this->Log->logDate(\$log['Log']['created']); ?>\n"); ?>
+						<?php printf("<?php echo \$this->Log->logDate(\${$admin->singularName}L['Log']['created']); ?>\n"); ?>
 					</td>
 				</tr>
 				<tr>
 				<?php printf("<?php endif; ?>\n");?>
-					<td class="frontpage-type">
-						<?php printf("<?php echo \$this->Log->logType(\$log['Log']); ?>\n"); ?>
+					<td class="frontpage-type" style="width:200px;padding-left: 70px;">
+						<?php printf("<?php echo \$this->Log->logType(\${$admin->singularName}L['Log']); ?>\n"); ?>
 					</td>
 					<td class="frontpage-title">
-						<?php echo sprintf("<?php echo \$this->Html->link(\$log['Log']['title'], array(", $admin->modelName, $admin->displayField);
-						echo sprintf("'action' => '%s', \$log['Log']['model_id'])); ?>\n", $admin->linkTo);
+						<?php echo sprintf("<?php echo \$this->Html->link(\${$admin->singularName}L['Log']['title'], array(", $admin->modelName, $admin->displayField);
+						echo sprintf("'action' => '%s', \${$admin->singularName}L['Log']['model_id'])); ?>\n", $admin->linkTo);
 						?>
 					</td>
 					<td class="frontpage-owner">
-						<?php printf("<?php echo \$this->Log->logOwner(\$log['Log']['action'], \$log['User']); ?>\n"); ?>
+						<?php printf("<?php echo \$this->Log->logOwner(\${$admin->singularName}L['Log']['action'], \${$admin->singularName}L['User']); ?>\n"); ?>
 					</td>
 				</tr>
 			<?php printf("<?php endforeach; ?>\n"); ?>

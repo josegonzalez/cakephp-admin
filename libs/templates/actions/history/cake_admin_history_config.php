@@ -55,7 +55,7 @@ class CakeAdminHistoryConfig extends CakeAdminActionConfig {
  *
  * @var array
  **/
-    var $methods = array();
+    var $methods = array('related');
 
 /**
  * Merges instantiated configuration with the class defaults

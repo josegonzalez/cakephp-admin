@@ -1,7 +1,5 @@
 	function <?php echo $alias; ?>() {
-		$logs = $this-><?php echo $admin->modelName; ?>->Log->find('dashboard', array(
-			'conditions' => array('Log.model' => '<?php echo $admin->modelName; ?>')
-		));
+		$logs = $this-><?php echo $admin->modelName; ?>->related('<?php echo $alias; ?>');
 		$this->helpers[] = 'Log.Log';
 		$this->set(compact('logs'));
 	}

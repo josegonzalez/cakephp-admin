@@ -11,7 +11,7 @@
 			return false;
 		}
 
-		$results[0]['Log'] = $this->Log->find('dashboard', array(
+		$results[0]['Log'] = $this->Behaviors->Logable->Log->find('dashboard', array(
 			'conditions' => array(
 				'Log.model' => '<?php echo $admin->modelName; ?>',
 				'Log.model_id' => $query['<?php echo $admin->primaryKey; ?>'],
