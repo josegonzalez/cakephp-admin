@@ -94,7 +94,7 @@ aside {
 body {
   background: #000000 url('../img/background.png');
   color: #fff;
-  font-family: 'lucida grande', verdana, helvetica, arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
   font-size: 90%;
   margin: 0;
 }
@@ -240,9 +240,30 @@ div.related {
 }
 /** Debugging **/
 pre {
+  background: #FEFBF3;
+  border: 1px solid rgba(0, 0, 0, 0.15);
   color: #000;
-  background: #f0f0f0;
-  padding: 1em;
+  display: block;
+  font-family: Monaco, Andale Mono, Courier New, monospace;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 16px;
+  padding: 16px;
+  white-space: pre-wrap;
+  -opera-border-radius: 3px;
+  -o-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -opera-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -khtml-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) transparent 0 0 0 transparent 0 0 0 transparent 0 0 0 transparent 0 0 0;
 }
 pre.cake-debug {
   background: #ffcc00;
@@ -502,17 +523,17 @@ table td.actions a {
 /** Paging **/
 p.paging-details {
   color: #666;
-  font-size: 10px;
-  padding-bottom: 10px;
+  font-size: 11.2px;
+  padding-bottom: 11.2px;
   text-align: center;
 }
 div.paging {
   background: #F1F1F1;
   border: 1px solid #E5E5E5;
   clear: both;
-  font-size: 10px;
+  font-size: 11.2px;
   margin: 0 0 1em 0;
-  padding: 1em;
+  padding: 11.2px;
   text-align: center;
   -opera-border-radius: 5px;
   -o-border-radius: 5px;
@@ -731,9 +752,12 @@ input[type=submit] {
 }
 /** Notices and Errors **/
 .error-page #content {
-  padding: 10px 1.5%;
+  padding: 16px;
 }
-.flash {
+.error-page h2 {
+  margin: 0 16px 16px 16px;
+}
+.error-page p, .flash {
   background-color: rgba(0, 0, 0, 0.15);
   background-repeat: repeat-x;
   background-image: -khtml-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.15)));
@@ -758,26 +782,26 @@ input[type=submit] {
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
-.flash p {
+.error-page p p, .flash p {
   color: #fff;
   margin-bottom: 0;
 }
-.flash p + p {
+.error-page p p + p, .flash p + p {
   margin-top: 5px;
 }
-.flash.error {
+.error-page p.error, .flash.error {
   background-color: #e06359;
 }
-.flash.notice {
+.error-page p.notice, .flash.notice {
   background-color: #ffd75a;
 }
-.flash.success {
+.error-page p.success, .flash.success {
   background-color: #74c474;
 }
-.flash.information {
+.error-page p.information, .flash.information {
   background-color: #30c0fb;
 }
-.flash a.close {
+.error-page p a.close, .flash a.close {
   float: right;
   margin-top: -2px;
   color: #fff;
@@ -795,7 +819,7 @@ input[type=submit] {
   -webkit-border-radius: 3px;
   border-radius: 3px;
 }
-.flash a.close:hover {
+.error-page p a.close:hover, .flash a.close:hover {
   text-decoration: none;
   filter: alpha(opacity=50);
   -khtml-opacity: 0.5;

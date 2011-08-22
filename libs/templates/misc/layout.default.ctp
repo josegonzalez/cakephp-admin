@@ -44,7 +44,7 @@ echo"
 		echo \$scripts_for_layout;
 	?>
 </head>
-<body>
+<body class=\"<?php if (\$this->name == 'CakeError') echo 'error-page'; ?>\">
 	<div id=\"container\">
 		<div id=\"header\">
 			<h1><?php printf(__('%s Dashboard', true), Inflector::humanize(\$this->params['controller'])); ?></h1>

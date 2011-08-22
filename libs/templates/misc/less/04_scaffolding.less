@@ -49,9 +49,18 @@ div.related {
 
 /** Debugging **/
 pre {
-	color: #000;
-	background: #f0f0f0;
-	padding: 1em;
+  background: #FEFBF3;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #000;
+  display: block;
+  font-family: Monaco, Andale Mono, Courier New, monospace;
+  font-size: @baseline - 4;
+  line-height: @baseline;
+  margin: @baseline;
+  padding: @baseline;
+  white-space: pre-wrap;
+  .border-radius(3px);
+  .box-shadow(0 1px 2px rgba(0,0,0,.1));
 }
 pre.cake-debug {
 	background: #ffcc00;

@@ -1,11 +1,13 @@
 /** Notices and Errors **/
 .error-page #content {
-	padding: 10px 1.5%
+	padding: @baseline;
+}
+.error-page h2 {
+  margin: 0 @baseline @baseline @baseline;
 }
 
-
 // One-liner alert bars
-.flash {
+.error-page p, .flash {
   #gradient > .vertical(transparent, rgba(0,0,0,0.15));
   background-color: @grayLighter;
   margin: @baseline;
