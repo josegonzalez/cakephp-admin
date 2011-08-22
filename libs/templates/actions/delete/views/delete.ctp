@@ -1,5 +1,5 @@
 <?php $id = false; ?>
-<div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?> form">
+<div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?> destructive-form form">
 	<h2><?php printf("<?php __d('%s', '%s %s'); ?>", $admin->plugin, Inflector::humanize($action), $admin->singularHumanName); ?></h2>
 <?php
 echo "\t<?php echo \$this->Form->create('{$admin->modelName}', array('url' => array(

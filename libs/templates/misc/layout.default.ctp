@@ -39,7 +39,7 @@ echo"
 	<?php
 		echo \$this->Html->meta('icon');
 
-		echo \$this->Html->css('/{$plugin}/css/cake.admin.generic');
+		echo \$this->Html->css('/{$plugin}/css/cake.admin.generic.min');
 
 		echo \$scripts_for_layout;
 	?>

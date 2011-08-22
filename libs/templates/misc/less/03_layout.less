@@ -1,0 +1,41 @@
+/** Layout **/
+#container {
+	text-align: left;
+}
+
+#header{
+	padding: @baseline @baseline 0 @baseline;
+}
+#header h1 {
+	color: #fff;
+	float: left;
+	height: @baseline * 2;
+	line-height: @baseline * 2;
+	padding: 0;
+	text-shadow: 2px 2px 2px #000;
+}
+#header h1 a {
+	color: #fff;
+	background: #003d4c;
+	font-weight: normal;
+	text-decoration: none;
+}
+#header h1 a:hover {
+	color: #fff;
+	background: #003d4c;
+	text-decoration: underline;
+}
+#content {
+	background: #f9f9f9 url('../img/background-noise.gif');
+	clear: both;
+	color: #333;
+	margin: @baseline;
+	overflow: auto;
+	.border-radius(5px);
+	.border-radius(0 2px 16px black, 0 0 1px black, 0 0 1px black);
+}
+#footer {
+	clear: both;
+	margin: 0 @baseline @baseline @baseline;
+	text-align: right;
+}

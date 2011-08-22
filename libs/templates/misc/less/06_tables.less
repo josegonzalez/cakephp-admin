@@ -1,0 +1,94 @@
+/** Tables **/
+table {
+	background: #fff;
+	clear: both;
+	color: #333;
+	font-size: @baseline * .7;
+	margin-bottom: @baseline * .7;
+	width: 100%;
+}
+table a {
+	color: #1B252C;
+	text-decoration: none;
+}
+table a:hover {
+	color: #1B252C;
+	text-decoration: underline;
+}
+thead tr th:first-child {
+	border-left: 1px solid #ddd;
+  .border-radius-top-left(5px);
+}
+thead tr th:last-child {
+  .border-radius-top-right(5px);
+}
+th {
+	background-color: #f5f5f5;
+	border:0;
+	border-bottom: 1px solid #ddd;
+	border-top: 1px solid #fdfdfd;
+	text-align: left;
+	padding: 4px;
+}
+th.actions {
+	text-align: center;
+}
+th a {
+	display: block;
+	font-size: @baseline * .7;
+	font-weight: normal;
+	padding: 2px 4px;
+}
+th a.asc:after {
+	content: ' ⇣';
+}
+th a.desc:after {
+	content: ' ⇡';
+}
+table tr td {
+	background: #fafafa;
+	border-bottom: 1px solid #f0f0f0;
+	line-height: @baseline * .7;
+	padding: 6px;
+	text-align: left;
+	vertical-align: top;
+}
+table tr.altrow td {
+	background: #fff;
+}
+table tr td a {
+	height: @baseline * .7;
+	line-height: @baseline * .7;
+	padding: 2px 0;
+}
+table tr td:first-child {
+	border-left: 1px solid #f0f0f0;
+}
+table tr td:last-child {
+	border-right: 1px solid #f0f0f0;
+}
+table tr:last-child td:first-child {
+  .border-radius-bottom-left(5px);
+}
+table tr:last-child td:last-child {
+  .border-radius-top-right(5px);
+}
+td.actions {
+	text-align: center;
+	white-space: nowrap;
+}
+table td.actions a {
+	margin: 0px 6px;
+	padding:2px 5px;
+}
+.cake-sql-log table {
+	background: #f4f4f4;
+}
+.cake-sql-log td {
+	padding: 4px 8px;
+	text-align: left;
+	font-family: Monaco, Consolas, "Courier New", monospaced;
+}
+.cake-sql-log caption {
+	color:#fff;
+}
