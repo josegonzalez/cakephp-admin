@@ -604,6 +604,43 @@ form fieldset p {
 form div.input {
   margin-bottom: 16px;
 }
+form .input.error {
+  background-color: #FAE5E3;
+  padding: 20px 0;
+  -opera-border-radius: 4px;
+  -o-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+form .input.error .error-message {
+  color: #9D261D;
+  padding-left: 150px;
+  padding-top: 20px;
+}
+form .input.error input[type=text], form .input.error input[type=password], form .input.error textarea {
+  border-color: #C87872;
+  -webkit-box-shadow: 0 0 3px rgba(171, 41, 32, 0.25), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -opera-box-shadow: 0 0 3px rgba(171, 41, 32, 0.25), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -o-box-shadow: 0 0 3px rgba(171, 41, 32, 0.25), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -khtml-box-shadow: 0 0 3px rgba(171, 41, 32, 0.25), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -moz-box-shadow: 0 0 3px rgba(171, 41, 32, 0.25), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -webkit-box-shadow: 0 0 3px rgba(171, 41, 32, 0.25), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  box-shadow: 0 0 3px rgba(171, 41, 32, 0.25);
+  box-shadow: 0 0 3px rgba(171, 41, 32, 0.25) transparent 0 0 0 transparent 0 0 0 transparent 0 0 0 transparent 0 0 0;
+}
+form .input.error input[type=text]:focus, form .input.error input[type=password]:focus, form .input.error textarea:focus {
+  border-color: #ba554d;
+  -webkit-box-shadow: 0 0 6px rgba(171, 41, 32, 0.5), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -opera-box-shadow: 0 0 6px rgba(171, 41, 32, 0.5), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -o-box-shadow: 0 0 6px rgba(171, 41, 32, 0.5), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -khtml-box-shadow: 0 0 6px rgba(171, 41, 32, 0.5), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -moz-box-shadow: 0 0 6px rgba(171, 41, 32, 0.5), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -webkit-box-shadow: 0 0 6px rgba(171, 41, 32, 0.5), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  box-shadow: 0 0 6px rgba(171, 41, 32, 0.5);
+  box-shadow: 0 0 6px rgba(171, 41, 32, 0.5) transparent 0 0 0 transparent 0 0 0 transparent 0 0 0 transparent 0 0 0;
+}
 form label,
 form input,
 form select,

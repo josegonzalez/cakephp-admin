@@ -26,11 +26,30 @@ form {
   div.input {
     margin-bottom: @baseline;
   }
+  .input.error {
+    background-color: #FAE5E3;
+    padding: 20px 0;
+    .border-radius(4px);
+    .error-message {
+      color: #9D261D;
+      padding-left: 150px;
+      padding-top: 20px;
+    }
+    input[type=text],
+    input[type=password],
+    textarea {
+      border-color: #C87872;
+      .box-shadow(0 0 3px rgba(171,41,32,.25));
+      &:focus {
+        border-color: darken(#C87872, 10%);
+        .box-shadow(0 0 6px rgba(171,41,32,.5));
+      }
+    }
+  }
   // Set font for forms
   label, input, select, textarea {
     #font > .sans-serif(normal,13px,normal);
   }
-
   // Float labels left
   label {
     padding-top: 4px;
