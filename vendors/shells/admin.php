@@ -62,7 +62,7 @@ class AdminShell extends Shell {
  * Override main
  *
  */
-    function main() {
+    function generate() {
         if (!isset($this->params['interactive'])) {
             $this->params['interactive'] = false;
         } else {
@@ -74,7 +74,7 @@ class AdminShell extends Shell {
         }
 
         // Create the admin object
-        $files = $this->find();
+        $files = $this->_find();
         if (!$files) {
             $this->error(__('Admin files not found', true));
         }
@@ -95,7 +95,7 @@ class AdminShell extends Shell {
             }
 
             // Check that paths can be written
-            if (($error = $this->checkBuild($admin)) !== true) {
+            if (($error = $this->_checkBuild($admin)) !== true) {
                 $this->err(sprintf('%s for %s', $error, $className));
                 continue;
             }
@@ -109,12 +109,12 @@ class AdminShell extends Shell {
             );
         }
 
-        $this->generateApp($plugins);
+        $this->_generateApp($plugins);
 
         foreach ($adminClasses as $file => $admin) {
-            if (!$this->generate($admin)) {
+            if (!$this->_create($admin)) {
                 $this->err(sprintf(
-                    __('Error in generating admin for %s', true),
+                    __('Error in creating admin for %s', true),
                     $className
                 ));
                 continue;
@@ -123,7 +123,7 @@ class AdminShell extends Shell {
             $build++;
         }
 
-        $this->generateMisc($plugins);
+        $this->_generateMisc($plugins);
 
         $fails = count($files) - $skipped - $build;
         if ($build == 0) {
@@ -149,8 +149,8 @@ class AdminShell extends Shell {
  * @return array
  * @todo test me
  */
-    function find() {
-        $this->handler();
+    function _find() {
+        $this->_handler();
         $this->handler->cd(APPLIBS);
         $content = $this->handler->read();
 
@@ -182,8 +182,8 @@ class AdminShell extends Shell {
  * @return mixed boolean true if successful, string error message otherwise
  * @todo test me
  */
-    function checkBuild($admin) {
-        $this->handler();
+    function _checkBuild($admin) {
+        $this->_handler();
         $this->handler->cd(APP);
         $contents = $this->handler->read();
 
@@ -239,7 +239,7 @@ class AdminShell extends Shell {
  * @return boolean
  * @todo test me
  **/
-    function generate($admin) {
+    function _create($admin) {
         if (!$this->AdminModel->generate($admin))  {
             $this->out();
             $this->out(sprintf('Failed to generate %s Model',
@@ -273,7 +273,7 @@ class AdminShell extends Shell {
  * @return boolean
  * @author Jose Diaz-Gonzalez
  **/
-    function generateApp($plugins) {
+    function _generateApp($plugins) {
         $generated = array();
 
         foreach ($plugins as $plugin => $cakeAdmins) {
@@ -310,7 +310,7 @@ class AdminShell extends Shell {
  * @return void
  * @author Jose Diaz-Gonzalez
  **/
-    function generateMisc($plugins) {
+    function _generateMisc($plugins) {
         foreach ($plugins as $plugin => $cakeAdmins) {
             $pluginPath = APP . 'plugins' . DS . $plugin;
 
@@ -357,12 +357,39 @@ class AdminShell extends Shell {
  * @return boolean true if handler is setup, false otherwise
  * @todo test me
  */
-    function handler() {
+    function _handler() {
         if (!$this->handler) {
             App::import('Core', 'Folder');
             $this->handler = new Folder(APP);
         }
         return is_object($this->handler);
+    }
+
+/**
+ * Displays help contents
+ *
+ * @access public
+ */
+    function help() {
+        $help = <<<TEXT
+The CakeAdmin Shell
+---------------------------------------------------------------
+Usage: cake admin generate
+---------------------------------------------------------------
+Params:
+
+
+Commands:
+
+    admin generate
+        auto-generates admin sections based on your app/libs/admin files
+
+    my help
+        shows this help message.
+
+TEXT;
+        $this->out($help);
+        $this->_stop();
     }
 
 }
