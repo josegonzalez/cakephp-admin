@@ -134,7 +134,7 @@ class CakeAdminIndexConfig extends CakeAdminActionConfig {
         }
 
         $sort = $fields;
-        if ($configuration['sort'] == false) {
+        if (empty($configuration['sort']) || $configuration['sort'] === false) {
             $sort = array();
         } else if (is_array($configuration['sort'])) {
             $sort = $configuration['sort'];
