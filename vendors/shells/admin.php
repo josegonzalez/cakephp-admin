@@ -11,8 +11,12 @@
  * @since         ApiGenerator 0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  **/
-if (!class_exists('CakeAdmin')) App::import('Lib', 'CakeAdmin.cake_admin');
-if (!class_exists('Shell')) App::import('Core', 'Shell');
+if (!class_exists('CakeAdmin')) {
+	App::import('Lib', 'CakeAdmin.cake_admin');
+}
+if (!class_exists('Shell')) {
+	App::import('Core', 'Shell');
+}
 class AdminShell extends Shell {
 
 /**
