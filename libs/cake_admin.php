@@ -386,10 +386,10 @@ class CakeAdmin {
         foreach ($this->actions as $alias => $configuration) {
             if (empty($configuration['plugin'])) $this->actions[$alias]['plugin'] = 'cake_admin';
 
-            $plugin = Inflector::camelize($this->actions[$alias]['plugin']);
-            $type = $configuration['type'];
-            $className = 'CakeAdmin' . Inflector::camelize($configuration['type']) . 'Config';
-            $fileName = "cake_admin_{$configuration['type']}_config.php";
+            $plugin    = Inflector::camelize($this->actions[$alias]['plugin']);
+            $type      = isset($configuration['type']) ? $configuration['type'] : $alias;
+            $className = 'CakeAdmin' . Inflector::camelize($type) . 'Config';
+            $fileName  = "cake_admin_{$type}_config.php";
 
             if (!class_exists($className)) {
                 App::import('Lib', "{$plugin}.{$className}", array(
@@ -399,6 +399,8 @@ class CakeAdmin {
             if (!class_exists($className)) {
                 throw new Exception(sprintf("Undefined class %s", $className));
             }
+
+            $this->actions[$alias]['type'] = $type;
 
             $configClass = new $className;
             if (isset($this->actions[$alias]['enabled'])) {
