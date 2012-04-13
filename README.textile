@@ -10,9 +10,9 @@ So I started work on a Django admin for CakePHP. Here is the beginning of that. 
 
 h2. Requirements
 
-* CakePHP 1.3
+* CakePHP 2.x
 * Patience
-* PHP 5.2+
+* PHP 5.2.8
 
 h2. Installation
 
@@ -20,29 +20,29 @@ _[Manual]_
 
 # Download this: http://github.com/josegonzalez/cake_admin/zipball/master
 # Unzip that download.
-# Copy the resulting folder to app/plugins
-# Rename the folder you just copied to @cake_admin@
+# Copy the resulting folder to app/Plugin
+# Rename the folder you just copied to @CakeAdmin@
 
 _[GIT Submodule]_
 
 In your app directory type:
-<pre><code>git submodule add git://github.com/josegonzalez/cake_admin.git plugins/cake_admin
+<pre><code>git submodule add git://github.com/josegonzalez/cake_admin.git Plugin/CakeAdmin
 git submodule init
 git submodule update
 </code></pre>
 
 _[GIT Clone]_
 
-In your plugin directory type
-<pre><code>git clone git://github.com/josegonzalez/cake_admin.git cake_admin</code></pre>
+In your Plugin directory type
+<pre><code>git clone git://github.com/josegonzalez/cake_admin.git CakeAdmin</code></pre>
 
 h2. Usage
 
-Create a folder in your @app/libs@ folder called @admin@. This folder will contain all of your @CakeAdmin@ classes. We'll use a @Post@ model for our example admin section.
+Create a folder in your @app/Lib@ folder called @Admin@. This folder will contain all of your @CakeAdmin@ classes. We'll use a @Post@ model for our example admin section.
 
-Create a @post_cake_admin.php@ file in your @app/libs/admin@ folder. This will contain your @PostCakeAdmin@ class. "This gist":http://gist.github.com/583603 is an example of such a class.
+Create a @PostCakeAdmin.php@ file in your @app/Lib/Admin@ folder. This will contain your @PostCakeAdmin@ class. "This gist":http://gist.github.com/583603 is an example of such a class.
 
-Once your @post_cake_admin.php@ file has been created, run @cake admin@ from the shell. This will create the respective plugin if not already (in our case, an @admin@ plugin), as well as all the models, views, and controllers for ALL available @*cake_admin.php@ files. In our case, you can then access the admin section at @example.com/admin/posts@.
+Once your @PostCakeAdmin.php@ file has been created, run @cake CakeAdmin.admin@ from the shell. This will create the respective plugin if not already (in our case, an @Admin@ plugin), as well as all the models, views, and controllers for ALL available @*CakeAdmin.php@ files. In our case, you can then access the admin section at @example.com/admin/posts@.
 
 h2. Parsing
 
@@ -250,7 +250,7 @@ The following is a list of things I am planning to implement, in order of most l
 
 h2. License
 
-Copyright (c) 2010-2011 Jose Diaz-Gonzalez
+Copyright (c) 2010-2012 Jose Diaz-Gonzalez
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
