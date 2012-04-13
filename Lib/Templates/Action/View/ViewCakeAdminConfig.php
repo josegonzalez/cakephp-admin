@@ -1,5 +1,5 @@
 <?php
-class CakeAdminViewConfig extends CakeAdminActionConfig {
+class ViewCakeAdminConfig extends CakeAdminActionConfig {
 
 /**
  * Configuration defaults

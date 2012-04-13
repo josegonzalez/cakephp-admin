@@ -1,5 +1,5 @@
 <?php
-class CakeAdminDeleteConfig extends CakeAdminActionConfig {
+class ChangelogCakeAdminConfig extends CakeAdminActionConfig {
 
 /**
  * Configuration defaults
@@ -7,9 +7,7 @@ class CakeAdminDeleteConfig extends CakeAdminActionConfig {
  * @var array
  **/
     var $defaults = array(
-        'displayPrimaryKey'     => true,                        // Display the primary key of the record being deleted
-        'displayName'           => true,                        // Display the name of the record being deleted
-        'cascade'               => true,                        // Cascade delete queries
+        'title' => false,
     );
 
 /**
@@ -17,7 +15,7 @@ class CakeAdminDeleteConfig extends CakeAdminActionConfig {
  *
  * @var boolean
  **/
-    var $enabled = true;
+    var $enabled = false;
 
 /**
  * Plugin where the templates for this action are located
@@ -32,7 +30,7 @@ class CakeAdminDeleteConfig extends CakeAdminActionConfig {
  *
  * @var string
  **/
-    var $type = 'delete';
+    var $type = 'changelog';
 
 /**
  * Whether this action is linkable
@@ -45,15 +43,12 @@ class CakeAdminDeleteConfig extends CakeAdminActionConfig {
  * - (string) confirmMessage: JavaScript confirmation message. Literal string will be output
  *          the following will be replaced within the confirmMessage
  *              {{primaryKey}} : alias of the primaryKey
- *              {{displayField}} : alias of the displayField
  *              {{modelName}} : alias of the humanized application modelName
- *              {{modelNameVar}} : alias of the variablized application modelName
  *              {{pluginModelName}} : alias of the humanized generated modelName
- *              {{pluginModelNameVar}} : alias of the variablized generated modelName
  *
  * @var mixed
  **/
-    var $linkable = array('title' => 'Delete');
+    var $linkable = array('title' => 'Changelog');
 
 /**
  * Model methods this action contains
@@ -61,5 +56,22 @@ class CakeAdminDeleteConfig extends CakeAdminActionConfig {
  * @var array
  **/
     var $methods = array('find');
+
+/**
+ * Merges instantiated configuration with the class defaults
+ *
+ * @param array $configuration action configuration
+ * @return array
+ * @author Jose Diaz-Gonzalez
+ */
+    function mergeVars($admin, $configuration = array()) {
+        if (empty($configuration)) $configuration = $this->defaults;
+
+        if (!$configuration['title']) {
+            $configuration['title'] = 'Changelog for: ';
+        }
+
+        return $configuration;
+    }
 
 }

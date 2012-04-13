@@ -1,5 +1,5 @@
 <?php
-class CakeAdminChangelogConfig extends CakeAdminActionConfig {
+class HistoryCakeAdminConfig extends CakeAdminActionConfig {
 
 /**
  * Configuration defaults
@@ -30,7 +30,7 @@ class CakeAdminChangelogConfig extends CakeAdminActionConfig {
  *
  * @var string
  **/
-    var $type = 'changelog';
+    var $type = 'history';
 
 /**
  * Whether this action is linkable
@@ -48,14 +48,14 @@ class CakeAdminChangelogConfig extends CakeAdminActionConfig {
  *
  * @var mixed
  **/
-    var $linkable = array('title' => 'Changelog');
+    var $linkable = 'History';
 
 /**
  * Model methods this action contains
  *
  * @var array
  **/
-    var $methods = array('find');
+    var $methods = array('related');
 
 /**
  * Merges instantiated configuration with the class defaults
@@ -68,7 +68,7 @@ class CakeAdminChangelogConfig extends CakeAdminActionConfig {
         if (empty($configuration)) $configuration = $this->defaults;
 
         if (!$configuration['title']) {
-            $configuration['title'] = 'Changelog for: ';
+            $configuration['title'] = $admin->singularHumanName . ' History';
         }
 
         return $configuration;

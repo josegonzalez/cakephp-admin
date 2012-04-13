@@ -1,5 +1,5 @@
 <?php
-class CakeAdminIndexConfig extends CakeAdminActionConfig {
+class IndexCakeAdminConfig extends CakeAdminActionConfig {
 
 /**
  * Configuration defaults

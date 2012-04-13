@@ -14,7 +14,7 @@ if (!class_exists('CakeAdminActionConfig')) App::import('Lib', 'CakeAdmin.cake_a
 class CakeAdmin {
 
 /**
- * Name of the model. Defaults to the class name 
+ * Name of the model. Defaults to the class name
  * minus the appended "Admin" string
  *
  * @var string
@@ -388,8 +388,8 @@ class CakeAdmin {
 
             $plugin    = Inflector::camelize($this->actions[$alias]['plugin']);
             $type      = isset($configuration['type']) ? $configuration['type'] : $alias;
-            $className = 'CakeAdmin' . Inflector::camelize($type) . 'Config';
-            $fileName  = "cake_admin_{$type}_config.php";
+            $className = Inflector::camelize($type) . 'CakeAdminConfig';
+            $fileName  = "{$className}.php";
 
             if (!class_exists($className)) {
                 App::import('Lib', "{$plugin}.{$className}", array(
@@ -624,7 +624,7 @@ class CakeAdmin {
     }
 
 /**
- * Update the class validation rules to conform to multiple validation 
+ * Update the class validation rules to conform to multiple validation
  * rule standards. Also updates the message if currently non-existent.
  * Properly deals with all core validation rule use-cases
  *
@@ -856,7 +856,7 @@ class CakeAdmin {
             foreach ($validations as $key => $options) {
                 $results[] = "\t'" . $key . "' => array(";
                 foreach ($options as $option => $value) {
-                    if ($option === 'rule') { 
+                    if ($option === 'rule') {
                         $line = "\t\t'rule' => array(";
                         if (is_array($options['rule'])) {
                             $ruleOptionsCount = count($options['rule']) - 1;

@@ -1,5 +1,5 @@
 <?php
-class CakeAdminHistoryConfig extends CakeAdminActionConfig {
+class DeleteCakeAdminConfig extends CakeAdminActionConfig {
 
 /**
  * Configuration defaults
@@ -7,7 +7,9 @@ class CakeAdminHistoryConfig extends CakeAdminActionConfig {
  * @var array
  **/
     var $defaults = array(
-        'title' => false,
+        'displayPrimaryKey'     => true,                        // Display the primary key of the record being deleted
+        'displayName'           => true,                        // Display the name of the record being deleted
+        'cascade'               => true,                        // Cascade delete queries
     );
 
 /**
@@ -15,7 +17,7 @@ class CakeAdminHistoryConfig extends CakeAdminActionConfig {
  *
  * @var boolean
  **/
-    var $enabled = false;
+    var $enabled = true;
 
 /**
  * Plugin where the templates for this action are located
@@ -30,7 +32,7 @@ class CakeAdminHistoryConfig extends CakeAdminActionConfig {
  *
  * @var string
  **/
-    var $type = 'history';
+    var $type = 'delete';
 
 /**
  * Whether this action is linkable
@@ -43,35 +45,21 @@ class CakeAdminHistoryConfig extends CakeAdminActionConfig {
  * - (string) confirmMessage: JavaScript confirmation message. Literal string will be output
  *          the following will be replaced within the confirmMessage
  *              {{primaryKey}} : alias of the primaryKey
+ *              {{displayField}} : alias of the displayField
  *              {{modelName}} : alias of the humanized application modelName
+ *              {{modelNameVar}} : alias of the variablized application modelName
  *              {{pluginModelName}} : alias of the humanized generated modelName
+ *              {{pluginModelNameVar}} : alias of the variablized generated modelName
  *
  * @var mixed
  **/
-    var $linkable = 'History';
+    var $linkable = array('title' => 'Delete');
 
 /**
  * Model methods this action contains
  *
  * @var array
  **/
-    var $methods = array('related');
-
-/**
- * Merges instantiated configuration with the class defaults
- *
- * @param array $configuration action configuration
- * @return array
- * @author Jose Diaz-Gonzalez
- */
-    function mergeVars($admin, $configuration = array()) {
-        if (empty($configuration)) $configuration = $this->defaults;
-
-        if (!$configuration['title']) {
-            $configuration['title'] = $admin->singularHumanName . ' History';
-        }
-
-        return $configuration;
-    }
+    var $methods = array('find');
 
 }
