@@ -1,12 +1,14 @@
 <?php
-class AdminViewTask extends Shell {
+App::uses('AppShell', 'Console/Command');
+
+class AdminViewTask extends AppShell {
 
 /**
  * Tasks to be loaded by this Task
  *
  * @var array
  */
-    var $tasks = array('AdminTemplate');
+    var $tasks = array('CakeAdmin.AdminTemplate');
 
 /**
  * Constructed plugin directory
@@ -22,14 +24,14 @@ class AdminViewTask extends Shell {
     function __construct(&$dispatch) {
         parent::__construct($dispatch);
 
-        $this->pluginDir        = APP . 'plugins' . DS;
+        $this->pluginDir        = APP . 'Plugin' . DS;
         $this->templateDir      = array();
         $this->templateDir[]    = dirname(__FILE__);
         $this->templateDir[]    = '..';
         $this->templateDir[]    = '..';
         $this->templateDir[]    = '..';
-        $this->templateDir[]    = 'libs';
-        $this->templateDir[]    = 'templates';
+        $this->templateDir[]    = 'Lib';
+        $this->templateDir[]    = 'Templates';
         $this->templateDir      = implode(DS, $this->templateDir);
     }
 
@@ -50,13 +52,13 @@ class AdminViewTask extends Shell {
     }
 
     function getContent($admin, $action, $configuration) {
-        $endPath = 'libs' . DS . 'templates' . DS . 'actions' . DS;
+        $endPath = 'Lib' . DS . 'Templates' . DS . 'Action' . DS;
         if (empty($configuration['plugin'])) {
             $path = APP . $endPath;
         } else {
             $path = $this->pluginDir . $configuration['plugin'] . DS . $endPath;
         }
-        $path .= $configuration['type'] . DS . 'views';
+        $path .= $configuration['type'] . DS . 'View';
 
         $this->AdminTemplate->set(compact(
             'admin',

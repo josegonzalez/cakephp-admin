@@ -6,16 +6,16 @@ if ($configuration['config']['formType']) {
 unset($configuration['config']['formType']);
 ?>
 <div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?> form">
-	<h2><?php echo sprintf("<?php __d('%s', '%s %s'); ?>", $admin->plugin, Inflector::humanize($action), $admin->singularHumanName); ?></h2>
+	<h2><?php echo sprintf("<?php echo __d('%s', '%s %s'); ?>", $admin->plugin, Inflector::humanize($action), $admin->singularHumanName); ?></h2>
 	<?php echo sprintf("<?php echo \$this->Form->create('%s', array('url' => array(
 		'plugin' => '%s', 'controller' => '%s', 'action' => '%s')%s));?>\n", $admin->modelName, $admin->plugin, $admin->controllerRoute, $action, $formType); ?>
 <?php foreach ($configuration['config'] as $i => $config): ?>
 		<fieldset<?php if (!empty($config['classes'])) echo sprintf(' class="%s"', $config['classes']); ?>>
 <?php if (!empty($config['title'])) : ?>
- 			<legend><?php printf("<?php __d('%s', '%s'); ?>", $admin->plugin, $config['title']); ?></legend>
+ 			<legend><?php printf("<?php echo __d('%s', '%s'); ?>", $admin->plugin, $config['title']); ?></legend>
 <?php endif; ?>
 <?php if (!empty($config['description'])) : ?>
-			<p><?php printf("<?php __d('%s', '%s'); ?>", $admin->plugin, $config['description']); ?></p><br />
+			<p><?php printf("<?php echo __d('%s', '%s'); ?>", $admin->plugin, $config['description']); ?></p><br />
 <?php endif; ?>
 <?php
 		echo "\t\t\t<?php\n";
@@ -26,7 +26,7 @@ unset($configuration['config']['formType']);
 					if (in_array($key, array('readonly', 'wrapper'))) continue;
 					$option = sprintf("'%s' => '%s'", $key, $value);
 					if ($key === 'label') {
-					    $option = sprintf("'%s' => __d('%s', '%s', true)", $key, $admin->plugin, $value);
+					    $option = sprintf("'%s' => __d('%s', '%s')", $key, $admin->plugin, $value);
 					}
 					$options[] = $option;
 				}
@@ -50,16 +50,16 @@ if ($config['habtm'] === true && !empty($admin->associations['hasAndBelongsToMan
 	echo "\t</fieldset";
 }
 ?>
-<?php echo sprintf("\t<?php echo \$this->Form->end(__d('%s', 'Submit', true));?>\n", $admin->plugin); ?>
+<?php echo sprintf("\t<?php echo \$this->Form->end(__d('%s', 'Submit'));?>\n", $admin->plugin); ?>
 </div>
 <div class="actions">
-	<h3><?php echo sprintf("<?php __d('%s', 'Actions'); ?>", $admin->plugin); ?></h3>
+	<h3><?php echo sprintf("<?php echo __d('%s', 'Actions'); ?>", $admin->plugin); ?></h3>
 	<ul>
 <?php
 foreach ($admin->links as $alias => $config) {
 	if ($alias == $action) continue;
 	if ($config !== false && is_string($config)) { ?>
-		<li><?php printf("<?php echo \$this->Html->link(__d('%s', '%s', true), array('action' => '%s')); ?>", $admin->plugin, $config, $alias); ?></li>
+		<li><?php printf("<?php echo \$this->Html->link(__d('%s', '%s'), array('action' => '%s')); ?>", $admin->plugin, $config, $alias); ?></li>
 <?php
 	}
 }

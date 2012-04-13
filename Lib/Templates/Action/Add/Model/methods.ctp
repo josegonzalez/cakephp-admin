@@ -3,7 +3,7 @@
 if (!empty($admin->associations['belongsTo']) || !empty($admin->associations['hasAndBelongsToMany'])) :
 
 ?>
-	function _related<?php echo Inflector::camelize($find); ?>() {
+	public function _related<?php echo Inflector::camelize($find); ?>() {
 <?php
 $compacts = array();
 

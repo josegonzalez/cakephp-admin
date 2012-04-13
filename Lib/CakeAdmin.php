@@ -10,7 +10,8 @@
  * @subpackage    cake_admin.libs
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  **/
-if (!class_exists('CakeAdminActionConfig')) App::import('Lib', 'CakeAdmin.cake_admin_action_config');
+App::uses('CakeAdminActionConfig', 'CakeAdmin.Lib');
+App::uses('Model', 'Model');
 class CakeAdmin {
 
 /**
@@ -189,7 +190,7 @@ class CakeAdmin {
         'index' => array(
             'type'      => 'index',                                     // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Index is enabled by default
-            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'plugin'    => 'CakeAdmin',                                 // Path where the associated templates are located
             'methods'   => array('find'),                               // Has Finders? Has Related Finders?
             'config'    => array(
                 'fields'                => array('*'),                  // Array or string of fields to enable
@@ -202,7 +203,7 @@ class CakeAdmin {
         'add' => array(
             'type'      => 'add',                                       // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Add is enabled by default
-            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'plugin'    => 'CakeAdmin',                                 // Path where the associated templates are located
             'methods'   => array('related'),                            // Has Finders? Has Related Finders?
             'config'    => array(
                 array(
@@ -220,7 +221,7 @@ class CakeAdmin {
         'edit' => array(
             'type'      => 'edit',                                      // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Edit is enabled by default
-            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'plugin'    => 'CakeAdmin',                                 // Path where the associated templates are located
             'methods'   => array('find', 'related'),                    // Has Finders? Has Related Finders?
             'config'    => array(
                 array(
@@ -237,8 +238,8 @@ class CakeAdmin {
         ),
         'view' => array(
             'type'      => 'view',                                      // If not set, type maps to the key of this action
-            'enabled'   => false,                                       // View is disabled by default
-            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'enabled'   => true,                                        // View is disabled by default
+            'plugin'    => 'CakeAdmin',                                 // Path where the associated templates are located
             'methods'   => array('find'),                               // Has Finders? Has Related Finders?
             'config'    => array(
                 'fields'                => array('*'),                  // Array or string of fields to enable
@@ -247,7 +248,7 @@ class CakeAdmin {
         'delete' => array(
             'type'      => 'delete',                                    // If not set, type maps to the key of this action
             'enabled'   => true,                                        // Delete is enabled by default
-            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'plugin'    => 'CakeAdmin',                                 // Path where the associated templates are located
             'methods'   => array('find'),                               // Has Finders? Has Related Finders?
             'config'    => array(
                 'displayPrimaryKey'     => true,                        // Display the primary key of the record being deleted
@@ -258,14 +259,14 @@ class CakeAdmin {
         'history' => array(
             'type'      => 'history',                                   // If not set, type maps to the key of this action
             'enabled'   => false,                                       // History is disabled by default. Requires Logable
-            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'plugin'    => 'CakeAdmin',                                 // Path where the associated templates are located
             'methods'   => false,                                       // Has Finders? Has Related Finders?
             'config'    => array(),
         ),
         'changelog' => array(
             'type'      => 'changelog',                                 // If not set, type maps to the key of this action
             'enabled'   => false,                                       // Changelog is disabled by default. Requires Logable
-            'plugin'    => 'cake_admin',                                // Path where the associated templates are located
+            'plugin'    => 'CakeAdmin',                                 // Path where the associated templates are located
             'methods'   => false,                                       // Has Finders? Has Related Finders?
             'config'    => array(),
         ),
@@ -337,6 +338,7 @@ class CakeAdmin {
 
         // Update the modelName if not set
         $this->_setVariables();
+
         // Iterate over validation rules to set proper defaults
         if (!empty($this->validate)) {
             $this->_updateValidationRules();
@@ -357,6 +359,7 @@ class CakeAdmin {
         $schema                 = $this->modelObj->schema(true);
         $this->fields           = array_keys($schema);
 
+        $this->plugin           = Inflector::underscore($this->plugin);
         $this->controllerRoute  = $this->_pluralName($this->modelName);
 
         $this->singularVar      = Inflector::variable($this->modelName);
@@ -384,18 +387,14 @@ class CakeAdmin {
         }
 
         foreach ($this->actions as $alias => $configuration) {
-            if (empty($configuration['plugin'])) $this->actions[$alias]['plugin'] = 'cake_admin';
+            if (empty($configuration['plugin'])) $this->actions[$alias]['plugin'] = 'CakeAdmin';
 
             $plugin    = Inflector::camelize($this->actions[$alias]['plugin']);
             $type      = isset($configuration['type']) ? $configuration['type'] : $alias;
+            $type      = Inflector::camelize($type);
             $className = Inflector::camelize($type) . 'CakeAdminConfig';
-            $fileName  = "{$className}.php";
+            App::uses($className, "{$plugin}.Lib/Templates/Action/{$type}");
 
-            if (!class_exists($className)) {
-                App::import('Lib', "{$plugin}.{$className}", array(
-                    'file' => 'templates' . DS . 'actions' . DS . $type . DS . $fileName,
-                ));
-            }
             if (!class_exists($className)) {
                 throw new Exception(sprintf("Undefined class %s", $className));
             }
@@ -473,20 +472,20 @@ class CakeAdmin {
     }
 
     function _setTemplates() {
-        $this->baseDir          = APP .'plugins' . DS . $this->plugin . DS;
-        $this->templateDir      = dirname(__FILE__) . DS . 'templates';
+        $this->baseDir          = APP .'Plugin' . DS . Inflector::camelize($this->plugin) . DS;
+        $this->templateDir      = dirname(__FILE__) . DS . 'Templates';
 
         $this->paths            = array();
         $controllerPath = $this->_controllerPath($this->controllerName);
 
         $outputModelPath = array();
-        $outputModelPath[] = $this->baseDir . 'models' . DS;
-        $outputModelPath[] = Inflector::underscore($this->modelName) . '.php';
+        $outputModelPath[] = $this->baseDir . 'Model' . DS;
+        $outputModelPath[] = $this->modelName . '.php';
 
         $outputControllerPath   = array();
         $outputControllerPath[] = $this->baseDir;
-        $outputControllerPath[] = 'controllers' . DS;
-        $outputControllerPath[] = $controllerPath . '_controller.php';
+        $outputControllerPath[] = 'Controller' . DS;
+        $outputControllerPath[] = $controllerPath . 'Controller.php';
 
         $this->paths['model'] = implode($outputModelPath);
         $this->paths['controller'] = implode($outputControllerPath);
@@ -495,12 +494,12 @@ class CakeAdmin {
             if ($configuration['enabled'] !== true) continue;
 
             $outputViewPath = array();
-            $outputViewPath[] = $this->baseDir . 'views' . DS;
+            $outputViewPath[] = $this->baseDir . 'View' . DS;
             $outputViewPath[] = $this->_controllerPath($this->controllerName) . DS;
             $outputViewPath[] = $alias . '.ctp';
 
             $this->paths['views'][$alias] = implode(DS, array(
-                $this->baseDir . 'views',
+                $this->baseDir . 'View',
                 $controllerPath,
                 $alias . '.ctp'
             ));
@@ -509,7 +508,6 @@ class CakeAdmin {
 
     function _setModel() {
         // Lets get a bare model
-        App::import('Core', 'Model');
         $this->modelObj = new Model(array(
             'name'  => $this->modelName,
             'table' => $this->useTable,
@@ -580,7 +578,7 @@ class CakeAdmin {
  * @access protected
  */
     function _controllerPath($name) {
-        return strtolower(Inflector::underscore($name));
+        return Inflector::camelize($name);
     }
 
 /**

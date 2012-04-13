@@ -1,18 +1,18 @@
 <?php
 echo "<?php\n";
 ?>
-class <?php echo Inflector::humanize($admin->plugin); ?>AppModel extends AppModel {
+class <?php echo Inflector::camelize($admin->plugin); ?>AppModel extends AppModel {
 
 	var $actsAs = array('Containable');
 	var $recursive = -1;
 
 	function related($type) {
-		if (isset($this->_relatedMethods[$type]) && $this->_relatedMethods[$type] === true) {
+		if (isset($this->relatedMethods[$type]) && $this->relatedMethods[$type] === true) {
 			return $this->{'_related' . Inflector::camelize($type)}();
 		}
 
 		trigger_error(
-			sprintf(__('(Model::related(%s)) Invalid related find for %s', true), $type, $this->alias),
+			__('(Model::related(%s)) Invalid related find for %s', $type, $this->alias),
 			E_USER_WARNING
 		);
 	}

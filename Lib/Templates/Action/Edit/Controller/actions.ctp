@@ -1,38 +1,51 @@
-	function <?php echo $alias; ?>($<?php echo $admin->primaryKey; ?> = null) {
-		if (!$<?php echo $admin->primaryKey; ?> && empty($this->data)) {
+	public function <?php echo $alias; ?>($<?php echo $admin->primaryKey; ?> = null) {
+		if (!$<?php echo $admin->primaryKey; ?>) {
+			if (empty($this->request->params['named']['<?php echo $admin->primaryKey; ?>'])) {
 <?php if ($admin->sessions): ?>
-			$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>', true), 'flash/error');
-			$this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
+				$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>'), 'flash/error');
+				return $this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php else: ?>
-			$this->flash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
+				return $this->flash(__('Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>'), array('action' => '<?php echo $admin->redirectTo; ?>'));
+<?php endif; ?>
+			} else {
+				$id = $this->request->params['named']['<?php echo $admin->primaryKey; ?>'];
+			}
+		}
+
+		if (!$<?php echo $admin->primaryKey; ?> && empty($this->request->data)) {
+<?php if ($admin->sessions): ?>
+			$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>'), 'flash/error');
+			return $this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
+<?php else: ?>
+			return $this->flash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>'), array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php endif; ?>
 		}
 
-		if (!empty($this->data)) {
-			if ($this-><?php echo $admin->modelName; ?>->save($this->data)) {
+		if ($this->request->is('patch') || $this->request->is('put') || $this->request->is('patch')) {
+			if ($this-><?php echo $admin->modelName; ?>->save($this->request->data)) {
 <?php if ($admin->sessions): ?>
-				$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'The <?php echo ucfirst(strtolower($admin->singularHumanName)); ?> has been saved', true), 'flash/success');
-				$this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
+				$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'The <?php echo ucfirst(strtolower($admin->singularHumanName)); ?> has been saved'), 'flash/success');
+				return $this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php else: ?>
-				$this->flash(__d('<?php echo $admin->plugin; ?>', 'The <?php echo ucfirst(strtolower($admin->singularHumanName)); ?> has been saved.', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
+				return $this->flash(__d('<?php echo $admin->plugin; ?>', 'The <?php echo ucfirst(strtolower($admin->singularHumanName)); ?> has been saved.'), array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php endif; ?>
 			} else {
 <?php if ($admin->sessions): ?>
-				$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'The <?php echo ucfirst(strtolower($admin->singularHumanName)); ?> could not be saved.', true), 'flash/error');
+				$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'The <?php echo ucfirst(strtolower($admin->singularHumanName)); ?> could not be saved.'), 'flash/error');
 <?php endif; ?>
 			}
 		}
 
-		if (empty($this->data)) {
-			$this->data = $this-><?php echo $admin->modelName; ?>->find('<?php echo $alias; ?>', compact('<?php echo $admin->primaryKey; ?>'));
+		if (empty($this->request->data)) {
+			$this->request->data = $this-><?php echo $admin->modelName; ?>->find('<?php echo $alias; ?>', compact('<?php echo $admin->primaryKey; ?>'));
 		}
 
-		if (empty($this->data)) {
+		if (empty($this->request->data)) {
 <?php if ($admin->sessions): ?>
-			$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>', true), 'flash/error');
-			$this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
+			$this->Session->setFlash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>'), 'flash/error');
+			return $this->redirect(array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php else: ?>
-			$this->flash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>', true), array('action' => '<?php echo $admin->redirectTo; ?>'));
+			return $this->flash(__d('<?php echo $admin->plugin; ?>', 'Invalid <?php echo ucfirst(strtolower($admin->singularHumanName)); ?>'), array('action' => '<?php echo $admin->redirectTo; ?>'));
 <?php endif; ?>
 		}
 <?php if (!empty($admin->associations['belongsTo']) || !empty($admin->associations['hasAndBelongsToMany'])) : ?>

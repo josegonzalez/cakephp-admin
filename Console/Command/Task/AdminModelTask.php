@@ -1,12 +1,14 @@
 <?php
-class AdminModelTask extends Shell {
+App::uses('AppShell', 'Console/Command');
+
+class AdminModelTask extends AppShell {
 
 /**
  * Tasks to be loaded by this Task
  *
  * @var array
  */
-    var $tasks = array('AdminTemplate');
+    var $tasks = array('CakeAdmin.AdminTemplate');
 
 /**
  * Constructed plugin directory
@@ -22,14 +24,14 @@ class AdminModelTask extends Shell {
     function __construct(&$dispatch) {
         parent::__construct($dispatch);
 
-        $this->pluginDir        = APP . 'plugins' . DS;
+        $this->pluginDir        = APP . 'Plugin' . DS;
         $this->templateDir      = array();
         $this->templateDir[]    = dirname(__FILE__);
         $this->templateDir[]    = '..';
         $this->templateDir[]    = '..';
         $this->templateDir[]    = '..';
-        $this->templateDir[]    = 'libs';
-        $this->templateDir[]    = 'templates';
+        $this->templateDir[]    = 'Lib';
+        $this->templateDir[]    = 'Templates';
         $this->templateDir      = implode(DS, $this->templateDir);
     }
 
@@ -39,13 +41,13 @@ class AdminModelTask extends Shell {
  * @return void
  **/
     function generateAppModel($admin) {
-        $path = $this->templateDir . DS . 'classes';
+        $path = $this->templateDir . DS . 'Class';
 
         $this->AdminTemplate->set(compact('admin'));
-        $contents = $this->AdminTemplate->generate($path, 'app_model');
+        $contents = $this->AdminTemplate->generate($path, 'AppModel');
 
-        $path = APP . 'plugins' . DS . $admin->plugin . DS;
-        $filename = $path . $admin->plugin . '_app_model.php';
+        $path = APP . 'Plugin' . DS . Inflector::camelize($admin->plugin) . DS . 'Model' . DS;
+        $filename = $path . Inflector::camelize($admin->plugin) . 'AppModel.php';
         if ($this->createFile($filename, $contents)) {
             return $contents;
         }
@@ -58,7 +60,7 @@ class AdminModelTask extends Shell {
  * @return void
  **/
     function generate($admin) {
-        $path = $this->templateDir . DS . 'classes';
+        $path = $this->templateDir . DS . 'Class';
 
         list($methods, $hasFinders, $hasRelated) = $this->generateContents($admin);
 
@@ -68,7 +70,7 @@ class AdminModelTask extends Shell {
             'hasFinders',
             'hasRelated'
         ));
-        $contents = $this->AdminTemplate->generate($path, 'model');
+        $contents = $this->AdminTemplate->generate($path, 'Model');
 
         if ($this->createFile($admin->paths['model'], $contents)) {
             return $contents;
@@ -114,13 +116,13 @@ class AdminModelTask extends Shell {
  * @return void
  */
     function getMethods($admin, $options) {
-        $endPath = 'libs' . DS . 'templates' . DS . 'actions' . DS;
+        $endPath = 'Lib' . DS . 'Templates' . DS . 'Action' . DS;
         if (empty($options['plugin'])) {
             $path = APP . $endPath;
         } else {
             $path = $this->pluginDir . $options['plugin'] . DS . $endPath;
         }
-        $path  .= $options['action'] . DS . 'models';
+        $path  .= $options['action'] . DS . 'Model';
 
         $find   = $options['alias'];
         $alias  = $options['alias'];

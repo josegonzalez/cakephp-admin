@@ -1,12 +1,14 @@
 <?php
-class AdminControllerTask extends Shell {
+App::uses('AppShell', 'Console/Command');
+
+class AdminControllerTask extends AppShell {
 
 /**
  * Tasks to be loaded by this Task
  *
  * @var array
  */
-    var $tasks = array('AdminTemplate');
+    var $tasks = array('CakeAdmin.AdminTemplate');
 
 /**
  * Constructed plugin directory
@@ -29,14 +31,14 @@ class AdminControllerTask extends Shell {
     function __construct(&$dispatch) {
         parent::__construct($dispatch);
 
-        $this->pluginDir        = APP . 'plugins' . DS;
+        $this->pluginDir        = APP . 'Plugin' . DS;
         $this->templateDir      = array();
         $this->templateDir[]    = dirname(__FILE__);
         $this->templateDir[]    = '..';
         $this->templateDir[]    = '..';
         $this->templateDir[]    = '..';
-        $this->templateDir[]    = 'libs';
-        $this->templateDir[]    = 'templates';
+        $this->templateDir[]    = 'Lib';
+        $this->templateDir[]    = 'Templates';
         $this->templateDir      = implode(DS, $this->templateDir);
     }
 
@@ -46,13 +48,13 @@ class AdminControllerTask extends Shell {
  * @return void
  **/
     function generateAppController($admin) {
-        $path = $this->templateDir . DS . 'classes';
+        $path = $this->templateDir . DS . 'Class';
 
         $this->AdminTemplate->set(compact('admin'));
-        $contents = $this->AdminTemplate->generate($path, 'app_controller');
+        $contents = $this->AdminTemplate->generate($path, 'AppController');
 
-        $path = $this->pluginDir . $admin->plugin . DS;
-        $filename = $path . $admin->plugin . '_app_controller.php';
+        $path = $this->pluginDir . Inflector::camelize($admin->plugin) . DS . 'Controller' . DS;
+        $filename = $path . Inflector::camelize($admin->plugin) . 'AppController.php';
         if ($this->createFile($filename, $contents)) {
             return $contents;
         }
@@ -73,8 +75,8 @@ class AdminControllerTask extends Shell {
             'actions'
         ));
 
-        $path       = $this->templateDir . DS . 'classes';
-        $contents   = $this->AdminTemplate->generate($path, 'controller');
+        $path       = $this->templateDir . DS . 'Class';
+        $contents   = $this->AdminTemplate->generate($path, 'Controller');
         if ($this->createFile($admin->paths['controller'], $contents)) {
             return $contents;
         }
@@ -111,16 +113,16 @@ class AdminControllerTask extends Shell {
  * @return void
  **/
     function getAction($admin, $options = array()) {
-        $endPath = 'libs' . DS . 'templates' . DS . 'actions' . DS;
+        $endPath = 'Lib' . DS . 'Templates' . DS . 'Action' . DS;
         if (empty($options['plugin'])) {
             $path = APP . $endPath;
         } else {
             $path = $this->pluginDir . $options['plugin'] . DS . $endPath;
         }
-        $path .= $options['action'] . DS . 'controllers';
+        $path .= $options['action'] . DS . 'Controller';
 
-        $alias              = $options['alias'];
-        $configuration      = $options['config'];
+        $alias         = $options['alias'];
+        $configuration = $options['config'];
 
         $this->AdminTemplate->set(compact(
             'admin',

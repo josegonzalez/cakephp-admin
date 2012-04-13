@@ -21,27 +21,27 @@
  */
 
 echo "<?php\n"; ?>
-class <?php echo $admin->modelName ?> extends <?php echo Inflector::humanize($admin->plugin); ?>AppModel {
+class <?php echo $admin->modelName ?> extends <?php echo Inflector::camelize($admin->plugin) ?>AppModel {
 
-	var $displayField = '<?php echo $admin->displayField; ?>';
-	var $useDbConfig  = '<?php echo $admin->useDbConfig; ?>';
-	var $useTable     = '<?php echo $admin->useTable; ?>';
-	var $primaryKey   = '<?php echo $admin->primaryKey; ?>';
+	public $displayField = '<?php echo $admin->displayField; ?>';
+	public $useDbConfig  = '<?php echo $admin->useDbConfig; ?>';
+	public $useTable     = '<?php echo $admin->useTable; ?>';
+	public $primaryKey   = '<?php echo $admin->primaryKey; ?>';
 <?php
 if (!empty($admin->actsAs)) : ?>
-	var $actsAs       = array(
+	public $actsAs       = array(
 		<?php echo $admin->formatted('actsAs', 2, false); ?>
 	);
 <?php endif; ?>
 <?php if (!empty($admin->finders)) : ?>
-	var $_findMethods = array(
+	public $findMethods = array(
 <?php 	foreach ($admin->finders as $findMethod) : ?>
 		'<?php echo $findMethod; ?>' => true,
 <?php 	endforeach; ?>
 	);
 <?php endif; ?>
 <?php if (!empty($admin->relatedFinders)) : ?>
-	var $_relatedMethods = array(
+	public $relatedMethods = array(
 <?php 	foreach ($admin->relatedFinders as $relatedMethod) : ?>
 		'<?php echo $relatedMethod; ?>' => true,
 <?php 	endforeach; ?>
@@ -49,7 +49,7 @@ if (!empty($admin->actsAs)) : ?>
 <?php endif; ?>
 <?php if (!empty($admin->validate)): ?>
 
-	function __construct($id = false, $table = null, $ds = null) {
+	public function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
 		$this->validate = array(
 			<?php echo $admin->formatted('validate', 3, false) ?>
@@ -58,7 +58,7 @@ if (!empty($admin->actsAs)) : ?>
 <?php endif; ?>
 <?php
 foreach ($admin->relations as $assocType => $values) {
-	echo "\n\tvar \$$assocType = array(\n";
+	echo "\n\public \$$assocType = array(\n";
 	echo $admin->formatted($values, 2);
 	echo "\t);\n";
 }

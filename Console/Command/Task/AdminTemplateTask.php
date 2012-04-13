@@ -17,7 +17,9 @@
  * @since         CakePHP(tm) v 1.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-class AdminTemplateTask extends Shell {
+App::uses('AppShell', 'Console/Command');
+
+class AdminTemplateTask extends AppShell {
 
 /**
  * variables to add to template scope

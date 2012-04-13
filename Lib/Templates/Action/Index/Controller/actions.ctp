@@ -1,4 +1,4 @@
-	function <?php echo $alias; ?>() {
+	public function <?php echo $alias; ?>() {
 <?php
 	$mappings = array();
 	if (!empty($admin->actions[$alias]['config']['search'])) {

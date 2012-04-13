@@ -1,5 +1,5 @@
 <div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?> index">
-	<h2><?php printf("<?php printf(__('%s%%s', true), \${$admin->singularName}['{$admin->modelName}']['{$admin->displayField}']); ?>", $configuration['config']['title']); ?></h2>
+	<h2><?php printf("<?php echo __('%s%%s', \${$admin->singularName}['{$admin->modelName}']['{$admin->displayField}']); ?>", $configuration['config']['title']); ?></h2>
 	<table id="recent-activity" cellpadding="0" cellspacing="0">
 		<thead class="hide">
 			<tr>
@@ -35,13 +35,13 @@
 	</table>
 </div>
 <div class="actions">
-	<h3><?php echo sprintf("<?php __d('%s', 'Actions'); ?>", $admin->plugin); ?></h3>
+	<h3><?php echo sprintf("<?php echo __d('%s', 'Actions'); ?>", $admin->plugin); ?></h3>
 	<ul>
 <?php
 foreach ($admin->links as $alias => $config) {
 	if ($alias == $action) continue;
 	if ($config !== false && is_string($config)) { ?>
-		<li><?php echo sprintf("<?php echo \$this->Html->link(__d('%s', '%s', true), array('action' => '%s')); ?>", $admin->plugin, $config, $alias); ?></li>
+		<li><?php echo sprintf("<?php echo \$this->Html->link(__d('%s', '%s'), array('action' => '%s')); ?>", $admin->plugin, $config, $alias); ?></li>
 <?php
 	} elseif (is_array($config)) {
 		$url     = array();
@@ -83,7 +83,7 @@ foreach ($admin->links as $alias => $config) {
 				$end .= sprintf(", %s", $confirmMessage);
 			}
 		}
-		echo sprintf("\t\t<li><?php echo \$this->Html->link(__d('%s', '%s', true), %s); ?></li>\n", $admin->plugin, $config['title'], $url.$end);
+		echo sprintf("\t\t<li><?php echo \$this->Html->link(__d('%s', '%s'), %s); ?></li>\n", $admin->plugin, $config['title'], $url.$end);
 	}
 }
 ?>

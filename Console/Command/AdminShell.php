@@ -11,24 +11,23 @@
  * @since         ApiGenerator 0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  **/
-if (!class_exists('CakeAdmin')) {
-	App::import('Lib', 'CakeAdmin.cake_admin');
-}
-if (!class_exists('Shell')) {
-	App::import('Core', 'Shell');
-}
-class AdminShell extends Shell {
+
+App::uses('CakeAdmin', 'CakeAdmin.Lib');
+App::uses('AppShell', 'Console/Command');
+App::uses('Folder', 'Utility');
+
+class AdminShell extends AppShell {
 
 /**
  * Tasks to be loaded by this Task
  *
  * @var array
  */
-    var $tasks = array(
-        'AdminTemplate',
-        'AdminModel',
-        'AdminController',
-        'AdminView',
+    public $tasks = array(
+        'CakeAdmin.AdminTemplate',
+        'CakeAdmin.AdminModel',
+        'CakeAdmin.AdminController',
+        'CakeAdmin.AdminView',
     );
 
 /**
@@ -37,28 +36,28 @@ class AdminShell extends Shell {
  * @var array
  * @access protected
  */
-    var $_tables = array();
+    protected $_tables = array();
 
 /**
  * Folder handler
  *
  * @var File
  **/
-    var $handler;
+    public $handler;
 
 /**
  *  Constructs this Shell instance.
  *
  */
-    function __construct(&$dispatch) {
-        parent::__construct($dispatch);
+    public function __construct($stdout = null, $stderr = null, $stdin = null) {
+        parent::__construct($stdout, $stderr, $stdin);
 
         $this->templateDir      = array();
         $this->templateDir[]    = dirname(__FILE__);
         $this->templateDir[]    = '..';
         $this->templateDir[]    = '..';
-        $this->templateDir[]    = 'libs';
-        $this->templateDir[]    = 'templates';
+        $this->templateDir[]    = 'Lib';
+        $this->templateDir[]    = 'Templates';
         $this->templateDir      = implode(DS, $this->templateDir);
     }
 
@@ -66,14 +65,14 @@ class AdminShell extends Shell {
  * Override main
  *
  */
-    function generate() {
+    public function generate() {
         if (!isset($this->params['interactive'])) {
             $this->params['interactive'] = false;
         } else {
             $this->params['interactive'] = true;
         }
         $this->interactive = $this->params['interactive'];
-        foreach ($this->tasks as $task) {
+        foreach (array('AdminController', 'AdminModel', 'AdminView') as $task) {
             $this->{$task}->interactive = $this->params['interactive'];
         }
 
@@ -89,8 +88,8 @@ class AdminShell extends Shell {
         $adminClasses = array();
         foreach ($files as $file) {
             // Create an instance of the particular admin class
-            $className = Inflector::camelize(str_replace('.php', '', $file));
-            App::import('Lib', $className, array('file' => "admin/{$file}"));
+            $className = str_replace('.php', '', $file);
+            App::uses($className, 'Lib/Admin');
             $admin = new $className();
 
             if (!$admin->enabled) {
@@ -105,7 +104,7 @@ class AdminShell extends Shell {
             }
 
             $adminClasses[$file] = $admin;
-            $plugins[$admin->plugin][] = array(
+            $plugins[Inflector::underscore($admin->plugin)][] = array(
                 'title'     => $this->_controllerName($admin->modelName),
                 'controller'=> $this->_pluralName($this->_controllerName($admin->modelName)),
                 'action'    => $admin->redirectTo,
@@ -117,10 +116,7 @@ class AdminShell extends Shell {
 
         foreach ($adminClasses as $file => $admin) {
             if (!$this->_create($admin)) {
-                $this->err(sprintf(
-                    __('Error in creating admin for %s', true),
-                    $className
-                ));
+                $this->err(__('Error in creating admin for %s', $file));
                 continue;
             }
 
@@ -131,17 +127,17 @@ class AdminShell extends Shell {
 
         $fails = count($files) - $skipped - $build;
         if ($build == 0) {
-            $this->out(__('Failed to build admin', true));
+            $this->out(__('Failed to build admin'));
         }
 
         $this->out(sprintf(
-            __('Admin successfully built for %s models', true),
+            __('Admin successfully built for %s models'),
             count($file)
         ));
 
         if ($fails !== 0) {
             $this->out(sprintf(
-                __('Fix all %s errors before regenerating admin', true),
+                __('Fix all %s errors before regenerating admin'),
                 $fails
             ));
         }
@@ -153,7 +149,7 @@ class AdminShell extends Shell {
  * @return array
  * @todo test me
  */
-    function _find() {
+    public function _find() {
         $this->_handler();
         $this->handler->cd(APPLIBS);
         $content = $this->handler->read();
@@ -162,12 +158,12 @@ class AdminShell extends Shell {
             return false;
         }
 
-        if (!in_array('admin', $content[0])) {
+        if (!in_array('Admin', $content[0])) {
             return false;
         }
 
-        $this->handler->cd(APPLIBS . 'admin');
-        $content = $this->handler->find('([a-z_]+)(.php)');
+        $this->handler->cd(APPLIBS . 'Admin');
+        $content = $this->handler->find('([\w_]+)(.php)');
 
         return (empty($content)) ? false : $content;
     }
@@ -186,30 +182,30 @@ class AdminShell extends Shell {
  * @return mixed boolean true if successful, string error message otherwise
  * @todo test me
  */
-    function _checkBuild($admin) {
+    public function _checkBuild($admin) {
         $this->_handler();
         $this->handler->cd(APP);
         $contents = $this->handler->read();
 
-        if (!in_array('plugins', $contents[0])) {
-            return __("Missing Plugin directory", true);
+        if (!in_array('Plugin', $contents[0])) {
+            return __("Missing Plugin directory");
         }
 
-        $this->handler->cd(APP . 'plugins');
+        $this->handler->cd(APP . 'Plugin');
         $contents = $this->handler->read();
-        $path = APP . 'plugins' . DS . $admin->plugin;
+        $path = APP . 'Plugin' . DS . Inflector::camelize($admin->plugin);
         // Recover if the required plugin directory is missing
         if (!in_array($admin->plugin, $contents[0])) {
             $this->handler->create($path);
         }
 
         $contents = $this->handler->read();
-        if (!in_array($admin->plugin, $contents[0])) {
-            return sprintf(__("Unable to create path: %s", true), $path);
+        if (!in_array(Inflector::camelize($admin->plugin), $contents[0])) {
+            return __("Unable to create path: %s", $path);
         }
 
         // Check all the required MVC directories
-        $required = array('controllers', 'models', 'views');
+        $required = array('Controller', 'Model', 'View');
         $this->handler->cd($path);
         $content = $this->handler->read();
 
@@ -220,16 +216,14 @@ class AdminShell extends Shell {
             $content = $this->handler->read();
 
             if (!in_array($directory, $content[0])) {
-                return sprintf(__('Missing directory: %s', true), $directory);
+                return __('Missing directory: %s', $directory);
             }
         }
 
         // Check that the directories and files are writeable by shell
         foreach ($required as $directory) {
             if (!$this->handler->chmod($path . DS .$directory)) {
-                return sprintf(__('Directory not writeable: %s', true), 
-                    $directory
-                );
+                return __('Directory not writeable: %s', $directory);
             }
         }
 
@@ -243,18 +237,16 @@ class AdminShell extends Shell {
  * @return boolean
  * @todo test me
  **/
-    function _create($admin) {
+    public function _create($admin) {
         if (!$this->AdminModel->generate($admin))  {
             $this->out();
-            $this->out(sprintf('Failed to generate %s Model',
-                $admin->modelName
-            ));
+            $this->out(__('Failed to generate %s Model', $admin->modelName));
             $this->out();
             return false;
         }
         if (!$this->AdminController->generate($admin)) {
             $this->out();
-            $this->out(sprintf('Failed to generate %s Controller',
+            $this->out(__('Failed to generate %s Controller',
                 $this->_controllerName($admin->modelName)
             ));
             $this->out();
@@ -262,7 +254,7 @@ class AdminShell extends Shell {
         }
         if (!$this->AdminView->generate($admin)) {
             $this->out();
-            $this->out(sprintf('Failed to generate %s Views',
+            $this->out(__('Failed to generate %s Views',
                 $this->_controllerName($admin->modelName)
             ));
             $this->out();
@@ -277,7 +269,7 @@ class AdminShell extends Shell {
  * @return boolean
  * @author Jose Diaz-Gonzalez
  **/
-    function _generateApp($plugins) {
+    public function _generateApp($plugins) {
         $generated = array();
 
         foreach ($plugins as $plugin => $cakeAdmins) {
@@ -289,17 +281,13 @@ class AdminShell extends Shell {
 
             if (!$this->AdminController->generateAppController($admin)) {
                 $this->out();
-                $this->out(sprintf('Failed to generate %s AppController',
-                    Inflector::humanize($admin->plugin)
-                ));
+                $this->out(__('Failed to generate %sAppController', Inflector::camelize($admin->plugin)));
                 $this->out();
                 return false;
             }
             if (!$this->AdminModel->generateAppModel($admin)) {
                 $this->out();
-                $this->out(sprintf('Failed to generate %s AppModel',
-                    Inflector::humanize($admin->plugin)
-                ));
+                $this->out(__('Failed to generate %sAppModel', Inflector::camelize($admin->plugin)));
                 $this->out();
                 return false;
             }
@@ -314,16 +302,15 @@ class AdminShell extends Shell {
  * @return void
  * @author Jose Diaz-Gonzalez
  **/
-    function _generateMisc($plugins) {
+    public function _generateMisc($plugins) {
         foreach ($plugins as $plugin => $cakeAdmins) {
-            $pluginPath = APP . 'plugins' . DS . $plugin;
+            $pluginPath = APP . 'Plugin' . DS . $plugin;
 
             // Generate flash elements
-            $elementPath = $pluginPath . DS . 'views' . DS . 'elements' . DS . 'flash';
-            $files = array('error', 'info', 'notice', 'success');
-            foreach ($files as $file) {
+            $elementPath = $pluginPath . DS . 'View' . DS . 'Elements' . DS . 'flash';
+            foreach (array('error', 'info', 'notice', 'success') as $file) {
                 $contents = $this->AdminTemplate->generate(
-                    $this->templateDir . DS . 'misc' . DS . 'flash' . DS,
+                    $this->templateDir . DS . 'Misc' . DS . 'flash' . DS,
                     $file
                 );
 
@@ -332,7 +319,7 @@ class AdminShell extends Shell {
 
             // Generate CSS
             $contents = $this->AdminTemplate->generate(
-                $this->templateDir . DS . 'misc' . DS,
+                $this->templateDir . DS . 'Misc' . DS,
                 'cake.admin.generic.min'
             );
             $path = $pluginPath . DS . 'webroot' . DS . 'css';
@@ -344,10 +331,10 @@ class AdminShell extends Shell {
                 'plugins'
             ));
             $contents = $this->AdminTemplate->generate(
-                $this->templateDir . DS . 'misc' . DS,
+                $this->templateDir . DS . 'Misc' . DS,
                 'layout.default'
             );
-            $path = $pluginPath . DS . 'views' . DS . 'layouts';
+            $path = $pluginPath . DS . 'View' . DS . 'Layouts';
             $this->createFile($path . DS . 'default.ctp', $contents);
         }
     }
@@ -361,39 +348,28 @@ class AdminShell extends Shell {
  * @return boolean true if handler is setup, false otherwise
  * @todo test me
  */
-    function _handler() {
+    public function _handler() {
         if (!$this->handler) {
-            App::import('Core', 'Folder');
             $this->handler = new Folder(APP);
         }
         return is_object($this->handler);
     }
 
 /**
- * Displays help contents
- *
- * @access public
- */
-    function help() {
-        $help = <<<TEXT
-The CakeAdmin Shell
----------------------------------------------------------------
-Usage: cake admin generate
----------------------------------------------------------------
-Params:
+* get the option parser.
+*
+* @return void
+*/
+public function getOptionParser() {
+    $parser = parent::getOptionParser();
+    return $parser->description(__d('cake_admin',
+        'The CakeAdmin shell generates a backend for your application.'
+    ))->addSubcommand('generate', array(
+        'help' => __d('cake_admin', 'Auto-generates admin sections based on your app/Lib/Admin files'),
+    ))->addSubcommand('help', array(
+        'help' => __d('cake_admin', 'Shows this help message'),
+    ));
+}
 
-
-Commands:
-
-    admin generate
-        auto-generates admin sections based on your app/libs/admin files
-
-    my help
-        shows this help message.
-
-TEXT;
-        $this->out($help);
-        $this->_stop();
-    }
 
 }

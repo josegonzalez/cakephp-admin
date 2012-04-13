@@ -35,7 +35,7 @@ echo"
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
 	<?php echo \$this->Html->charset(); ?>
-	<title><?php printf(__('%s - Dashboard', true), \$title_for_layout); ?></title>
+	<title><?php echo __('%s - Dashboard', \$title_for_layout); ?></title>
 	<?php
 		echo \$this->Html->meta('icon');
 
@@ -47,13 +47,13 @@ echo"
 <body class=\"<?php if (\$this->name == 'CakeError') echo 'error-page'; ?>\">
 	<div id=\"container\">
 		<div id=\"header\">
-			<h1><?php printf(__('%s Dashboard', true), Inflector::humanize(\$this->params['controller'])); ?></h1>
+			<h1><?php echo __('%s Dashboard', Inflector::humanize(\$this->request->params['controller'])); ?></h1>
 			<ul class=\"navigation\">\n";
 				foreach ($links as $i => $link) {
 					if ($i === 0) {
-						echo "\t\t\t<li class=\"first<?php if (\$this->params['plugin'] === '{$link['plugin']}' && \$this->params['controller'] === '{$link['controller']}') echo ' on'?>\">\n\t\t\t\t<?php echo {$link['link']} ?>\n\t\t\t</li>\n";
+						echo "\t\t\t<li class=\"first<?php if (\$this->request->params['plugin'] === '{$link['plugin']}' && \$this->request->params['controller'] === '{$link['controller']}') echo ' on'?>\">\n\t\t\t\t<?php echo {$link['link']} ?>\n\t\t\t</li>\n";
 					} else {
-						echo "\t\t\t<li class=\"<?php if (\$this->params['plugin'] === '{$link['plugin']}' && \$this->params['controller'] === '{$link['controller']}') echo 'on'?>\">\n\t\t\t\t<?php echo {$link['link']} ?>\n\t\t\t</li>\n";
+						echo "\t\t\t<li class=\"<?php if (\$this->request->params['plugin'] === '{$link['plugin']}' && \$this->request->params['controller'] === '{$link['controller']}') echo 'on'?>\">\n\t\t\t\t<?php echo {$link['link']} ?>\n\t\t\t</li>\n";
 					}
 				}
 echo "			</ul>
@@ -68,7 +68,7 @@ echo "			</ul>
 		</div>
 		<div id=\"footer\">
 			<?php echo \$this->Html->link(
-					\$this->Html->image('cake.power.gif', array('alt'=> __('CakePHP: the rapid development php framework', true), 'border' => '0')),
+					\$this->Html->image('cake.power.gif', array('alt'=> __('CakePHP: the rapid development php framework'), 'border' => '0')),
 					'http://www.cakephp.org/',
 					array('target' => '_blank', 'escape' => false)
 				);

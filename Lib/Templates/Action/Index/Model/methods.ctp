@@ -7,7 +7,7 @@ $list_filter = $admin->actions[$find]['config']['list_filter'];
 // Available variables: [modelObj, list_filter, searches, fields]
 
 ?>
-	function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
+	public function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
 		if ($state === 'before') {
 <?php if (!empty($list_filter)) : ?>
 <?php foreach ($list_filter as $field => $config) : ?>

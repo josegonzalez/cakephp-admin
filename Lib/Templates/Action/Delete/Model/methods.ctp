@@ -1,4 +1,4 @@
-	function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
+	public function _find<?php echo Inflector::camelize($find); ?>($state, $query, $results = array()) {
 		if ($state === 'before') {
 			$query['conditions']['<?php echo $admin->modelName; ?>.<?php echo $admin->primaryKey?>'] = $query['<?php echo $admin->primaryKey; ?>'];
 			$query['limit'] = 1;

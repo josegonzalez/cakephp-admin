@@ -1,5 +1,5 @@
 <div class="<?php echo $admin->pluralVar; ?> <?php echo $action; ?>">
-	<h2><?php printf("<?php __d('%s', '%s');?>", $admin->plugin, Inflector::pluralize(Inflector::humanize($admin->modelName))) ;?></h2>
+	<h2><?php printf("<?php echo __d('%s', '%s');?>", $admin->plugin, Inflector::pluralize(Inflector::humanize($admin->modelName))) ;?></h2>
 	<table cellpadding="0" cellspacing="0">
 		<thead>
 			<tr>
@@ -10,7 +10,7 @@
   			<th><?php echo Inflector::humanize(preg_replace('/_id$/', '', $field)); ?></th>
 <?php	endif; ?>
 <?php endforeach;?>
-				<th class="actions"><?php echo sprintf("<?php __d('%s', 'Actions'); ?>", $admin->plugin); ?></th>
+				<th class="actions"><?php echo sprintf("<?php echo __d('%s', 'Actions'); ?>", $admin->plugin); ?></th>
 			</tr>
 		</thead>
 	<?php
@@ -80,7 +80,7 @@
 						$end .= sprintf(", %s", $confirmMessage);
 					}
 				}
-				echo sprintf("\t\t\t\t<?php echo \$this->Html->link(__d('%s', '%s', true), %s); ?>\n", $admin->plugin, $config['title'], $url.$end);
+				echo sprintf("\t\t\t\t<?php echo \$this->Html->link(__d('%s', '%s'), %s); ?>\n", $admin->plugin, $config['title'], $url.$end);
 			}
 		}
 		echo "\t\t\t</td>\n";
@@ -92,24 +92,24 @@
 	<p class="paging-details">
 		<?php echo sprintf("<?php
 			echo \$this->Paginator->counter(array(
-				'format' => __d('%s', 'Page %%page%% of %%pages%%, showing %%current%% records out of %%count%% total, starting on record %%start%%, ending on %%end%%', true)
+				'format' => __d('%s', 'Page %%page%% of %%pages%%, showing %%current%% records out of %%count%% total, starting on record %%start%%, ending on %%end%%')
 			));
 		?>\n", $admin->plugin); ?>
 	</p>
 	<div class="paging">
-		<?php echo sprintf("<?php echo \$this->Paginator->prev(__d('%s', '« Previous', true), array(), null, array('class'=>'disabled')); ?>\n", $admin->plugin); ?>
+		<?php echo sprintf("<?php echo \$this->Paginator->prev(__d('%s', '« Previous'), array(), null, array('class'=>'disabled')); ?>\n", $admin->plugin); ?>
 		<?php echo "\t<?php echo \$this->Paginator->numbers(array('separator' => false)); ?>\n"?>
-	<?php echo sprintf("\t<?php echo \$this->Paginator->next(__d('%s', 'Next »', true), array(), null, array('class' => 'disabled')); ?>\n", $admin->plugin); ?>
+	<?php echo sprintf("\t<?php echo \$this->Paginator->next(__d('%s', 'Next »'), array(), null, array('class' => 'disabled')); ?>\n", $admin->plugin); ?>
 	</div>
 </div>
 <div class="actions">
-	<h3><?php echo sprintf("<?php __d('%s', 'Actions'); ?>", $admin->plugin); ?></h3>
+	<h3><?php echo sprintf("<?php echo __d('%s', 'Actions'); ?>", $admin->plugin); ?></h3>
 	<ul>
 <?php
 foreach ($admin->links as $alias => $config) :
 	if ($alias == $action) continue;
 	if ($config !== false && is_string($config)) : ?>
-		<li><?php echo sprintf("<?php echo \$this->Html->link(__d('%s', '%s', true), array('action' => '%s')); ?>", $admin->plugin, $config, $alias); ?></li>
+		<li><?php echo sprintf("<?php echo \$this->Html->link(__d('%s', '%s'), array('action' => '%s')); ?>", $admin->plugin, $config, $alias); ?></li>
 <?php
 	endif;
 endforeach;
@@ -117,20 +117,20 @@ endforeach;
 	</ul>
 
 <?php if (!empty($configuration['config']['list_filter'])) : ?>
-	<h3><?php echo sprintf("<?php __d('%s', 'Filter'); ?>", $admin->plugin); ?></h3>
-	<?php echo "<?php \$current = array_diff_key(\$this->params['named'], Set::normalize(array('direction', 'sort', 'order', 'page'))); ?>\n"; ?>
+	<h3><?php echo sprintf("<?php echo __d('%s', 'Filter'); ?>", $admin->plugin); ?></h3>
+	<?php echo "<?php \$current = array_diff_key(\$this->request->params['named'], Set::normalize(array('direction', 'sort', 'order', 'page'))); ?>\n"; ?>
 <?php	foreach ($configuration['config']['list_filter'] as $field => $filter) : ?>
-	<h4><?php echo sprintf("<?php __d('%s', 'By %s'); ?>", $admin->plugin, Inflector::humanize(preg_replace('/_id$/', '', $field))); ?></h4>
+	<h4><?php echo sprintf("<?php echo __d('%s', 'By %s'); ?>", $admin->plugin, Inflector::humanize(preg_replace('/_id$/', '', $field))); ?></h4>
 	<ul>
 <?php		foreach ($filter as $key => $value) : ?>
-		<li><?php echo sprintf("<?php echo \$this->Html->link(__d('%s', 'Show %s', true), array_merge(\$current, array('%s' => %s))); ?>", $admin->plugin, $value, $field, $key); ?></li>
+		<li><?php echo sprintf("<?php echo \$this->Html->link(__d('%s', 'Show %s'), array_merge(\$current, array('%s' => %s))); ?>", $admin->plugin, $value, $field, $key); ?></li>
 <?php		endforeach; ?>
 	</ul>
 <?php	endforeach; ?>
 <?php endif; ?>
 
 <?php if (!empty($configuration['config']['search'])) : ?>
-	<h3><?php echo sprintf("<?php __d('%s', 'Search'); ?>", $admin->plugin); ?></h3>
+	<h3><?php echo sprintf("<?php echo __d('%s', 'Search'); ?>", $admin->plugin); ?></h3>
 	<?php echo sprintf("<?php echo \$this->Form->create('%s', array('url' => array(
 		'plugin' => '%s', 'controller' => '%s', 'action' => '%s'))); ?>\n", $admin->modelName, $admin->plugin, $admin->controllerRoute, $action); ?>
 	<ul>
