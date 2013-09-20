@@ -6,21 +6,21 @@ class CakeAdminActionConfig {
  *
  * @var string
  **/
-    var $defaults = array();
+	var $defaults = array();
 
 /**
  * Is this action enabled by default
  *
  * @var string
  **/
-    var $enabled = true;
+	var $enabled = true;
 
 /**
  * Plugin where the templates for this action are located
  *
  * @var string
  **/
-    var $plugin = null;
+	var $plugin = null;
 
 /**
  * Type of action this is
@@ -28,7 +28,7 @@ class CakeAdminActionConfig {
  *
  * @var string
  **/
-    var $type = null;
+	var $type = null;
 
 /**
  * Whether this action is linkable
@@ -46,24 +46,24 @@ class CakeAdminActionConfig {
  *
  * @var mixed
  **/
-    var $linkable = false;
+	var $linkable = false;
 
 /**
  * Model methods this action contains
  *
  * @var array
  **/
-    var $methods = array();
+	var $methods = array();
 
 /**
  * Constructor. Throws exceptions on invalid class properties
  *
  * @author Jose Diaz-Gonzalez
  */
-    function __construct() {
-        if (!$this->type) throw new Exception('undefined property "$type"');
-        if (!$this->plugin) throw new Exception('undefined property "$plugin"');
-    }
+	function __construct() {
+		if (!$this->type) throw new Exception('undefined property "$type"');
+		if (!$this->plugin) throw new Exception('undefined property "$plugin"');
+	}
 
 /**
  * Merges instantiated configuration with the class defaults
@@ -72,8 +72,8 @@ class CakeAdminActionConfig {
  * @return array
  * @author Jose Diaz-Gonzalez
  */
-    function mergeVars($admin, $configuration = array()) {
-        return array_merge($this->defaults, $configuration);
-    }
+	function mergeVars($admin, $configuration = array()) {
+		return array_merge($this->defaults, $configuration);
+	}
 
 }

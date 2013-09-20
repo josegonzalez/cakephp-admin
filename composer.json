@@ -1,0 +1,32 @@
+{
+  "name": "josegonzalez/cakephp-admin",
+  "version": "1.0.0",
+  "description": "An admin generator for CakePHP 2.x",
+  "type": "cakephp-plugin",
+  "keywords": [
+    "cakephp",
+    "admin",
+    "bake"
+  ],
+  "homepage": "http://github.com/josegonzalez/cakephp-admin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jose Diaz-Gonzalez",
+      "email": "email@josediazgonzalez.com",
+      "homepage": "http://josediazgonzalez.com",
+      "role": "Maintainer"
+    }
+  ],
+  "require": {
+    "composer/installers": "*"
+  },
+  "support": {
+    "email": "cakephp+admin@josediazgonzalez.com",
+    "issues": "https://github.com/josegonzalez/cakephp-admin/issues",
+    "source": "https://github.com/josegonzalez/cakephp-admin"
+  },
+  "extra": {
+    "installer-name": "CakeAdmin"
+  }
+}
